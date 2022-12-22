@@ -1,9 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Retailer API [⚠️🚧 wip]
+  title: Retailer API [DRAFT]
   description: |-
-    This is a draft of the Lola's Retailer API based on the OpenAPI 3.0 specification.
-
+    This is the official OpenAPI specification for Retailer API V1.
 
     # Concepts
 
@@ -34,12 +33,12 @@ info:
         - looks like yes
 
   # contact:
-  #   email: apiteam@swagger.io
+  #   email: someone@glovoxl.io
   
-  # ⚠️🚧
-  #     - [Operations Config] "Service areas for delivery": ask for Postal-Code/Location Coverage
-  #     - [Operations Config] "Preview time slots": ask for Next Available Timeslot (for given location)
-  #     - [Operations Config] "Availability": ask for Time slots (for given location)
+  # 🚧
+  #     - "Service areas for delivery": ask for Postal-Code/Location Coverage
+  #     - "Preview time slots": ask for Next Available Timeslot (for given location)
+  #     - "Availability": ask for Time slots (for given location)
   #     - Post an Order (w/ location + timeslot)
   version: 1.0.0
 servers:
