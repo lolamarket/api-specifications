@@ -1,0 +1,569 @@
+openapi: 3.0.3
+info:
+  title: Retailer API [⚠️🚧 wip]
+  description: |-
+    This is a draft of the Lola's Retailer API based on the OpenAPI 3.0 specification.
+
+
+    # Concepts
+
+      **Delivery Area**: TBA  
+      **Picking Location**: TBA  
+      ...
+
+
+    To be discussed:
+      - Authentication (and Authorization) strategy;
+      - Geographic areas [representation](https://opencagedata.com/guides/how-to-think-about-postcodes-and-geocoding):
+        - many countries do not have any form of postal code at all
+        - almost every aspect of what a postcode is and what it means can differ across countries
+        - some countries have assigned postcode regions only to parts of their territory
+        - many countries and territories of the world use the postal service of other countries (thus, we might need to ask for the country code along with the postal code)
+      - Notifications: 
+        - webhooks:
+          - define all types of events to be subscribed by the retailer
+          - define the best strategy for events subscription:
+            a) /subscribe and /unsubscribe endpoints (or similar)
+            b) set up by us, as part o the initial retailer configuration process
+        - (?) emails:
+          - if so, define all types of emails and its receivers
+        - (?) others...  
+      - Still missing proper API Data models (eg.: location, fleet, capacity, order, etc)
+        - the concepts used here might change as well.
+      - Does the time slots availability varies dependending on the type of services? Eg.: Availability for pickup vs deliver vs ...
+        - looks like yes
+
+  # contact:
+  #   email: apiteam@swagger.io
+  
+  # ⚠️🚧
+  #     - [Operations Config] "Service areas for delivery": ask for Postal-Code/Location Coverage
+  #     - [Operations Config] "Preview time slots": ask for Next Available Timeslot (for given location)
+  #     - [Operations Config] "Availability": ask for Time slots (for given location)
+  #     - Post an Order (w/ location + timeslot)
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/retailer/v1
+    description: Production server (live data)
+  - url: https://sandbox-api.example.com/v1
+    description: Sandbox server (test data)
+tags:
+  - name: auth
+  - name: delivery-areas
+  - name: picking-locations #TODO: rename it to picking-places? is shorter
+  - name: time-slots
+  - name: orders
+paths:
+  # Authentication
+  /oauth/token: # TODO: https://swagger.io/docs/specification/authentication/oauth2/
+    post:
+      tags:
+        - auth
+      summary: Generate an access token
+      description: |
+        Returns a new access token.
+
+        The access token must be included in all other requests as a Bearer token for authentication purposes.
+
+        Before you start, make sure you have been given a client ID and secret key. 
+
+        The token is valid for ***[X time]***. During this period, reuse the same token. After that, a new token must be generated.
+      operationId: generateAccessToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                clientSecret:
+                  type: string
+                grantType:
+                  type: string
+                scope:
+                  type: string
+                code:
+                  type: string
+                redirectUri:  
+                  type: string
+              required:
+                - clientId
+                - clientSecret
+                - grantType
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+  /oauth/token/revoke: # TODO: https://docs.instacart.com/connect/api/oauth/revoke_access_token
+    post:
+      tags:
+        - auth
+      summary: Revoke an access token
+      description: |
+        Revokes any access token. 
+        
+        You need to include your client ID and secret and the access token in the request body.
+      operationId: revokeAccessToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                clientSecret:
+                  type: string
+                token:
+                  type: string
+              required:
+                - clientId
+                - clientSecret
+                - token
+      responses:
+        '200':
+          description: OK
+
+  # Picking Locations
+  /picking-locations:
+    post:
+      #TODO: bulk or single creation?
+      summary: 'Create a Picking Location'
+      description: 'Create a Picking Location.'
+      operationId: createPickingLocation
+      tags:
+        - picking-locations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # TODO: WIP
+              type: object
+              properties:
+                name:
+                  type: string
+                coords:
+                  $ref: '#/components/schemas/GeoCoordinates'
+                postalCode:
+                  type: string
+                addressLine1:
+                  type: string
+                addressLine2:
+                  type: string
+                countryCode:
+                  type: string
+                  format: ISO 3166-1
+              required:
+                - name
+                #TODO: - coords ?
+                - postalCode
+                - addressLine1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PickingLocation'
+  /picking-locations/{id}:
+    get:
+      summary: 'Find picking location by ID'
+      description: 
+        Returns a single picking location for a given ID. 
+      operationId: findPickingLocationById
+      tags:
+        - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PickingLocation'
+        '400':
+          description: Invalid ID
+    patch:
+      summary: 'Update an existing picking location'
+      description: 
+        Update a picking location for given location ID. 
+      operationId: updatePickingLocation
+      tags:
+        - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: # TODO: WIP
+              type: object
+              properties:
+                name:
+                  type: string
+                coords:
+                  $ref: '#/components/schemas/GeoCoordinates'
+                postalCode:
+                  type: string
+                addressLine1:
+                  type: string
+                addressLine2:
+                  type: string
+                countryCode:
+                  type: string
+                  format: ISO 3166-1
+              required:
+                - name
+                #TODO: - coords ?
+                - postalCode
+                - addressLine1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PickingLocation'
+        '400':
+          description: Invalid ID
+    delete:
+      summary: 'Delete a picking location'
+      description: '' 
+      operationId: deletePickingLocation
+      tags:
+        - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location ID to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid ID
+  
+   #TODO: Time Slots 
+    # /picking-location/{id}/time-slots/availability
+    # /picking-location/{id}/time-slots/next-available
+    # /time-slots/availability
+    # /slots-availability
+    # service-availability/
+    
+    # /time-slots/next
+    # /time-slots/next-available
+    # /time-slots/preview
+
+  /picking-locations/{id}/slots-availability:
+    get:
+      summary: Get time slots availability for a given picking location
+      description: |
+        Returns a preview of the next available time slots for a given picking location and date.
+      operationId: getTimeSlotsAvailability
+      tags:
+        # - picking-locations
+        - time-slots
+      parameters:
+        - name: id
+          in: path
+          description: Picking location ID
+          required: true
+          schema:
+            type: string
+        - name: fromDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: ISO 8601
+        - name: quantity
+          in: query
+          required: true
+          description: Number of slots to be displayed
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlotAvailability'
+        '400':
+          description: Invalid ID
+  
+  /schedules/availability:
+    get:
+      summary: Get time slots availability for a given picking location
+      description: |
+        Returns a preview of the next available time slots for a given picking location and date.
+      operationId: getTimeSlotsAvailability
+      tags:
+        # - picking-locations
+        - time-slots
+      parameters:
+        - name: id
+          in: path
+          description: location ID
+          required: true
+          schema:
+            type: string
+        - name: fromDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: ISO 8601
+        - name: quantity
+          in: query
+          required: true
+          description: Number of slots to be displayed
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlotAvailability'
+        '400':
+          description: Invalid ID
+
+  # Delivery Areas
+  /delivery-areas:
+    # TODO: what if there's no postal code?
+    get:
+      summary: 'Retrieve delivery area'
+      description: |
+        Returns details of single Delivery Area.
+        
+        Can be used to validate the delivery service coverage in a given country and postal code or at certain coordinates
+        if query filters are passed.
+      operationId: findDeliveryArea
+      tags:
+        - delivery-areas
+      parameters:
+        - in: query
+          name: query
+          required: true
+          style: form
+          explode: true
+
+          description: |
+            ```YAML 
+            schema:
+              oneOf:
+                - required: [lon, lat]
+                - required: [postalCode, countryCode]
+            ```
+          schema:
+            type: object
+            properties:
+              lon: 
+                type: string
+              lat:
+                type: string
+              postalCode:
+                type: string
+              countryCode:
+                type: string
+                format: ISO 3166-1
+            oneOf:
+              - required: [lon, lat]
+              - required: [postalCode, countryCode]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryArea'
+  
+  /delivery-areas/{id}:
+    get:
+      summary: 'Find delivery area by ID'
+      description: 
+        Returns a single delivery area for a given ID. 
+      operationId: findDeliveryAreaById
+      tags:
+        - delivery-areas
+      parameters:
+        - name: id
+          in: path
+          description: Delivery Area ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryArea'
+
+  # Orders
+  /orders:
+    post:
+      description: ''
+      summary: ''
+      tags:
+        - orders
+      parameters: []
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:      
+    AccessToken:
+      type: object
+      properties:
+        token: 
+          type: string
+        tokenType: 
+          type: string
+        scope: 
+          type: string
+        expiresIn: 
+          type: integer
+        createdAt: 
+          type: integer
+
+    PickingLocation:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        coords:
+          $ref: '#/components/schemas/GeoCoordinates'
+        postalCode:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        serviceArea:
+          $ref: '#/components/schemas/ServiceArea'
+
+    DeliveryArea:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        coords:
+          $ref: '#/components/schemas/GeoCoordinates'
+        countryCode:
+          type: string
+          format: ISO 3166-1
+        serviceArea:
+          $ref: '#/components/schemas/ServiceArea'
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          
+    ServiceArea: #TODO: wip operational area
+      type: object
+      properties:
+        id:
+          type: string
+
+    GeoCoordinates:
+      type: object
+      properties:
+        lat: 
+          type: number
+          description: Latitude in decimal degrees
+        lon: 
+          type: number
+          description: Longitude in decimal degrees
+
+    Capacity:
+      type: object
+      properties:
+        id:
+          type: string
+        total: 
+          type: number
+        occupied:
+          type: number
+
+    TimeSlot:
+      type: object
+      properties:
+        id:
+          type: string
+        fromDate:
+          type: string
+          format: ISO 8601
+        toDate:
+          type: string
+          format: ISO 8601
+        
+    SlotAvailability:
+      type: object
+      properties:
+        id:
+          type: string
+        # TODO: storeId? locationCode? pickingLocationId? placeId? coords?
+        # does the availability varies dependending on the kind of services? pick vs deliver vs click&collect vs ...
+        locationId: 
+          type: string
+        # date:
+        #   type: string
+        #   format: ISO 8601
+        timeSlot:
+          $ref: '#/components/schemas/TimeSlot'
+        capacity:
+          $ref: '#/components/schemas/Capacity'
+        available:
+          type: boolean
+
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: string
+        slots: 
+          type: array
+          items:
+            $ref: '#/components/schemas/SlotAvailability'
+
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+  
