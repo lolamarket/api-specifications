@@ -4,42 +4,36 @@ info:
   description: |-
     This is the official OpenAPI specification for Retailer API V1.
 
-    # Concepts
+    ## Concepts
+      [TBD]
 
-      **Delivery Area**: TBA  
-      **Picking Location**: TBA  
-      ...
-
-
-    To be discussed:
-      - Authentication (and Authorization) strategy;
-      - Geographic areas [representation](https://opencagedata.com/guides/how-to-think-about-postcodes-and-geocoding):
+    ### Discussion points
+      - [tech] Authentication and Authorization strategy;
+        - [product] define flow to send credentials (eg.: clientId and secret) to the retailer;
+      - [tech] Geographic areas [representation](https://opencagedata.com/guides/how-to-think-about-postcodes-and-geocoding):
         - many countries do not have any form of postal code at all
-        - almost every aspect of what a postcode is and what it means can differ across countries
-        - some countries have assigned postcode regions only to parts of their territory
         - many countries and territories of the world use the postal service of other countries (thus, we might need to ask for the country code along with the postal code)
-      - Notifications: 
-        - webhooks:
-          - define all types of events to be subscribed by the retailer
+      - Notifications types:
+        - Webhooks:
+          - [product] define all types of events to be subscribed by the retailer
           - define the best strategy for events subscription:
-            a) /subscribe and /unsubscribe endpoints (or similar)
-            b) set up by us, as part o the initial retailer configuration process
-        - (?) emails:
+            a) [tech] /subscribe and /unsubscribe endpoints (or similar)
+            b) [product] set up by us, as part o the initial retailer configuration process
+        - [product] (?) emails:
           - if so, define all types of emails and its receivers
-        - (?) others...  
-      - Still missing proper API Data models (eg.: location, fleet, capacity, order, etc)
-        - the concepts used here might change as well.
-      - Does the time slots availability varies dependending on the type of services? Eg.: Availability for pickup vs deliver vs ...
-        - looks like yes
+        - [product] (?) others:
+      - [tech] Final API data models / schemas / concepts (eg.: for location, fleet, capacity, order, etc)
+      - [product] Does the time slots availability varies depending on the type of services? Eg.: Availability for pickup vs deliver vs ...
+        - (looks like yes)
+      - [product] Clarify integration/communication points with the Retailer after the moment of order placement (Fulfilment flow)
+        - [tech] create endpoints
 
-  # contact:
-  #   email: someone@glovoxl.io
-  
-  # 🚧
-  #     - "Service areas for delivery": ask for Postal-Code/Location Coverage
-  #     - "Preview time slots": ask for Next Available Timeslot (for given location)
-  #     - "Availability": ask for Time slots (for given location)
-  #     - Post an Order (w/ location + timeslot)
+# TODO: (?) re-think and rename some concepts: eg.: picking-locations to picking-places?
+# TODO: review auth token generation - [https://swagger.io/docs/specification/authentication/oauth2/]
+# TODO: review revoke token [https://docs.instacart.com/connect/api/oauth/revoke_access_token]
+# TODO: POST /picking-locations: bulk or single creation?
+# TODO: GET /delivery-area: what if there's no postal code?
+
   version: 1.0.0
 servers:
   - url: https://api.example.com/retailer/v1
@@ -49,12 +43,12 @@ servers:
 tags:
   - name: auth
   - name: delivery-areas
-  - name: picking-locations #TODO: rename it to picking-places? is shorter
+  - name: picking-locations
   - name: time-slots
   - name: orders
 paths:
   # Authentication
-  /oauth/token: # TODO: https://swagger.io/docs/specification/authentication/oauth2/
+  /oauth/token:
     post:
       tags:
         - auth
@@ -98,7 +92,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccessToken'
-  /oauth/token/revoke: # TODO: https://docs.instacart.com/connect/api/oauth/revoke_access_token
+  /oauth/token/revoke:
     post:
       tags:
         - auth
@@ -132,7 +126,6 @@ paths:
   # Picking Locations
   /picking-locations:
     post:
-      #TODO: bulk or single creation?
       summary: 'Create a Picking Location'
       description: 'Create a Picking Location.'
       operationId: createPickingLocation
@@ -262,29 +255,37 @@ paths:
           description: Invalid ID
   
    #TODO: Time Slots 
+    #  possibilites :
     # /picking-location/{id}/time-slots/availability
-    # /picking-location/{id}/time-slots/next-available
+    # /picking-location/{id}/time-slots/preview
+    # /delivery-area/{id}/time-slots/availability
+    # /delivery-area/{id}/time-slots/preview
+
+    # /service-area/{id}/time-slots/availability
+    # /service-area/{id}/time-slots/preview
     # /time-slots/availability
     # /slots-availability
     # service-availability/
+    
+    # /delivery-areas/{id}/schedules/preview  
     
     # /time-slots/next
     # /time-slots/next-available
     # /time-slots/preview
 
-  /picking-locations/{id}/slots-availability:
+  /delivery-areas/{id}/slot-availability:
     get:
-      summary: Get time slots availability for a given picking location
+      summary: Get time slots availability for a given delivery area
       description: |
-        Returns a preview of the next available time slots for a given picking location and date.
+        Returns a preview of the next available time slots for a given delivery area and date.
       operationId: getTimeSlotsAvailability
       tags:
-        # - picking-locations
+        # - delivery-area ?
         - time-slots
       parameters:
         - name: id
           in: path
-          description: Picking location ID
+          description: Delivery area ID
           required: true
           schema:
             type: string
@@ -310,47 +311,8 @@ paths:
         '400':
           description: Invalid ID
   
-  /schedules/availability:
-    get:
-      summary: Get time slots availability for a given picking location
-      description: |
-        Returns a preview of the next available time slots for a given picking location and date.
-      operationId: getTimeSlotsAvailability
-      tags:
-        # - picking-locations
-        - time-slots
-      parameters:
-        - name: id
-          in: path
-          description: location ID
-          required: true
-          schema:
-            type: string
-        - name: fromDate
-          in: query
-          required: true
-          schema:
-            type: string
-            format: ISO 8601
-        - name: quantity
-          in: query
-          required: true
-          description: Number of slots to be displayed
-          schema:
-            type: number
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SlotAvailability'
-        '400':
-          description: Invalid ID
-
   # Delivery Areas
   /delivery-areas:
-    # TODO: what if there's no postal code?
     get:
       summary: 'Retrieve delivery area'
       description: |
@@ -424,8 +386,8 @@ paths:
   # Orders
   /orders:
     post:
-      description: ''
-      summary: ''
+      description: 'WIP'
+      summary: 'WIP'
       tags:
         - orders
       parameters: []
