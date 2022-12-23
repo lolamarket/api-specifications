@@ -254,63 +254,6 @@ paths:
         '400':
           description: Invalid ID
   
-   #TODO: Time Slots 
-    #  possibilites :
-    # /picking-location/{id}/time-slots/availability
-    # /picking-location/{id}/time-slots/preview
-    # /delivery-area/{id}/time-slots/availability
-    # /delivery-area/{id}/time-slots/preview
-
-    # /service-area/{id}/time-slots/availability
-    # /service-area/{id}/time-slots/preview
-    # /time-slots/availability
-    # /slots-availability
-    # service-availability/
-    
-    # /delivery-areas/{id}/schedules/preview  
-    
-    # /time-slots/next
-    # /time-slots/next-available
-    # /time-slots/preview
-
-  /delivery-areas/{id}/slot-availability:
-    get:
-      summary: Get time slots availability for a given delivery area
-      description: |
-        Returns a preview of the next available time slots for a given delivery area and date.
-      operationId: getTimeSlotsAvailability
-      tags:
-        # - delivery-area ?
-        - time-slots
-      parameters:
-        - name: id
-          in: path
-          description: Delivery area ID
-          required: true
-          schema:
-            type: string
-        - name: fromDate
-          in: query
-          required: true
-          schema:
-            type: string
-            format: ISO 8601
-        - name: quantity
-          in: query
-          required: true
-          description: Number of slots to be displayed
-          schema:
-            type: number
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SlotAvailability'
-        '400':
-          description: Invalid ID
-  
   # Delivery Areas
   /delivery-areas:
     get:
@@ -382,6 +325,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeliveryArea'
+
+  /delivery-areas/{id}/slot-availability:
+    get:
+      summary: Get time slots availability for a given delivery area
+      description: |
+        Returns a preview of the next available time slots for a given delivery area and date.
+      operationId: getTimeSlotsAvailability
+      tags:
+        # - delivery-area ?
+        - time-slots
+      parameters:
+        - name: id
+          in: path
+          description: Delivery area ID
+          required: true
+          schema:
+            type: string
+        - name: fromDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: ISO 8601
+        - name: quantity
+          in: query
+          required: true
+          description: Number of slots to be displayed
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlotAvailability'
+        '400':
+          description: Invalid ID
+  
+  #TODO: Time Slots 
+    #  possibilites :
+    # /picking-location/{id}/time-slots/availability
+    # /picking-location/{id}/time-slots/preview
+    # /delivery-area/{id}/time-slots/availability
+    # /delivery-area/{id}/time-slots/preview
+
+    # /service-area/{id}/time-slots/availability
+    # /service-area/{id}/time-slots/preview
+    # /time-slots/availability
+    # /slots-availability
+    # service-availability/
+    
+    # /delivery-areas/{id}/schedules/preview  
+    
+    # /time-slots/next
+    # /time-slots/next-available
+    # /time-slots/preview
 
   # Orders
   /orders:
