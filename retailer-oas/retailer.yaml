@@ -400,7 +400,7 @@ paths:
 
 
   # Delivery Areas
-  /delivery-areas:
+  /delivery-area:
     get:
       summary: 'Retrieve delivery area'
       description: |
@@ -410,7 +410,7 @@ paths:
         if query filters are passed.
       operationId: findDeliveryArea
       tags:
-        - delivery-areas
+        - delivery-area
       parameters:
         - in: query
           name: query
@@ -448,14 +448,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/DeliveryArea'
 
-  /delivery-areas/{id}:
+  /delivery-area/{id}:
     get:
       summary: 'Find delivery area by ID'
       description:
         Returns a single delivery area for a given ID.
       operationId: findDeliveryAreaById
       tags:
-        - delivery-areas
+        - delivery-area
       parameters:
         - name: id
           in: path
@@ -471,14 +471,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/DeliveryArea'
 
-  /delivery-areas/{id}/slot-availability:
+  /delivery-area/{id}/delivery-timeslots:
     get:
       summary: Get time slots availability for a given delivery area
-      description: |
-        Returns a preview of the next available time slots for a given delivery area and date.
+      description: Returns a preview of the next available time slots for a given delivery area and date.
       operationId: getTimeSlotsAvailability
       tags:
-        # - delivery-area ?
         - time-slots
       parameters:
         - name: id
@@ -505,7 +503,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SlotAvailability'
+                $ref: '#/components/schemas/TimeSlotAvailability'
         '400':
           description: Invalid ID
 
@@ -687,43 +685,47 @@ components:
     Capacity:
       type: object
       properties:
-        id:
-          type: string
         total:
           type: number
+          description: Total capacity of the location
+          example: 100
         occupied:
           type: number
+          description: Occupied capacity of the location
+          example: 20
 
     TimeSlot:
       type: object
       properties:
         id:
           type: string
+          description: Unique identifier of the time slot
+          example: "slot1"
         fromDate:
           type: string
           format: ISO 8601
+          description: The starting time of the timeslot
+          example: "2023-01-11T14:00:00+00:00"
         toDate:
           type: string
           format: ISO 8601
+          description: The ending time of the timeslot
+          example: "2023-01-11T15:00:00+00:00"
 
-    SlotAvailability:
-      type: object
-      properties:
-        id:
-          type: string
-        # TODO: storeId? locationCode? pickingLocationId? placeId? coords?
-        # does the availability varies dependending on the kind of services? pick vs deliver vs click&collect vs ...
-        locationId:
-          type: string
-        # date:
-        #   type: string
-        #   format: ISO 8601
-        timeSlot:
-          $ref: '#/components/schemas/TimeSlot'
-        capacity:
-          $ref: '#/components/schemas/Capacity'
-        available:
-          type: boolean
+    TimeSlotAvailability:
+      type: array
+      items:
+        type: object
+        properties:
+          timeSlot:
+            $ref: '#/components/schemas/TimeSlot'
+          capacity:
+            $ref: '#/components/schemas/Capacity'
+          available:
+            type: boolean
+            description: Indicates if the user can select this timeslot. Usually
+            if still have free capacity.
+            example: true
 
     Schedule:
       type: object
@@ -733,7 +735,7 @@ components:
         slots:
           type: array
           items:
-            $ref: '#/components/schemas/SlotAvailability'
+            $ref: '#/components/schemas/TimeSlotAvailability'
 
     ApiResponse:
       type: object
