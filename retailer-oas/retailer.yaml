@@ -164,13 +164,13 @@ paths:
           description: Service not available for the given postal code.
 
   # Picking Locations
-  /picking-locations:
+  /picking-location:
     post:
       summary: 'Create a Picking Location'
       description: 'Create a Picking Location.'
       operationId: createPickingLocation
       tags:
-        - picking-locations
+        - picking-location
       requestBody:
         required: true
         content:
@@ -178,31 +178,82 @@ paths:
             schema: # TODO: WIP
               type: object
               properties:
+                id:
+                  type: integer
+                  readOnly: true
+                  description: The unique identifier of the picking location
                 name:
                   type: string
+                  description: The name of the picking location.
+                  example: "Warehouse 1"
                 coords:
                   $ref: '#/components/schemas/GeoCoordinates'
                 postalCode:
                   type: string
+                  description: The postal code of the picking location
+                  example: "90210"
                 addressLine1:
                   type: string
+                  description: The first line of the address of the picking location
+                  example: "123 Main St"
                 addressLine2:
                   type: string
+                  description: The second line of the address of the picking location
+                  example: "Suite 456"
                 countryCode:
                   type: string
                   format: ISO 3166-1
+                  description: The country code of the picking location
+                  example: "PL"
+                person_of_contact:
+                  type: string
+                  description: The person of contact at the picking location
+                  example: "John Smith"
+                email:
+                  type: string
+                  format: email
+                  description: The email of the person of contact
+                  example: "john.smith@example.com"
+                phone:
+                  type: string
+                  format: phone
+                  description: The phone number of the person of contact
+                  example: "+1 555 555 5555"
+                has_parking:
+                  type: boolean
+                  description: Indicates if the picking location has parking available
+                  example: true
+                status:
+                  type: string
+                  enum: [active, temporary_closed]
+                  description: The status of the picking location, whether it is active or temporarily closed
+                  example: "active"
               required:
                 - name
-                #TODO: - coords ?
+                - coords
                 - postalCode
                 - addressLine1
+                - countryCode
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PickingLocation'
+                description: The created picking location object
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid request, some fields are missing"
+
+
   /picking-locations/{id}:
     get:
       summary: 'Find picking location by ID'
