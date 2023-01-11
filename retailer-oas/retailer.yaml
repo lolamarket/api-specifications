@@ -304,6 +304,101 @@ paths:
         '404':
           description: Invalid ID
 
+  /picking-location/{id}/schedule:
+    post:
+      summary: 'Creates a Picking Location Schedule'
+      description: 'Inform the schedule of the picking location'
+      operationId: createPickingLocationSchedule
+      tags:
+        - picking-locations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickingLocation'
+              required:
+                - id
+                - opening_hours
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Picking Location schedule updated successfully"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid request, some fields are missing"
+        404:
+          description: Picking Location not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Picking Location with id not found"
+    patch:
+      summary: 'Update a Picking Location Schedule'
+      description: 'Update the schedule of a Picking Location'
+      operationId: updatePickingLocationSchedule
+      tags:
+        - picking-locations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickingLocation'
+              required:
+                - id
+                - opening_hours
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Picking Location schedule updated successfully"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid request, some fields are missing"
+        404:
+          description: Picking Location not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Picking Location with id not found"
+
+
   # Delivery Areas
   /delivery-areas:
     get:
@@ -514,6 +609,43 @@ components:
           enum: [active, temporary_closed]
           description: The status of the picking location, whether it is active or temporarily closed
           example: "active"
+
+
+    PickingLocationSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the picking location
+          example: 1
+        opening_hours:
+          type: array
+          description: An array of objects that represent the opening hours of the Picking Location.
+          items:
+            type: object
+            properties:
+              day:
+                type: string
+                enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+                description: The day of the week.
+              start:
+                type: string
+                format: time
+                description: The starting time for the day
+                example: "09:00:00"
+              end:
+                type: string
+                format: time
+                description: The ending time for the day
+                example: "17:00:00"
+          example: [{ "day": "monday", "start": "09:00:00", "end": "17:00:00" }, { "day": "tuesday", "start": "09:00:00", "end": "17:00:00" }]
+        closed_dates:
+          type: array
+          description: An array of dates when the picking location will be closed.
+          items:
+            type: string
+            format: date
+          example: ["2022-12-25", "2022-12-26"]
 
     DeliveryArea:
       type: object
