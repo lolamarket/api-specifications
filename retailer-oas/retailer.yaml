@@ -58,7 +58,7 @@ paths:
 
         The access token must be included in all other requests as a Bearer token for authentication purposes.
 
-        Before you start, make sure you have been given a client ID and secret key. 
+        Before you start, make sure you have been given a client ID and secret key.
 
         The token is valid for ***[X time]***. During this period, reuse the same token. After that, a new token must be generated.
       operationId: generateAccessToken
@@ -79,7 +79,7 @@ paths:
                   type: string
                 code:
                   type: string
-                redirectUri:  
+                redirectUri:
                   type: string
               required:
                 - clientId
@@ -98,8 +98,8 @@ paths:
         - auth
       summary: Revoke an access token
       description: |
-        Revokes any access token. 
-        
+        Revokes any access token.
+
         You need to include your client ID and secret and the access token in the request body.
       operationId: revokeAccessToken
       requestBody:
@@ -122,6 +122,46 @@ paths:
       responses:
         '200':
           description: OK
+
+  # Service availability
+  /service-availability:
+    get:
+      summary: 'Check service availability.'
+      description: 'Returns the service availability for a given postal code.'
+      operationId: checkAvailability
+      tags:
+        - service-availability
+      parameters:
+        - name: postalcode
+          in: query
+          description: The postal code to check service availability for.
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK Service is available for the given postal code.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pickingLocationID:
+                    type: integer
+                    description: The ID of the picking location for the given postal code,
+                    should be used to check the catalog to display to the customer.
+                  deliveryAreaID:
+                    type: integer
+                    description: The ID of the delivery area for the given postal code,
+                    should be used later to check the available timeslot.
+                  availableServices:
+                    type: array
+                    description: The available services for the given postal code
+                    items:
+                      type: string
+        400:
+          description: Invalid postal code format.
+        404:
+          description: Service not available for the given postal code.
 
   # Picking Locations
   /picking-locations:
@@ -166,8 +206,8 @@ paths:
   /picking-locations/{id}:
     get:
       summary: 'Find picking location by ID'
-      description: 
-        Returns a single picking location for a given ID. 
+      description:
+        Returns a single picking location for a given ID.
       operationId: findPickingLocationById
       tags:
         - picking-locations
@@ -189,8 +229,8 @@ paths:
           description: Invalid ID
     patch:
       summary: 'Update an existing picking location'
-      description: 
-        Update a picking location for given location ID. 
+      description:
+        Update a picking location for given location ID.
       operationId: updatePickingLocation
       tags:
         - picking-locations
@@ -237,7 +277,7 @@ paths:
           description: Invalid ID
     delete:
       summary: 'Delete a picking location'
-      description: '' 
+      description: ''
       operationId: deletePickingLocation
       tags:
         - picking-locations
@@ -253,14 +293,14 @@ paths:
           description: No Content
         '400':
           description: Invalid ID
-  
+
   # Delivery Areas
   /delivery-areas:
     get:
       summary: 'Retrieve delivery area'
       description: |
         Returns details of single Delivery Area.
-        
+
         Can be used to validate the delivery service coverage in a given country and postal code or at certain coordinates
         if query filters are passed.
       operationId: findDeliveryArea
@@ -274,7 +314,7 @@ paths:
           explode: true
 
           description: |
-            ```YAML 
+            ```YAML
             schema:
               oneOf:
                 - required: [lon, lat]
@@ -283,7 +323,7 @@ paths:
           schema:
             type: object
             properties:
-              lon: 
+              lon:
                 type: string
               lat:
                 type: string
@@ -302,12 +342,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeliveryArea'
-  
+
   /delivery-areas/{id}:
     get:
       summary: 'Find delivery area by ID'
-      description: 
-        Returns a single delivery area for a given ID. 
+      description:
+        Returns a single delivery area for a given ID.
       operationId: findDeliveryAreaById
       tags:
         - delivery-areas
@@ -363,8 +403,8 @@ paths:
                 $ref: '#/components/schemas/SlotAvailability'
         '400':
           description: Invalid ID
-  
-  #TODO: Time Slots 
+
+  #TODO: Time Slots
     #  possibilites :
     # /picking-location/{id}/time-slots/availability
     # /picking-location/{id}/time-slots/preview
@@ -376,9 +416,9 @@ paths:
     # /time-slots/availability
     # /slots-availability
     # service-availability/
-    
-    # /delivery-areas/{id}/schedules/preview  
-    
+
+    # /delivery-areas/{id}/schedules/preview
+
     # /time-slots/next
     # /time-slots/next-available
     # /time-slots/preview
@@ -396,19 +436,19 @@ paths:
           description: OK
 
 components:
-  schemas:      
+  schemas:
     AccessToken:
       type: object
       properties:
-        token: 
+        token:
           type: string
-        tokenType: 
+        tokenType:
           type: string
-        scope: 
+        scope:
           type: string
-        expiresIn: 
+        expiresIn:
           type: integer
-        createdAt: 
+        createdAt:
           type: integer
 
     PickingLocation:
@@ -449,7 +489,7 @@ components:
       properties:
         id:
           type: string
-          
+
     ServiceArea: #TODO: wip operational area
       type: object
       properties:
@@ -459,10 +499,10 @@ components:
     GeoCoordinates:
       type: object
       properties:
-        lat: 
+        lat:
           type: number
           description: Latitude in decimal degrees
-        lon: 
+        lon:
           type: number
           description: Longitude in decimal degrees
 
@@ -471,7 +511,7 @@ components:
       properties:
         id:
           type: string
-        total: 
+        total:
           type: number
         occupied:
           type: number
@@ -487,7 +527,7 @@ components:
         toDate:
           type: string
           format: ISO 8601
-        
+
     SlotAvailability:
       type: object
       properties:
@@ -495,7 +535,7 @@ components:
           type: string
         # TODO: storeId? locationCode? pickingLocationId? placeId? coords?
         # does the availability varies dependending on the kind of services? pick vs deliver vs click&collect vs ...
-        locationId: 
+        locationId:
           type: string
         # date:
         #   type: string
@@ -512,7 +552,7 @@ components:
       properties:
         id:
           type: string
-        slots: 
+        slots:
           type: array
           items:
             $ref: '#/components/schemas/SlotAvailability'
@@ -527,4 +567,3 @@ components:
           type: string
         message:
           type: string
-  
