@@ -529,17 +529,56 @@ paths:
   # Orders
   /orders:
     post:
-      description: 'WIP'
-      summary: 'WIP'
+      summary: "Create a new order"
+      description: "Create a new order with the provided information"
+      operationId: "createOrder"
       tags:
         - orders
-      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
       responses:
         '200':
-          description: OK
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "TIMESLOT_NOT_AVAILABLE"
+                      - "ORDER_TOO_HEAVY"
+                      - "INVALID_SHIPPING_ADDRESS"
+                      - "INVALID_CUSTOMER_DATA"
+                      - "ORDER_TOO_HEAVY"
+                      - "MAX_ORDERS_EXCEEDED"
+                      - "INVALID_PRODUCT_QUANTITY"
+                      - "ORDER_TOTAL_MISMATCH"
+                      - "DUPLICATE_ORDER"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
 
 components:
   schemas:
+
     AccessToken:
       type: object
       properties:
@@ -736,6 +775,195 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TimeSlotAvailability'
+
+    OrderArticle:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the product
+          example: "12345"
+        sku:
+          type: string
+          description: Stock Keeping Unit of the product
+          example: "12345"
+        requestedQuantity:
+          type: number
+          description: The requested quantity of the product in the order
+          example: 10
+        unitOfMeasure:
+          type: string
+          description: The unit of measure of the product
+          example: "each"
+        name:
+          type: string
+          description: The name of the product
+          example: "Product A"
+        customerSpecialNote:
+          type: string
+          description: A description of any special request from the customer.
+          example: "I want it in small slices"
+        productImage:
+          type: string
+          format: uri
+          description: The URL of the product image
+          example: "https://example.com/productA.jpg"
+        longDescription:
+          type: string
+          description: The long description of the product
+          example: "This is a long description of Product A, including details about its features and specifications"
+        unitOfSale:
+          type: string
+          description: The unit of sale of the product
+          example: "case"
+        discount:
+          type: number
+          format: percent
+          description: The discount applied to the product
+          example: 0.1
+        buyingPrice:
+          type: number
+          format: currency
+          description: The buying price of the product
+          example: 10.99
+        unitPrice:
+          type: number
+          format: currency
+          description: The unit price of the product
+          example: 11.99
+        totalPrice:
+          type: number
+          format: currency
+          description: The total price of the product considering the quantity
+          example: 119.9
+        estimatedWeight:
+          type: number
+          format: weight
+          description: The estimated weight of the product
+          example: 12.5
+        replacementPreference:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unique identifier of the product
+                example: "12345"
+              sku:
+                type: string
+                description: Stock Keeping Unit of the product
+                example: "12345"
+              name:
+                type: string
+                description: The name of the product
+                example: "Product A"
+              productImage:
+                type: string
+                format: uri
+                description: The URL of the product image
+                example: "https://example.com/productA.jpg"
+              unitPrice:
+                type: number
+                format: currency
+                description: The unit price of the product
+                example: 11.99
+
+    CustomerInfo:
+      type: object
+      properties:
+        customerName:
+          type: string
+          description: The name of the customer
+          example: "John Smith"
+        customerId:
+          type: string
+          description: The unique identifier of the customer
+          example: "customer1"
+        email:
+          type: string
+          format: email
+          description: The email of the customer
+          example: "john.smith@example.com"
+        phone:
+          type: string
+          format: phone
+          description: The phone number of the customer
+          example: "+1 (555) 555-5555"
+        billingName:
+          type: string
+          description: The name of the customer for billing purposes
+          example: "John Smith"
+        billingAddress:
+          type: string
+          description: The billing address of the customer
+          example: "123 Main St, Suite 200, Anytown USA 12345"
+        vatNumber:
+          type: string
+          description: The VAT number of the customer, if applicable
+          example: "1234567890"
+
+    ShippingAddress:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+          description: The first line of the shipping address
+          example: "123 Main St"
+        addressLine2:
+          type: string
+          description: The second line of the shipping address
+          example: "Suite 200"
+        additionalInfo:
+          type: string
+          description: Any additional info that the customer would like to specify
+          example: "If I am not at home please give it to the neighbour"
+        city:
+          type: string
+          description: The city of the shipping address
+          example: "Warsaw"
+        state:
+          type: string
+          description: The state or province of the shipping address
+          example: "Poland"
+        postalCode:
+          type: string
+          description: The postal code of the shipping address
+          example: "123-545"
+        coords:
+          $ref: '#/components/schemas/GeoCoordinates'
+
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: The unique identifier of the order
+          example: "order1"
+        timeSlot:
+          $ref: '#/components/schemas/TimeSlot'
+          description: The time slot selected for the order
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderArticle'
+          description: The array of articles included in the order
+        customerInfo:
+          $ref: '#/components/schemas/CustomerInfo'
+          description: The customer information related to the order
+        shippingAddress:
+          $ref: '#/components/schemas/CustomerInfo'
+          description: Where the order should be delivered.
+        totalPrice:
+          type: number
+          format: currency
+          description: The total price of the order
+          example: 119.9
+        estimatedWeight:
+          type: number
+          format: weight
+          description: The estimated weight of the order
+          example: 12.5
 
     ApiResponse:
       type: object
