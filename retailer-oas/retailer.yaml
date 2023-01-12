@@ -288,6 +288,29 @@ paths:
           description: Picking Location not found
 
   /picking-locations/{id}/schedule:
+    get:
+      summary: Get a Picking Location's Schedule
+      description: Get the opening hours and closed days of a Picking Location.
+      operationId: getPickingLocationSchedule
+      tags:
+        - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PickingLocationSchedule'
+        404:
+          description: Picking Location not found
+
     post:
       summary: Create a Picking Location Schedule
       description: Set opening hours and closed days of a Picking Location.
@@ -299,7 +322,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PickingLocation'
+              $ref: '#/components/schemas/PickingLocationSchedule'
               required:
                 - id
                 - openingHours
@@ -338,7 +361,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PickingLocation'
+              $ref: '#/components/schemas/PickingLocationSchedule'
               required:
                 - id
                 - openingHours
@@ -600,10 +623,10 @@ components:
         closedDays:
           type: array
           description: An array of dates when the Picking Location will be closed.
+          example: ["2022-12-25", "2022-12-26"]
           items:
             type: string
             format: date
-            example: ["2022-12-25", "2022-12-26"]
 
     DeliveryArea:
       type: object
