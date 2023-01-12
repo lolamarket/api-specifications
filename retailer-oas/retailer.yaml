@@ -5,34 +5,11 @@ info:
     This is the official OpenAPI specification for Retailer API V1.
 
     ## Concepts
-      [TBD]
-
-    ### Discussion points
-      - [tech] Authentication and Authorization strategy;
-        - [product] define flow to send credentials (eg.: clientId and secret) to the retailer;
-      - [tech] Geographic areas [representation](https://opencagedata.com/guides/how-to-think-about-postcodes-and-geocoding):
-        - many countries do not have any form of postal code at all
-        - many countries and territories of the world use the postal service of other countries (thus, we might need to ask for the country code along with the postal code)
-      - Notifications types:
-        - Webhooks:
-          - [product] define all types of events to be subscribed by the retailer
-          - define the best strategy for events subscription:
-            a) [tech] /subscribe and /unsubscribe endpoints (or similar)
-            b) [product] set up by us, as part o the initial retailer configuration process
-        - [product] (?) emails:
-          - if so, define all types of emails and its receivers
-        - [product] (?) others:
-      - [tech] Final API data models / schemas / concepts (eg.: for location, fleet, capacity, order, etc)
-      - [product] Does the time slots availability varies depending on the type of services? Eg.: Availability for pickup vs deliver vs ...
-        - (looks like yes)
-      - [product] Clarify integration/communication points with the Retailer after the moment of order placement (Fulfilment flow)
-        - [tech] create endpoints
-
-# TODO: (?) re-think and rename some concepts: eg.: picking-locations to picking-places?
-# TODO: review auth token generation - [https://swagger.io/docs/specification/authentication/oauth2/]
-# TODO: review revoke token [https://docs.instacart.com/connect/api/oauth/revoke_access_token]
-# TODO: POST /picking-locations: bulk or single creation?
-# TODO: GET /delivery-area: what if there's no postal code?
+    TBD w/ Product
+    - Picking Location:
+    - Delivery Area:
+    - Order:
+    - Time Slot:
 
   version: 1.0.0
 servers:
@@ -44,7 +21,6 @@ tags:
   - name: auth
   - name: delivery-areas
   - name: picking-locations
-  - name: time-slots
   - name: orders
 paths:
   # Authentication
@@ -58,7 +34,7 @@ paths:
 
         The access token must be included in all other requests as a Bearer token for authentication purposes.
 
-        Before you start, make sure you have been given a client ID and secret key.
+        Before you start, make sure you have been given a `clientId` and `clientSecret`.
 
         The token is valid for ***[X time]***. During this period, reuse the same token. After that, a new token must be generated.
       operationId: generateAccessToken
@@ -86,7 +62,7 @@ paths:
                 - clientSecret
                 - grantType
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
@@ -100,7 +76,7 @@ paths:
       description: |
         Revokes any access token.
 
-        You need to include your client ID and secret and the access token in the request body.
+        You need to include your `clientId` and secret and the access token in the request body.
       operationId: revokeAccessToken
       requestBody:
         required: true
@@ -120,54 +96,63 @@ paths:
                 - clientSecret
                 - token
       responses:
-        '200':
+        200:
           description: OK
 
   # Service availability
   /service-availability:
     get:
-      summary: 'Check service availability.'
-      description: 'Returns the service availability for a given postal code.'
+      summary: Check service availability
+      description: Return service availability information for a given postal code.
       operationId: checkAvailability
       tags:
         - service-availability
       parameters:
-        - name: postalcode
+        - name: postalCode
           in: query
           description: The postal code to check service availability for.
           required: true
           type: string
+        - name: countryCode
+          in: query
+          description: The ISO 3166 country code corresponding to the given postal code.
+          required: true
+          type: string
+          format: ISO 3166-1
+
       responses:
         200:
-          description: OK Service is available for the given postal code.
+          description: Service is available for the given postal code.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  pickingLocationID:
-                    type: integer
-                    description: The ID of the picking location for the given postal code,
-                    should be used to check the catalog to display to the customer.
-                  deliveryAreaID:
-                    type: integer
-                    description: The ID of the delivery area for the given postal code,
-                    should be used later to check the available timeslot.
-                  availableServices:
-                    type: array
-                    description: The available services for the given postal code
-                    items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    serviceType:
                       type: string
+                      enum: [delivery, picking]
+                      description: The logistical service type offered; `delivery` means that picking and delivering goods through couriers is supported; `picking` means that only picking up goods from picking locations is supported.
+                    deliveryAreaId:
+                      type: string
+                      description: The Delivery Area identifier.Nnecessary to request `delivery` TimeSlots
+                    pickingLocationIds:
+                      type: array
+                      description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier  corresponding to the Picking Location closest to the delivery location.
+                      items:
+                        type: string
+                        description: The Picking Location identifier.
         400:
-          description: Invalid postal code format.
+          description: Invalid postal code or country code format.
         404:
-          description: Service not available for the given postal code.
+          description: Service not available for the given postal code and country code.
 
   # Picking Locations
-  /picking-location:
+  /picking-locations:
     post:
-      summary: 'Create a Picking Location'
-      description: 'Create a Picking Location.'
+      summary: Create a Picking Location
+      description: Create a Picking Location.
       operationId: createPickingLocation
       tags:
         - picking-locations
@@ -203,18 +188,17 @@ paths:
                     example: "Invalid request, some fields are missing"
 
 
-  /picking-location/{id}:
+  /picking-locations/{id}:
     get:
-      summary: 'Find picking location by ID'
-      description:
-        Returns a single picking location for a given ID.
+      summary: Find a Picking Location by identifier
+      description: Get a single Picking Location for a given identifier.
       operationId: findPickingLocationById
       tags:
         - picking-locations
       parameters:
         - name: id
           in: path
-          description: Picking location ID
+          description: Picking location identifier
           required: true
           schema:
             type: string
@@ -236,19 +220,18 @@ paths:
                     type: string
                     example: "Invalid request, some fields are missing"
         404:
-          description: Invalid ID
+          description: Picking Location not found
 
     patch:
-      summary: 'Update an existing picking location'
-      description:
-        Update a picking location for given location ID.
+      summary: Update an existing Picking Location
+      description: Update a Picking Location for a given identifier.
       operationId: updatePickingLocation
       tags:
         - picking-locations
       parameters:
         - name: id
           in: path
-          description: Picking location ID
+          description: Picking Location identifier
           required: true
           schema:
             type: string
@@ -256,7 +239,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: # TODO: WIP
+            schema:
               schema:
                 $ref: '#/components/schemas/PickingLocation'
                 required:
@@ -283,31 +266,31 @@ paths:
                     type: string
                     example: "Invalid request, some fields are missing"
         404:
-          description: Invalid ID
+          description: Picking Location not found
 
     delete:
-      summary: 'Delete a picking location'
-      description: ''
+      summary: Delete an existing Picking Location
+      description: Update a Picking Location for a given identifier.
       operationId: deletePickingLocation
       tags:
         - picking-locations
       parameters:
         - name: id
           in: path
-          description: Picking location ID to delete
+          description: Picking Location identifier
           required: true
           schema:
             type: string
       responses:
-        '204':
+        204:
           description: No Content
-        '404':
-          description: Invalid ID
+        404:
+          description: Picking Location not found
 
-  /picking-location/{id}/schedule:
+  /picking-locations/{id}/schedule:
     post:
-      summary: 'Creates a Picking Location Schedule'
-      description: 'Inform the schedule of the picking location'
+      summary: Create a Picking Location Schedule
+      description: Set opening hours and closed days of a Picking Location.
       operationId: createPickingLocationSchedule
       tags:
         - picking-locations
@@ -319,7 +302,7 @@ paths:
               $ref: '#/components/schemas/PickingLocation'
               required:
                 - id
-                - opening_hours
+                - openingHours
       responses:
         200:
           description: OK
@@ -343,17 +326,10 @@ paths:
                     example: "Invalid request, some fields are missing"
         404:
           description: Picking Location not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Picking Location with id not found"
+
     patch:
-      summary: 'Update a Picking Location Schedule'
-      description: 'Update the schedule of a Picking Location'
+      summary: Update a Picking Location Schedule
+      description: Update opening hours and closed days of a Picking Location.
       operationId: updatePickingLocationSchedule
       tags:
         - picking-locations
@@ -365,7 +341,7 @@ paths:
               $ref: '#/components/schemas/PickingLocation'
               required:
                 - id
-                - opening_hours
+                - openingHours
       responses:
         200:
           description: OK
@@ -389,99 +365,41 @@ paths:
                     example: "Invalid request, some fields are missing"
         404:
           description: Picking Location not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Picking Location with id not found"
-
 
   # Delivery Areas
-  /delivery-area:
+  /delivery-areas/{id}:
     get:
-      summary: 'Retrieve delivery area'
-      description: |
-        Returns details of single Delivery Area.
-
-        Can be used to validate the delivery service coverage in a given country and postal code or at certain coordinates
-        if query filters are passed.
-      operationId: findDeliveryArea
-      tags:
-        - delivery-area
-      parameters:
-        - in: query
-          name: query
-          required: true
-          style: form
-          explode: true
-
-          description: |
-            ```YAML
-            schema:
-              oneOf:
-                - required: [lon, lat]
-                - required: [postalCode, countryCode]
-            ```
-          schema:
-            type: object
-            properties:
-              lon:
-                type: string
-              lat:
-                type: string
-              postalCode:
-                type: string
-              countryCode:
-                type: string
-                format: ISO 3166-1
-            oneOf:
-              - required: [lon, lat]
-              - required: [postalCode, countryCode]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeliveryArea'
-
-  /delivery-area/{id}:
-    get:
-      summary: 'Find delivery area by ID'
-      description:
-        Returns a single delivery area for a given ID.
+      summary: Find a Delivery Area by identifier
+      description: Get a single Delivery Area for a given identifier.
       operationId: findDeliveryAreaById
       tags:
-        - delivery-area
+        - delivery-areas
       parameters:
         - name: id
           in: path
-          description: Delivery Area ID
+          description: Delivery Area identifier
           required: true
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeliveryArea'
 
-  /delivery-area/{id}/delivery-timeslots:
+  /delivery-areas/{id}/timeslots:
     get:
-      summary: Get time slots availability for a given delivery area
-      description: Returns a preview of the next available time slots for a given delivery area and date.
+      summary: Get the Time Slots and their availability for a given Delivery Area
+      description: Returns the delivery Time Slots available for a given Delivery Area and date.
       operationId: getTimeSlotsAvailability
       tags:
-        - time-slots
+        - delivery-areas
       parameters:
         - name: id
           in: path
-          description: Delivery area ID
+          description: Delivery Area identifier
           required: true
           schema:
             type: string
@@ -494,25 +412,25 @@ paths:
         - name: quantity
           in: query
           required: true
-          description: Number of slots to be displayed
+          description: Number of Time Slots to be displayed
           schema:
             type: number
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TimeSlotAvailability'
-        '400':
+        400:
           description: Invalid ID
 
   #TODO: Time Slots
     #  possibilites :
-    # /picking-location/{id}/time-slots/availability
-    # /picking-location/{id}/time-slots/preview
-    # /delivery-area/{id}/time-slots/availability
-    # /delivery-area/{id}/time-slots/preview
+    # /picking-locations/{id}/time-slots/availability
+    # /picking-locations/{id}/time-slots/preview
+    # /delivery-areas/{id}/time-slots/availability
+    # /delivery-areas/{id}/time-slots/preview
 
     # /service-area/{id}/time-slots/availability
     # /service-area/{id}/time-slots/preview
@@ -529,9 +447,9 @@ paths:
   # Orders
   /orders:
     post:
-      summary: "Create a new order"
-      description: "Create a new order with the provided information"
-      operationId: "createOrder"
+      summary: Create a new order
+      description: Create a new order with the provided information
+      operationId: createOrder
       tags:
         - orders
       requestBody:
@@ -541,14 +459,14 @@ paths:
             schema:
               $ref: '#/components/schemas/Order'
       responses:
-        '200':
-          description: "OK"
+        200:
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-        '400':
-          description: "Bad Request"
+        400:
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -565,11 +483,9 @@ paths:
                       - "ORDER_TOO_HEAVY"
                       - "INVALID_SHIPPING_ADDRESS"
                       - "INVALID_CUSTOMER_DATA"
-                      - "ORDER_TOO_HEAVY"
-                      - "MAX_ORDERS_EXCEEDED"
                       - "INVALID_PRODUCT_QUANTITY"
                       - "ORDER_TOTAL_MISMATCH"
-                      - "DUPLICATE_ORDER"
+                      - "DUPLICATED_ORDER"
                   errors:
                     type: array
                     items:
@@ -589,62 +505,62 @@ components:
         scope:
           type: string
         expiresIn:
-          type: integer
+          type: number
         createdAt:
-          type: integer
+          type: date
 
     PickingLocation:
       type: object
       properties:
         id:
-          type: integer
+          type: string
           readOnly: true
-          description: The unique identifier of the picking location
+          description: The unique identifier of the Picking Location
         name:
           type: string
-          description: The name of the picking location.
-          example: "Warehouse 1"
+          description: The name of the Picking Location.
+          example: "Main Street Store"
         coords:
           $ref: '#/components/schemas/GeoCoordinates'
         postalCode:
           type: string
-          description: The postal code of the picking location
+          description: The postal code of the Picking Location
           example: "90210"
         addressLine1:
           type: string
-          description: The first line of the address of the picking location
+          description: The first line of the address of the Picking Location (usually identifies the street's name and door number)
           example: "123 Main St"
         addressLine2:
           type: string
-          description: The second line of the address of the picking location
+          description: The second line of the address of the Picking Location (usually identifies floor/apartment numbers and any other relevant address information)
           example: "Suite 456"
         countryCode:
           type: string
           format: ISO 3166-1
-          description: The country code of the picking location
+          description: The country code of the Picking Location
           example: "PL"
-        person_of_contact:
+        personOfContact:
           type: string
-          description: The person of contact at the picking location
+          description: The person of contact at the Picking Location
           example: "John Smith"
         email:
           type: string
           format: email
           description: The email of the person of contact
-          example: "john.smith@example.com"
+          example: "john.smith@mainstreetstore.com"
         phone:
           type: string
           format: phone
-          description: The phone number of the person of contact
+          description: The phone number of the person of contact (should include phone country code)
           example: "+1 555 555 5555"
-        has_parking:
+        hasParking:
           type: boolean
-          description: Indicates if the picking location has parking available
+          description: Indicates if the Picking Location has parking available
           example: true
         status:
           type: string
-          enum: [active, temporary_closed]
-          description: The status of the picking location, whether it is active or temporarily closed
+          enum: [operating, closed, unpublished]
+          description: The status of the Picking Location, whether it is operating or closed. The `unpublished` status indicates a Picking Location will not be displayed when querying for service availability. Useful for inputting data into the system without immediately making it available to the public.
           example: "active"
 
 
@@ -652,12 +568,11 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          description: The unique identifier of the picking location
-          example: 1
-        opening_hours:
+          type: string
+          description: The unique identifier of the Picking Location
+        openingHours:
           type: array
-          description: An array of objects that represent the opening hours of the Picking Location.
+          description: An array of objects that represent the opening days and hours of the Picking Location.
           items:
             type: object
             properties:
@@ -665,24 +580,30 @@ components:
                 type: string
                 enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
                 description: The day of the week.
-              start:
-                type: string
-                format: time
-                description: The starting time for the day
-                example: "09:00:00"
-              end:
-                type: string
-                format: time
-                description: The ending time for the day
-                example: "17:00:00"
-          example: [{ "day": "monday", "start": "09:00:00", "end": "17:00:00" }, { "day": "tuesday", "start": "09:00:00", "end": "17:00:00" }]
-        closed_dates:
+              schedule:
+                type: array
+                description: An array of objects that represent the opening days and hours of the Picking Location.
+                items:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                      format: time
+                      description: The starting time of the schedule block.
+                      example: "09:00:00"
+                    end:
+                      type: string
+                      format: time
+                      description: The ending time of the schedule block
+                      example: "17:00:00"
+          example: [{ "day": "monday", schedule: [{"start": "09:00:00", "end": "17:00:00"}]}, { "day": "saturday", schedule: [{"start": "09:00:00", "end": "12:00:00"}, {"start": "13:00:00", "end": "17:00:00"}] }]
+        closedDays:
           type: array
-          description: An array of dates when the picking location will be closed.
+          description: An array of dates when the Picking Location will be closed.
           items:
             type: string
             format: date
-          example: ["2022-12-25", "2022-12-26"]
+            example: ["2022-12-25", "2022-12-26"]
 
     DeliveryArea:
       type: object
@@ -696,20 +617,6 @@ components:
         countryCode:
           type: string
           format: ISO 3166-1
-        serviceArea:
-          $ref: '#/components/schemas/ServiceArea'
-
-    Order:
-      type: object
-      properties:
-        id:
-          type: string
-
-    ServiceArea: #TODO: wip operational area
-      type: object
-      properties:
-        id:
-          type: string
 
     GeoCoordinates:
       type: object
@@ -738,17 +645,17 @@ components:
       properties:
         id:
           type: string
-          description: Unique identifier of the time slot
+          description: Unique identifier of the Time Slot
           example: "slot1"
         fromDate:
           type: string
           format: ISO 8601
-          description: The starting time of the timeslot
+          description: The starting time of the Time Slot
           example: "2023-01-11T14:00:00+00:00"
         toDate:
           type: string
           format: ISO 8601
-          description: The ending time of the timeslot
+          description: The ending time of the Time Slot
           example: "2023-01-11T15:00:00+00:00"
 
     TimeSlotAvailability:
@@ -762,8 +669,7 @@ components:
             $ref: '#/components/schemas/Capacity'
           available:
             type: boolean
-            description: Indicates if the user can select this timeslot. Usually
-            if still have free capacity.
+            description: Indicates if the user can book this Time Slot.
             example: true
 
     Schedule:
@@ -779,43 +685,18 @@ components:
     OrderArticle:
       type: object
       properties:
-        id:
-          type: string
-          description: Unique identifier of the product
-          example: "12345"
         sku:
           type: string
-          description: Stock Keeping Unit of the product
+          description: Stock Keeping Unit of the Product
           example: "12345"
         requestedQuantity:
           type: number
-          description: The requested quantity of the product in the order
+          description: Requested quantity of the Product
           example: 10
-        unitOfMeasure:
+        customerNote:
           type: string
-          description: The unit of measure of the product
-          example: "each"
-        name:
-          type: string
-          description: The name of the product
-          example: "Product A"
-        customerSpecialNote:
-          type: string
-          description: A description of any special request from the customer.
+          description: A description of any request from the customer.
           example: "I want it in small slices"
-        productImage:
-          type: string
-          format: uri
-          description: The URL of the product image
-          example: "https://example.com/productA.jpg"
-        longDescription:
-          type: string
-          description: The long description of the product
-          example: "This is a long description of Product A, including details about its features and specifications"
-        unitOfSale:
-          type: string
-          description: The unit of sale of the product
-          example: "case"
         discount:
           type: number
           format: percent
@@ -841,66 +722,45 @@ components:
           format: weight
           description: The estimated weight of the product
           example: 12.5
-        replacementPreference:
+        replacementPreferences:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: Unique identifier of the product
-                example: "12345"
-              sku:
-                type: string
-                description: Stock Keeping Unit of the product
-                example: "12345"
-              name:
-                type: string
-                description: The name of the product
-                example: "Product A"
-              productImage:
-                type: string
-                format: uri
-                description: The URL of the product image
-                example: "https://example.com/productA.jpg"
-              unitPrice:
-                type: number
-                format: currency
-                description: The unit price of the product
-                example: 11.99
+            type: string
+            description: An array of preferred Stock Keeping Units to replace this Product in the case of a stockout.
+            example: ['53234', '232321']
 
     CustomerInfo:
       type: object
       properties:
         customerName:
           type: string
-          description: The name of the customer
+          description: The name of the Customer
           example: "John Smith"
         customerId:
           type: string
-          description: The unique identifier of the customer
+          description: The unique identifier of the Customer
           example: "customer1"
         email:
           type: string
           format: email
-          description: The email of the customer
+          description: The email of the Customer
           example: "john.smith@example.com"
         phone:
           type: string
           format: phone
-          description: The phone number of the customer
+          description: The phone number of the Customer (should include phone country code)
           example: "+1 (555) 555-5555"
         billingName:
           type: string
-          description: The name of the customer for billing purposes
+          description: The name of the Customer for billing purposes
           example: "John Smith"
         billingAddress:
           type: string
-          description: The billing address of the customer
+          description: The billing address of the Customer
           example: "123 Main St, Suite 200, Anytown USA 12345"
         vatNumber:
           type: string
-          description: The VAT number of the customer, if applicable
+          description: The VAT number of the Customer, if applicable
           example: "1234567890"
 
     ShippingAddress:
@@ -908,27 +768,27 @@ components:
       properties:
         addressLine1:
           type: string
-          description: The first line of the shipping address
+          description: The first address line of the Shipping Address
           example: "123 Main St"
         addressLine2:
           type: string
-          description: The second line of the shipping address
+          description: The second address line of the Shipping Address
           example: "Suite 200"
         additionalInfo:
           type: string
           description: Any additional info that the customer would like to specify
-          example: "If I am not at home please give it to the neighbour"
+          example: "If I am not at home please deliver it to the neighbor in Suite 201"
         city:
           type: string
-          description: The city of the shipping address
+          description: The city of the Shipping Address
           example: "Warsaw"
         state:
           type: string
-          description: The state or province of the shipping address
+          description: The state or province of the Shipping Address
           example: "Poland"
         postalCode:
           type: string
-          description: The postal code of the shipping address
+          description: The postal code of the Shipping Address
           example: "123-545"
         coords:
           $ref: '#/components/schemas/GeoCoordinates'
@@ -938,38 +798,38 @@ components:
       properties:
         orderId:
           type: string
-          description: The unique identifier of the order
+          description: The unique identifier of the Order
           example: "order1"
         timeSlot:
           $ref: '#/components/schemas/TimeSlot'
-          description: The time slot selected for the order
+          description: The Time Slot selected for the Order
         articles:
           type: array
           items:
             $ref: '#/components/schemas/OrderArticle'
-          description: The array of articles included in the order
+          description: The array of articles included in the Order
         customerInfo:
           $ref: '#/components/schemas/CustomerInfo'
-          description: The customer information related to the order
+          description: The customer information related to the Order
         shippingAddress:
           $ref: '#/components/schemas/CustomerInfo'
-          description: Where the order should be delivered.
+          description: Where the Order should be delivered.
         totalPrice:
           type: number
           format: currency
-          description: The total price of the order
+          description: The total price of the Order
           example: 119.9
         estimatedWeight:
           type: number
           format: weight
-          description: The estimated weight of the order
+          description: The estimated weight of the Order
           example: 12.5
 
     ApiResponse:
       type: object
       properties:
         code:
-          type: integer
+          type: number
           format: int32
         type:
           type: string
