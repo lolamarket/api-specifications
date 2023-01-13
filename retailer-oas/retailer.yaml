@@ -23,6 +23,7 @@ servers:
 tags:
   - name: auth
   - name: picking-locations
+  - name: service-availability
   - name: timeslots
   - name: orders
 
