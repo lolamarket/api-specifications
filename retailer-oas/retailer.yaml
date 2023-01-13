@@ -1,6 +1,7 @@
 openapi: 3.0.3
 info:
   title: Retailer API [DRAFT]
+  version: 1.0.0
   description: |-
     This is the official OpenAPI specification for Retailer API V1.
 
@@ -13,17 +14,18 @@ info:
 
     - Time Slot: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into specific intervals, such as every hour, or every two hours. The system may offer different timeslots depending on the delivery area, days of the week, or other factors. Customers can select a timeslot when placing their order and the availability can change depending on the demand.
 
-  version: 1.0.0
 servers:
   - url: https://api.example.com/retailer/v1
     description: Production server (live data)
   - url: https://sandbox-api.example.com/v1
     description: Sandbox server (test data)
+
 tags:
   - name: auth
-  - name: delivery-areas
   - name: picking-locations
+  - name: timeslots
   - name: orders
+
 paths:
   # Authentication
   /oauth/token:
@@ -391,39 +393,18 @@ paths:
         404:
           description: Picking Location not found
 
-  # Delivery Areas
-  /delivery-areas/{id}:
-    get:
-      summary: Find a Delivery Area by identifier
-      description: Get a single Delivery Area for a given identifier.
-      operationId: findDeliveryAreaById
-      tags:
-        - delivery-areas
-      parameters:
-        - name: id
-          in: path
-          description: Delivery Area identifier
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeliveryArea'
+  # Timeslots
 
-  /delivery-areas/{id}/timeslots:
+  /timeslots:
     get:
       summary: Get the Time Slots and their availability for a given Delivery Area
-      description: Returns the delivery Time Slots available for a given Delivery Area and date.
+      description: This endpoint allows retailers to retrieve the available time slots for a given delivery area. The retailer can specify the delivery area by passing its identifier in the id query parameter. The fromDate parameter is used to specify the starting date of the time slots to be retrieved. The date must be in ISO 8601 format. The quantity parameter is used to limit the number of time slots to be returned. This parameter is useful to limit the request to retrieve just the nearest available time slots.
       operationId: getTimeSlotsAvailability
       tags:
-        - delivery-areas
+        - timeslots
       parameters:
         - name: id
-          in: path
+          in: query
           description: Delivery Area identifier
           required: true
           schema:
@@ -621,7 +602,7 @@ components:
                       format: time
                       description: The ending time of the schedule block
                       example: "17:00:00"
-          example: [{ "day": "monday", schedule: [{"start": "09:00:00", "end": "17:00:00"}]}, { "day": "saturday", schedule: [{"start": "09:00:00", "end": "12:00:00"}, {"start": "13:00:00", "end": "17:00:00"}] }]
+          example: [{ "day": "monday", schedule: [{"start": "09:00:00", "end": "12:00:00"},{"start": "15:00:00", "end": "17:00:00"}]}, { "day": "saturday", schedule: [{"start": "09:00:00", "end": "12:00:00"}, {"start": "13:00:00", "end": "17:00:00"}] }]
         closedDays:
           type: array
           description: An array of dates when the Picking Location will be closed.
@@ -825,9 +806,10 @@ components:
           type: string
           description: The unique identifier of the Order
           example: "order1"
-        timeSlot:
-          $ref: '#/components/schemas/TimeSlot'
-          description: The Time Slot selected for the Order
+        timeSlotId:
+          type: string
+          description: The Timeslot's id selected for the Order
+          example: "slot2"
         articles:
           type: array
           items:
@@ -837,7 +819,7 @@ components:
           $ref: '#/components/schemas/CustomerInfo'
           description: The customer information related to the Order
         shippingAddress:
-          $ref: '#/components/schemas/CustomerInfo'
+          $ref: '#/components/schemas/ShippingAddress'
           description: Where the Order should be delivered.
         totalPrice:
           type: number
