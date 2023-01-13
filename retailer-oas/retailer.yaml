@@ -5,11 +5,13 @@ info:
     This is the official OpenAPI specification for Retailer API V1.
 
     ## Concepts
-    TBD w/ Product
-    - Picking Location:
-    - Delivery Area:
-    - Order:
-    - Time Slot:
+    - Picking Location: The physical location within a warehouse, distribution center or a store where the items for an order are prepared for delivery. It is the place where products are stored, organized, and from where they are picked.
+
+    - Delivery Area: a geographic region where our service provides service. A delivery area can be defined by zip codes, city or state boundaries, or other geographic parameters. In the context of a grocery website, a delivery area is a region in which customers can place orders for delivery or pickup at a specific location. A company may have multiple delivery areas depending on their coverage, and the delivery areas can change over time to better serve their customers. Available timslots depends on the delivery area.
+
+    - Order: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred timesslot. Will be tracked by a unique order ID and will transition for different statuses. Orders can also be cancelled, refunded or modified, depending on the company's policies.
+
+    - Time Slot: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into specific intervals, such as every hour, or every two hours. The system may offer different timeslots depending on the delivery area, days of the week, or other factors. Customers can select a timeslot when placing their order and the availability can change depending on the demand.
 
   version: 1.0.0
 servers:
