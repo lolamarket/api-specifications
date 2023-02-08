@@ -623,7 +623,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Order'
         400:
           description: Bad Request
           content:
@@ -650,6 +652,54 @@ paths:
                     items:
                       type: string
                       description: List of error details
+    patch:
+      summary: Update an existing Order
+      description: Update an existing order with the provided information
+      operationId: updateOrder
+      tags:
+        - orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Order'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "TIMESLOT_NOT_AVAILABLE"
+                      - "ORDER_TOO_HEAVY"
+                      - "INVALID_SHIPPING_ADDRESS"
+                      - "INVALID_CUSTOMER_DATA"
+                      - "INVALID_PRODUCT_QUANTITY"
+                      - "ORDER_TOTAL_MISMATCH"
+                      - "DUPLICATED_ORDER"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
+
   /orders/{id}/cancel:
     post:
       summary: Cancel a reservation of a given time slot
@@ -1096,14 +1146,10 @@ components:
           example: "123-545"
         coords:
           $ref: '#/components/schemas/GeoCoordinates'
-
+    
     Order:
       type: object
       properties:
-        id:
-          type: string
-          description: The unique identifier of the Order
-          example: "order1"
         timeSlotId:
           type: string
           description: The Timeslot's identifier selected for the Order
@@ -1148,11 +1194,21 @@ components:
             type:
               type: string
         order:
-          $ref: '#/components/schemas/Order'
+          allOf:
+           - $ref: '#/components/schemas/ID'
+           - $ref: '#/components/schemas/Order'
         createdAt:
           type: string
           format: ISO 8601
         
+    ID:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          example: "id1"
+
     ApiResponse:
       type: object
       properties:
