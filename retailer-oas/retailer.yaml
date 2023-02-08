@@ -117,13 +117,15 @@ paths:
           in: query
           description: The postal code to check service availability for.
           required: true
-          type: string
+          schema:
+            type: string
         - name: countryCode
           in: query
           description: The ISO 3166 country code corresponding to the given postal code.
           required: true
-          type: string
-          format: ISO 3166-1
+          schema:
+            type: string
+            format: ISO 3166-1
 
       responses:
         200:
@@ -245,14 +247,13 @@ paths:
         content:
           application/json:
             schema:
-              schema:
-                $ref: '#/components/schemas/PickingLocation'
-                required:
-                  - name
-                  - coords
-                  - postalCode
-                  - addressLine1
-                  - countryCode
+              $ref: '#/components/schemas/PickingLocation'
+              required:
+                - name
+                - coords
+                - postalCode
+                - addressLine1
+                - countryCode
       responses:
         200:
           description: OK
@@ -514,7 +515,8 @@ components:
         expiresIn:
           type: number
         createdAt:
-          type: date
+          type: string
+          format: ISO 8601
 
     PickingLocation:
       type: object
