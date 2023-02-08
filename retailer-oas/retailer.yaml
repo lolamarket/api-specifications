@@ -26,6 +26,7 @@ tags:
   - name: service-availability
   - name: timeslots
   - name: orders
+  - name: webhooks
 
 paths:
   # Authentication
@@ -806,7 +807,90 @@ paths:
                       description: List of error details
         404:
           description: Order Not Found
+  
+    
+  /webhooks/subscriptions/event-types:
+    get:
+      summary: List webhook event types
+      description: Endpoint to see all the event types that you can subscribe to.
+      operationId: listWebhookEventTypes
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          
+  # TODO: add this to test subscription
+  # /webhooks/subscriptions/{id}/test:
+  #   post:
+  #     summary: Test webhook subscription
+  #     description: Tests a webhook subscription by sending a test event to the notification URL.
+  #     operationId: testWebhookSubscription
+  #     tags:
+  #       - webhooks
+  #     parameters: []
+  #     responses:
+  #       '200':
+  #         description: OK
 
+
+  /webhooks/subscriptions:
+    get:
+      summary: List webhook subscriptions
+      description: Lists all webhook subscriptions owned by an application.
+      operationId: listWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create new webhook subscription
+      description: |-
+        Subscribe to receive events. 
+        Use this endpoint to add your notification URL and list of events that you want your application to subscribe to.
+      operationId: createWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+
+  /webhooks/subscriptions/{id}:  
+    get:
+      summary: Get webhook subscription
+      description: Retrieves a webhook subscription identified by its ID.
+      operationId: getWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update webhook subscription
+      description: Updates a webhook subscription.
+      operationId: updateWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete webhook subscription
+      description: Deletes a webhook subscription.
+      operationId: deleteWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+      
 components:
   schemas:
 
