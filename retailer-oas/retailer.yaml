@@ -10,7 +10,7 @@ info:
 
     - Delivery Area: a geographic region where our service provides service. A Delivery Area can be defined by zip codes, city or state boundaries, or other geographic parameters. In the context of a grocery website, a delivery area is a region where customers can place orders for delivery or pickup at a specific location. A company may have multiple delivery areas depending on their coverage, and the delivery areas can change over time to better serve their customers. Available Time Slots depend on the delivery area.
 
-    - Order: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred Time Slot. It will be tracked by a unique order ID and will transition between different statuses. Depending on the company's policies, orders can also be cancelled, refunded or modified.
+    - Order: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred Time Slot. It will be tracked by a unique order ID and will transition between different statuses. Depending on the company's policies, orders can also be canceled, refunded or modified.
 
     - Time Slot: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into particular intervals, such as every hour or every two hours. The system may offer different timeslots depending on the delivery area, days of the week, or other factors. Customers can select a timeslot when placing their order; availability can change depending on the demand.
 
@@ -419,7 +419,7 @@ paths:
       tags:
         - timeslots
       parameters:
-        - name: id
+        - name: deliveryAreaId
           in: query
           description: Delivery Area identifier
           required: true
@@ -446,6 +446,143 @@ paths:
                 $ref: '#/components/schemas/TimeSlotAvailability'
         400:
           description: Invalid ID
+  /timeslots/{id}/reservations:
+    post:
+      summary: Reserve a time slot
+      description: Create a new Time Slot reservation
+      operationId: createTimeSlotReservation
+      tags:
+        - timeslots
+      parameters:
+        - name: id
+          in: path
+          description: Time Slot identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+             schema:
+                $ref: '#/components/schemas/TimeSlotReservation'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSlotReservation'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "TIMESLOT_NOT_AVAILABLE"
+                      - "TOTAL_ARTICLES_TOO_HEAVY"
+                      - "INVALID_SHIPPING_ADDRESS"
+                      - "INVALID_CUSTOMER_DATA"
+                      - "INVALID_ARTICLE_ITEM_QUANTITY"
+                      - "TOTAL_MISMATCH"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
+  
+  /timeslots/{timeSlotId}/reservations/{reservationId}/cancel:
+    post:
+      summary: Cancel a reservation of a given time slot
+      description: Cancel a reservation of a given time slot
+      operationId: cancelTimeSlotReservation
+      tags:
+        - timeslots
+      parameters:
+        - name: timeSlotId
+          in: path
+          description: Time Slot identifier
+          required: true
+          schema:
+            type: string
+        - name: reservationId
+          in: path
+          description: Time Slot Reservation identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+             schema:
+                type: object
+                properties:
+                  reason:
+                    type: object
+                    properties:
+                      code:
+                        description: |-
+                          - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+                          - `OMS_DRIVEN`	The OMS triggered the cancelation.
+                          - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+                          - `OTHER`	The cancelation was triggered by another source.
+                        enum:
+                          - CUSTOMER_DRIVEN
+                          - OMS_DRIVEN
+                          - RETAILER_DRIVEN
+                          - OTHER
+                      type:
+                        type: string
+                        description: Cancelation reasons type
+                        enum: 
+                          - 'payment failed'
+                          - 'fraudulent customer'
+                          - 'incorrect customer information'
+                          - 'customer requested to cancel'
+                          - 'too many out of stock items'
+                          - 'system error'
+                          - 'other'
+                          - 'unknown'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSlotReservationCancelation'
+                required: ['id', 'status', 'createdAt', 'timeSlotReservation']
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "TOO_LATE_TO_CANCEL"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
+        404:
+          description: Not Found
+
 
   #TODO: Time Slots
     #  possibilites :
@@ -513,6 +650,94 @@ paths:
                     items:
                       type: string
                       description: List of error details
+  /orders/{id}/cancel:
+    post:
+      summary: Cancel a reservation of a given time slot
+      description: Cancel a reservation of a given time slot
+      operationId: cancelTimeSlotReservation
+      tags:
+        - orders
+      parameters:
+        - name: id
+          in: path
+          description: Order identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: object
+                  properties:
+                    code:
+                      description: |-
+                        Cancelation reason code:
+                        - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+                        - `OMS_DRIVEN`	The OMS triggered the cancelation.
+                        - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+                        - `SHOPPER_DRIVEN`	The shopper triggered the cancelation.
+                        - `OTHER`	The cancelation was triggered by another source.
+                      enum:
+                        - CUSTOMER_DRIVEN
+                        - OMS_DRIVEN
+                        - RETAILER_DRIVEN
+                        - SHOPPER_DRIVEN
+                        - OTHER
+                    type:
+                      type: string
+                      description: Cancelation reason type
+                      enum: 
+                        - 'duplicate order'
+                        - 'customer requested since order is early'
+                        - 'customer requested since order is late'
+                        - 'customer is unavailable'
+                        - 'customer requested to cancel'
+                        - 'shopper unable to complete order'
+                        - 'shopper could not find address'
+                        - 'too many out of stock items'
+                        - 'canceled by retailer'
+                        - 'fraudulent customer'
+                        - 'store early closure'
+                        - 'system error'
+                        - 'other'
+                        - 'unknown'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderCancelation'
+                required: ['id', 'status', 'createdAt', 'order']
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "ALREADY_CANCELED"
+                      - "TOO_LATE_TO_CANCEL"
+                      - "INVALID_REASON"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
+        404:
+          description: Order Not Found
 
 components:
   schemas:
@@ -695,6 +920,62 @@ components:
             description: Indicates if the user can book this Time Slot.
             example: true
 
+    TimeSlotReservation:
+      type: object
+      properties:
+        id: 
+          type: string
+          description: The Time Slot Reservation identifier
+          example: "reservation1"
+        timeSlotId:
+          type: string
+          description: The Timeslot's identifier selected for the Order
+          example: "slot2"
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderArticle'
+          description: The array of articles included in the Order
+        customerInfo:
+          $ref: '#/components/schemas/CustomerInfo'
+          description: The customer information related to the Order
+        shippingAddress:
+          $ref: '#/components/schemas/ShippingAddress'
+          description: Where the Order should be delivered.
+        totalPrice:
+          type: number
+          format: currency
+          description: The total price of the Order
+          example: 119.9
+        estimatedWeight:
+          type: number
+          format: weight
+          description: The estimated weight of the Order
+          example: 12.5
+
+    TimeSlotReservationCancelation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The cancelation identifier
+        status:
+          type: string
+          example: "canceled"
+        reason:
+          type: object
+          description: The cancelation reason
+          properties:
+            code:
+              type: string
+            type:
+              type: string
+        timeSlotReservation:
+          $ref: '#/components/schemas/TimeSlotReservation'
+        createdAt:
+          type: string
+          format: ISO 8601
+
     Schedule:
       type: object
       properties:
@@ -819,7 +1100,7 @@ components:
     Order:
       type: object
       properties:
-        orderId:
+        id:
           type: string
           description: The unique identifier of the Order
           example: "order1"
@@ -849,6 +1130,29 @@ components:
           description: The estimated weight of the Order
           example: 12.5
 
+    OrderCancelation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The order cancelation unique identifier
+        status:
+          type: string
+          example: "canceled"
+        reason:
+          type: object
+          description: The cancelation reason
+          properties:
+            code:
+              type: string
+            type:
+              type: string
+        order:
+          $ref: '#/components/schemas/Order'
+        createdAt:
+          type: string
+          format: ISO 8601
+        
     ApiResponse:
       type: object
       properties:
