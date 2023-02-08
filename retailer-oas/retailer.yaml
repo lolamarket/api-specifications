@@ -323,6 +323,13 @@ paths:
       operationId: createPickingLocationSchedule
       tags:
         - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location identifier
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -362,6 +369,13 @@ paths:
       operationId: updatePickingLocationSchedule
       tags:
         - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location identifier
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -570,7 +584,7 @@ components:
           type: string
           enum: [operating, closed, unpublished]
           description: The status of the Picking Location, whether it is operating or closed. The `unpublished` status indicates a Picking Location will not be displayed when querying for service availability. Useful for inputting data into the system without immediately making it available to the public.
-          example: "active"
+          example: "operating"
 
 
     PickingLocationSchedule:
@@ -736,7 +750,7 @@ components:
           items:
             type: string
             description: An array of preferred Stock Keeping Units to replace this Product in the case of a stockout.
-            example: ['53234', '232321']
+          example: ["53234", "232321"]
 
     CustomerInfo:
       type: object
