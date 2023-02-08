@@ -866,7 +866,13 @@ paths:
       operationId: getWebhookSubscription
       tags:
         - webhooks
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription identifier
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -876,7 +882,13 @@ paths:
       operationId: updateWebhookSubscription
       tags:
         - webhooks
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription identifier
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -886,7 +898,13 @@ paths:
       operationId: deleteWebhookSubscription
       tags:
         - webhooks
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription identifier
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
