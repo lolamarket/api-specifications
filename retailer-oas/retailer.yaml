@@ -133,23 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    serviceType:
-                      type: string
-                      enum: [delivery, picking]
-                      description: The logistical service type offered; `delivery` means that picking and delivering goods through couriers is supported; `picking` means that only picking up goods from picking locations is supported.
-                    deliveryAreaId:
-                      type: string
-                      description: The Delivery Area identifier.Nnecessary to request `delivery` TimeSlots
-                    pickingLocationIds:
-                      type: array
-                      description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier  corresponding to the Picking Location closest to the delivery location.
-                      items:
-                        type: string
-                        description: The Picking Location identifier.
+                $ref: '#/components/schemas/ServiceAvailability'
         400:
           description: Invalid postal code or country code format.
         404:
@@ -472,7 +456,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TimeSlotReservation'
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/TimeSlotReservation'
         400:
           description: Bad Request
           content:
@@ -655,7 +641,7 @@ paths:
    
   /orders/{id}:
      get:
-      summary: Get an Order
+      summary: Get an order
       description: Retrieves order details by order ID.
       operationId: getOrderById
       tags:
@@ -678,7 +664,7 @@ paths:
           description: Order not found
      
      patch:
-      summary: Update an existing Order
+      summary: Update an existing order
       description: Update an existing order with the provided information
       operationId: updateOrder
       tags:
@@ -734,8 +720,8 @@ paths:
 
   /orders/{id}/cancel:
     post:
-      summary: Cancel a reservation of a given time slot
-      description: Cancel a reservation of a given time slot
+      summary: Cancel an order
+      description: Cancel an order
       operationId: cancelTimeSlotReservation
       tags:
         - orders
@@ -1005,14 +991,12 @@ components:
     TimeSlotReservation:
       type: object
       properties:
-        id: 
-          type: string
-          description: The Time Slot Reservation identifier
-          example: "reservation1"
         timeSlotId:
           type: string
           description: The Timeslot's identifier selected for the Order
           example: "slot2"
+        serviceType:
+          $ref: '#/components/schemas/ServiceType'
         articles:
           type: array
           items:
@@ -1053,7 +1037,9 @@ components:
             type:
               type: string
         timeSlotReservation:
-          $ref: '#/components/schemas/TimeSlotReservation'
+          allOf:
+           - $ref: '#/components/schemas/ID'
+           - $ref: '#/components/schemas/TimeSlotReservation'
         createdAt:
           type: string
           format: ISO 8601
@@ -1233,13 +1219,35 @@ components:
           type: string
           format: ISO 8601
         
+    ServiceType:
+      type: string
+      enum: [delivery, picking]
+      description: The logistical service type offered; `delivery` means that picking and delivering goods through couriers is supported; `picking` means that only picking up goods from picking locations is supported.
+
+    ServiceAvailability:
+      type: array
+      properties:
+        items:
+          type: object
+          properties:
+            serviceType:
+              $ref: '#/components/schemas/ServiceType'
+            deliveryAreaId:
+              type: string
+              description: The Delivery Area identifier.Nnecessary to request `delivery` TimeSlots
+            pickingLocationIds:
+              type: array
+              description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier  corresponding to the Picking Location closest to the delivery location.
+              items:
+                type: string
+                description: The Picking Location identifier.
     ID:
       type: object
       properties:
         id:
           type: string
           description: Unique identifier
-          example: "id1"
+          example: "uuid"
 
     ApiResponse:
       type: object
