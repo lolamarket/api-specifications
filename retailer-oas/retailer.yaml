@@ -852,8 +852,13 @@ paths:
                 type: object
                 properties:
                   subscriptions:
-                    $ref: '#/components/schemas/Subscriptions'
-                    example: []
+                    type: array
+                    properties:
+                      items:
+                        allOf:
+                          - $ref: '#/components/schemas/ID'
+                          - $ref: '#/components/schemas/Subscription'
+                        example: []
         '400':
           description: Bad Request
 
@@ -1363,33 +1368,30 @@ components:
           description: Unique identifier
           example: "uuid"
 
-    Subscriptions:
-      type: array
+    Subscription:
+      type: object
       properties:
-        items:
-          type: object
-          properties:
-            eventTypes: 
-              type: array
-              items:
-                type: string
-              example: [ "order.created", "order.updated"]
-            notificationUrl: 
-              example: "https://retailer.example-webhook-url.com"
-            createdAt:
-              type: string
-              format: ISO 8601
-            updatedAt:
-              type: string
-              format: ISO 8601
-            id:
-              $ref: '#/components/schemas/ID'
-            name:
-              type: string
-              example: "Example Webhook Subscription"
-            enabled:
-              type: boolean
-    
+        eventTypes: 
+          type: array
+          items:
+            type: string
+          example: [ "order.created", "order.updated"]
+        notificationUrl: 
+          example: "https://retailer.example-webhook-url.com"
+        createdAt:
+          type: string
+          format: ISO 8601
+        updatedAt:
+          type: string
+          format: ISO 8601
+        # id:
+        #   $ref: '#/components/schemas/ID'
+        name:
+          type: string
+          example: "Example Webhook Subscription"
+        enabled:
+          type: boolean
+
 
     ApiResponse:
       type: object
