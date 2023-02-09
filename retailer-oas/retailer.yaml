@@ -8,11 +8,11 @@ info:
     ## Concepts
     - Picking Location: The physical location within a warehouse, distribution centre or store where the items for an order are prepared for delivery. It is the place where products are stored, organized and picked.
 
-    - Delivery Area: a geographic region where our service provides service. A Delivery Area can be defined by zip codes, city or state boundaries, or other geographic parameters. In the context of a grocery website, a delivery area is a region where customers can place orders for delivery or pickup at a specific location. A company may have multiple delivery areas depending on their coverage, and the delivery areas can change over time to better serve their customers. Available Time Slots depend on the delivery area.
+    - Delivery Area: a geographic region where our service provides service. A Delivery Area can be defined by zip codes, city or state boundaries, or other geographic parameters. In the context of a grocery website, a delivery area is a region where customers can place orders for delivery or pickup at a specific location. A company may have multiple delivery areas depending on their coverage, and the delivery areas can change over time to better serve their customers. Available Timeslots depend on the delivery area.
 
-    - Order: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred Time Slot. It will be tracked by a unique order ID and will transition between different statuses. Depending on the company's policies, orders can also be canceled, refunded or modified.
+    - Order: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred Timeslot. It will be tracked by a unique order ID and will transition between different statuses. Depending on the company's policies, orders can also be canceled, refunded or modified.
 
-    - Time Slot: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into particular intervals, such as every hour or every two hours. The system may offer different timeslots depending on the delivery area, days of the week, or other factors. Customers can select a timeslot when placing their order; availability can change depending on the demand.
+    - Timeslot: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into particular intervals, such as every hour or every two hours. The system may offer different timeslots depending on the delivery area, days of the week, or other factors. Customers can select a timeslot when placing their order; availability can change depending on the demand.
 
 servers:
   - url: https://api.example.com/retailer/v1
@@ -398,9 +398,9 @@ paths:
 
   /timeslots:
     get:
-      summary: Get the Time Slots and their availability for a given Delivery Area
-      description: This endpoint allows retailers to retrieve the available time slots for a given delivery area. The retailer can specify the delivery area by passing its identifier in the id query parameter. The fromDate parameter is used to specify the starting date of the time slots to be retrieved. The date must be in ISO 8601 format. The quantity parameter limits the number of time slots to be returned. Use this parameter to limit the request and retrieve just the nearest available time slots.
-      operationId: getTimeSlotsAvailability
+      summary: Get the Timeslots and their availability for a given Delivery Area
+      description: This endpoint allows retailers to retrieve the available timeslots for a given delivery area. The retailer can specify the delivery area by passing its identifier in the id query parameter. The fromDate parameter is used to specify the starting date of the timeslots to be retrieved. The date must be in ISO 8601 format. The quantity parameter limits the number of timeslots to be returned. Use this parameter to limit the request and retrieve just the nearest available timeslots.
+      operationId: getTimeslotsAvailability
       tags:
         - timeslots
       parameters:
@@ -419,7 +419,7 @@ paths:
         - name: quantity
           in: query
           required: true
-          description: Number of Time Slots to be displayed
+          description: Number of Timeslots to be displayed
           schema:
             type: number
       responses:
@@ -428,20 +428,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TimeSlotAvailability'
+                $ref: '#/components/schemas/TimeslotAvailability'
         '400':
           description: Invalid ID
   /timeslots/{id}/reservations:
     post:
-      summary: Reserve a time slot
-      description: Create a new Time Slot reservation
-      operationId: createTimeSlotReservation
+      summary: Reserve a timeslot
+      description: Create a new Timeslot reservation
+      operationId: createTimeslotReservation
       tags:
         - timeslots
       parameters:
         - name: id
           in: path
-          description: Time Slot identifier
+          description: Timeslot identifier
           required: true
           schema:
             type: string
@@ -450,7 +450,7 @@ paths:
         content:
           application/json:
              schema:
-                $ref: '#/components/schemas/TimeSlotReservation'
+                $ref: '#/components/schemas/TimeslotReservation'
       responses:
         '200':
           description: OK
@@ -459,7 +459,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/ID'
-                  - $ref: '#/components/schemas/TimeSlotReservation'
+                  - $ref: '#/components/schemas/TimeslotReservation'
         '400':
           description: Bad Request
           content:
@@ -486,23 +486,23 @@ paths:
                       type: string
                       description: List of error details
   
-  /timeslots/{timeSlotId}/reservations/{reservationId}/cancel:
+  /timeslots/{timeslotId}/reservations/{reservationId}/cancel:
     post:
-      summary: Cancel a reservation of a given time slot
-      description: Cancel a reservation of a given time slot
-      operationId: cancelTimeSlotReservation
+      summary: Cancel a reservation of a given timeslot
+      description: Cancel a reservation of a given timeslot
+      operationId: cancelTimeslotReservation
       tags:
         - timeslots
       parameters:
-        - name: timeSlotId
+        - name: timeslotId
           in: path
-          description: Time Slot identifier
+          description: Timeslot identifier
           required: true
           schema:
             type: string
         - name: reservationId
           in: path
-          description: Time Slot Reservation identifier
+          description: Timeslot Reservation identifier
           required: true
           schema:
             type: string
@@ -545,8 +545,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TimeSlotReservationCancelation'
-                required: ['id', 'status', 'createdAt', 'timeSlotReservation']
+                $ref: '#/components/schemas/TimeslotReservationCancelation'
+                required: ['id', 'status', 'createdAt', 'timeslotReservation']
         '400':
           description: Bad Request
           content:
@@ -571,7 +571,7 @@ paths:
           description: Not Found
 
 
-  #TODO: Time Slots
+  #TODO: Timeslots
     #  possibilites :
     # /picking-locations/{id}/time-slots/availability
     # /picking-locations/{id}/time-slots/preview
@@ -1058,42 +1058,42 @@ components:
           description: Occupied capacity of the location
           example: 20
 
-    TimeSlot:
+    Timeslot:
       type: object
       properties:
         id:
           type: string
-          description: Unique identifier of the Time Slot
+          description: Unique identifier of the Timeslot
           example: "slot1"
         fromDate:
           type: string
           format: ISO 8601
-          description: The starting time of the Time Slot
+          description: The starting time of the Timeslot
           example: "2023-01-11T14:00:00+00:00"
         toDate:
           type: string
           format: ISO 8601
-          description: The ending time of the Time Slot
+          description: The ending time of the Timeslot
           example: "2023-01-11T15:00:00+00:00"
 
-    TimeSlotAvailability:
+    TimeslotAvailability:
       type: array
       items:
         type: object
         properties:
-          timeSlot:
-            $ref: '#/components/schemas/TimeSlot'
+          timeslot:
+            $ref: '#/components/schemas/Timeslot'
           capacity:
             $ref: '#/components/schemas/Capacity'
           available:
             type: boolean
-            description: Indicates if the user can book this Time Slot.
+            description: Indicates if the user can book this Timeslot.
             example: true
 
-    TimeSlotReservation:
+    TimeslotReservation:
       type: object
       properties:
-        timeSlotId:
+        timeslotId:
           type: string
           description: The Timeslot's identifier selected for the Order
           example: "slot2"
@@ -1121,7 +1121,7 @@ components:
           description: The estimated weight of the Order
           example: 12.5
 
-    TimeSlotReservationCancelation:
+    TimeslotReservationCancelation:
       type: object
       properties:
         id:
@@ -1138,10 +1138,10 @@ components:
               type: string
             type:
               type: string
-        timeSlotReservation:
+        timeslotReservation:
           allOf:
            - $ref: '#/components/schemas/ID'
-           - $ref: '#/components/schemas/TimeSlotReservation'
+           - $ref: '#/components/schemas/TimeslotReservation'
         createdAt:
           type: string
           format: ISO 8601
@@ -1154,7 +1154,7 @@ components:
         slots:
           type: array
           items:
-            $ref: '#/components/schemas/TimeSlotAvailability'
+            $ref: '#/components/schemas/TimeslotAvailability'
 
     OrderArticle:
       type: object
@@ -1270,7 +1270,7 @@ components:
     Order:
       type: object
       properties:
-        timeSlotId:
+        timeslotId:
           type: string
           description: The Timeslot's identifier selected for the Order
           example: "slot2"
@@ -1336,7 +1336,7 @@ components:
               $ref: '#/components/schemas/ServiceType'
             deliveryAreaId:
               type: string
-              description: The Delivery Area identifier.Nnecessary to request `delivery` TimeSlots
+              description: The Delivery Area identifier.Nnecessary to request `delivery` Timeslots
             pickingLocationIds:
               type: array
               description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier  corresponding to the Picking Location closest to the delivery location.
