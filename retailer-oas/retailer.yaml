@@ -398,15 +398,15 @@ paths:
 
   /timeslots:
     get:
-      summary: Get the Timeslots and their availability for a given Delivery Area
-      description: This endpoint allows retailers to retrieve the available timeslots for a given delivery area. The retailer can specify the delivery area by passing its identifier in the id query parameter. The fromDate parameter is used to specify the starting date of the timeslots to be retrieved. The date must be in ISO 8601 format. The quantity parameter limits the number of timeslots to be returned. Use this parameter to limit the request and retrieve just the nearest available timeslots.
+      summary: Get the Timeslots and their availability for a given Picking Location
+      description: This endpoint allows retailers to retrieve the available timeslots for a given picking location. The retailer can specify the picking location by passing its identifier in the id query parameter. The fromDate parameter is used to specify the starting date of the timeslots to be retrieved. The date must be in ISO 8601 format. The quantity parameter limits the number of timeslots to be returned. Use this parameter to limit the request and retrieve just the nearest available timeslots.
       operationId: getTimeslotsAvailability
       tags:
         - timeslots
       parameters:
-        - name: deliveryAreaId
+        - name: pickingLocationId
           in: query
-          description: Delivery Area identifier
+          description: Picking Location identifier
           required: true
           schema:
             type: string
