@@ -846,6 +846,18 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscriptions:
+                    $ref: '#/components/schemas/Subscriptions'
+                    example: []
+        '400':
+          description: Bad Request
+
+
     post:
       summary: Create new webhook subscription
       description: |-
@@ -1350,6 +1362,34 @@ components:
           type: string
           description: Unique identifier
           example: "uuid"
+
+    Subscriptions:
+      type: array
+      properties:
+        items:
+          type: object
+          properties:
+            eventTypes: 
+              type: array
+              items:
+                type: string
+              example: [ "order.created", "order.updated"]
+            notificationUrl: 
+              example: "https://retailer.example-webhook-url.com"
+            createdAt:
+              type: string
+              format: ISO 8601
+            updatedAt:
+              type: string
+              format: ISO 8601
+            id:
+              $ref: '#/components/schemas/ID'
+            name:
+              type: string
+              example: "Example Webhook Subscription"
+            enabled:
+              type: boolean
+    
 
     ApiResponse:
       type: object
