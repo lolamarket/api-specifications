@@ -862,7 +862,6 @@ paths:
         '400':
           description: Bad Request
 
-
     post:
       summary: Create new webhook subscription
       description: |-
@@ -872,9 +871,37 @@ paths:
       tags:
         - webhooks
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventTypes: 
+                  type: array
+                  items:
+                    type: string
+                  example: [ "order.created", "order.updated"]
+                notificationUrl: 
+                  example: "https://retailer.example-webhook-url.com"
+                name:
+                  type: string
+                  example: "Example App Webhook Subscription"
+              required:
+                - "eventTypes"
+                - "notificationUrl"
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
 
   /webhooks/subscriptions/{id}:  
     get:
@@ -1371,6 +1398,8 @@ components:
     Subscription:
       type: object
       properties:
+        subscriberId:
+          $ref: '#/components/schemas/ID'
         eventTypes: 
           type: array
           items:
@@ -1384,8 +1413,6 @@ components:
         updatedAt:
           type: string
           format: ISO 8601
-        # id:
-        #   $ref: '#/components/schemas/ID'
         name:
           type: string
           example: "Example Webhook Subscription"
