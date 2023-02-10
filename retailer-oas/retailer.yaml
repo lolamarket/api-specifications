@@ -21,7 +21,6 @@ info:
     By subscribing to these webhooks, you can receive real-time updates on the status of your orders, without the need to continuously poll the API.
 
     ![Order statuses](http://lolamarket.statics.prod.s3.amazonaws.com/lola-help/order_state_machine.jpg)
-
     1. `order.received`: Order received on the OMS and waiting for processing.
     2. `order.confirmed`: Order confirmed by the OMS, waiting for shopper assignment.
     3. `order.allocated`: Order assigned and accepted by a shopper. In some cases, the order may be assigned to multiple resources (picker, courier).
@@ -1349,19 +1348,32 @@ paths:
         '400':
           description: Bad Request
 
-  # TODO: add this to test subscription
-  # /webhooks/subscriptions/{id}/test:
-  #   post:
-  #     summary: Test webhook subscription
-  #     description: Tests a webhook subscription by sending a test event to the notification URL.
-  #     operationId: testWebhookSubscription
-  #     tags:
-  #       - webhooks
-  #     parameters: []
-  #     responses:
-  #       '200':
-  #         description: OK
-
+  /webhooks/subscriptions/{id}/test:
+    post:
+      summary: Test webhook subscription
+      description: Tests a webhook subscription by sending a test event to the notification URL.
+      operationId: testWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventType:
+                    $ref: '#/components/schemas/EventTypesEnum'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionTestResult'
+        '400':
+          description: Bad Request
 
   /webhooks/subscriptions:
     get:
@@ -2046,6 +2058,37 @@ components:
           updatedAt:
             type: string
             format: ISO 8601
+
+    SubscriptionTestResult:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The validation request identifier (idempotency key)
+          format: "uuid"
+        subscriberId:
+          type: string
+          format: "uuid"
+        notificationUrl:
+          type: string 
+        validationResult:
+          type: object
+          properties:
+            responseStatusCode:
+              type: number
+              description: HTTP status code
+              example: 200
+            responseCode:
+              type: string
+              example: "OK"
+            responseMessage: 
+              type: string
+              example: "Event sent successfully."
+            succeeded:
+              type: boolean
+            createdAt:
+              type: string
+              format: ISO 8601
 
     ApiResponse:
       type: object
