@@ -1355,7 +1355,13 @@ paths:
       operationId: testWebhookSubscription
       tags:
         - webhooks
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          description: Picking location identifier
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
