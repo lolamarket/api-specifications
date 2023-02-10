@@ -1,18 +1,511 @@
 openapi: 3.0.3
 info:
   title: Retailer API [DRAFT]
-  version: 1.0.0
+  version: 1.0.1
   description: |-
     This is the official OpenAPI specification for Retailer API V1.
 
     ## Concepts
     - Picking Location: The physical location within a warehouse, distribution centre or store where the items for an order are prepared for delivery. It is the place where products are stored, organized and picked.
 
-    - Delivery Area: a geographic region where our service provides service. A Delivery Area can be defined by zip codes, city or state boundaries, or other geographic parameters. In the context of a grocery website, a delivery area is a region where customers can place orders for delivery or pickup at a specific location. A company may have multiple delivery areas depending on their coverage, and the delivery areas can change over time to better serve their customers. Available Time Slots depend on the delivery area.
+    - Delivery Area: a geographic region where our service provides service. A Delivery Area can be defined by zip codes, city or state boundaries, or other geographic parameters. In the context of a grocery website, a delivery area is a region where customers can place orders for delivery or pickup at a specific location. A company may have multiple delivery areas depending on their coverage, and the delivery areas can change over time to better serve their customers. Available Timeslots depend on the delivery area.
 
-    - Order: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred Time Slot. It will be tracked by a unique order ID and will transition between different statuses. Depending on the company's policies, orders can also be cancelled, refunded or modified.
+    - Order: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred Timeslot. It will be tracked by a unique order ID and will transition between different statuses. Depending on the company's policies, orders can also be canceled, refunded or modified.
 
-    - Time Slot: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into particular intervals, such as every hour or every two hours. The system may offer different timeslots depending on the delivery area, days of the week, or other factors. Customers can select a timeslot when placing their order; availability can change depending on the demand.
+    - Timeslot: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into particular intervals, such as every hour or every two hours. The system may offer different timeslots depending on the delivery area, days of the week, or other factors. Customers can select a timeslot when placing their order; availability can change depending on the demand.
+
+    ## Webhooks
+
+    Webhooks allow your application to subscribe to specific events that occur within the API.
+    Our API includes webhooks to notify you of status changes on an order.
+    By subscribing to these webhooks, you can receive real-time updates on the status of your orders, without the need to continuously poll the API.
+
+    ![Order statuses](http://lolamarket.statics.prod.s3.amazonaws.com/lola-help/order_state_machine.jpg)
+    1. `order.received`: Order received on the OMS and waiting for processing.
+    2. `order.confirmed`: Order confirmed by the OMS, waiting for shopper assignment.
+    3. `order.allocated`: Order assigned and accepted by a shopper. In some cases, the order may be assigned to multiple resources (picker, courier).
+    4. `order.rescheduled`: Order has been moved to a different timeslot, needs to be allocated.
+    5. `order.in.picking`: Shopper started picking items. Each product in the order will have their own status.
+        1. `item.pending`
+        2. `item.picked`
+        3. `item.not.found`
+        4. `item.replaced`
+    6. `order.picked`: Shopper finished picking order items and will go to the cashier.
+    7. `order.in.transit`: Order on its way to the customer.
+    8. `order.delivered`: Order delivered to the customer.
+    9. `order.on.hold`: Order on hold for some reason that may include:
+        1. In warehouse: order with partial picking for some reason.
+        2. Fraud detected: Retailer detects a fraud attempt by the shopper and order has been blocked.
+        3. Order not delivered: Order can not be delivered to the customer and delivery has been postponed.
+    10. `order.rejected`: Order rejected by the OMS for some reason.
+    11. `order.canceled`: Order has been canceled before left the store. A cancelation could be initiated by the customer, the retailer, the shopper, or the OMS
+    12. `order.returned`: Order has been canceled after leaving the store so need to be returned to picking location.
+
+    In the following sections, you will find examples of the payload for each event type that can be triggered by an order status change.
+
+    ### ORDER_RECEIVED
+    Order received on the OMS and waiting for processing.
+    ```json
+    {
+      "eventId": 1201895966044343901,
+      "eventName": "order.received",
+      "eventTimestamp": "2023-01-10T18:30:00Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeSlot": {
+          "id": "slot1",
+          "fromDate": "2023-01-11T14:00:00+00:00",
+          "toDate": "2023-01-11T15:00:00+00:00"
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_CONFIRMED
+    Order confirmed by the OMS, waiting for shopper assignment.
+    ```json
+    {
+      "eventId": 1201895966044343902,
+      "eventName": "order.confirmed",
+      "eventTimestamp": "2023-01-10T18:31:00Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeSlot": {
+          "id": "slot1",
+          "fromDate": "2023-01-11T14:00:00+00:00",
+          "toDate": "2023-01-11T15:00:00+00:00"
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_ALLOCATED
+    Order assigned and accepted by a shopper. In some cases, the order may be assigned to multiple resources (picker, courier).
+    ```json
+    {
+      "eventId": 1201895966044343903,
+      "eventName": "order.allocated",
+      "eventTimestamp": "2023-01-11T12:50:00Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeslot": {
+          "id": "slot1",
+          "fromDate": "2023-01-11T14:00:00+00:00",
+          "toDate": "2023-01-11T15:00:00+00:00"
+        },
+        "shopper": {
+          "id": "shopper-01",
+          "name": "Lukasz",
+          "avatarUrl": "https:\/\/media.lolamarket.com\/shopper\/lsdfdsf-sfdfs123-asd2.jpg"
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_RESCHEDULED
+    Order has been moved to a different timeslot, needs to be allocated.
+    ```json
+    {
+      "eventId": 1201895966044343904,
+      "eventName": "order.rescheduled",
+      "eventTimestamp": "2023-01-11T13:50:00Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "newTimeslot": {
+          "id": "slot45",
+          "fromDate": "2023-01-12T10:00:00+00:00",
+          "toDate": "2023-01-12T11:00:00+00:00"
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_IN_PICKING
+    Shopper started picking items. Each product in the order will have their own status.
+    ```json
+    {
+      "eventId": 1201895966044343905,
+      "eventName": "order.in.picking",
+      "eventTimestamp": "2023-01-12T09:10:20Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeslot": {
+          "id": "slot45",
+          "fromDate": "2023-01-12T10:00:00+00:00",
+          "toDate": "2023-01-12T11:00:00+00:00"
+        },
+        "shopper": {
+          "id": "shopper-01",
+          "name": "Lukasz",
+          "avatarUrl": "https:\/\/media.lolamarket.com\/shopper\/lsdfdsf-sfdfs123-asd2.jpg"
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_PICKED
+    Shopper finished picking order items and will go to the cashier.
+    ```json
+    {
+      "eventId": 1201895966044343906,
+      "eventName": "order.picked",
+      "eventTimestamp": "2023-01-12T10:12:31Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeslot": {
+          "id": "slot45",
+          "fromDate": "2023-01-12T10:00:00+00:00",
+          "toDate": "2023-01-12T11:00:00+00:00"
+        },
+        "shopper": {
+          "id": "shopper-01",
+          "name": "Lukasz",
+          "avatarUrl": "https:\/\/media.lolamarket.com\/shopper\/lsdfdsf-sfdfs123-asd2.jpg"
+        },
+        "serviceType": "DELIVERY",
+        "express": false,
+        "articles": [
+          {
+            "itemId": "12345",
+            "scanCode": "00980349940",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": false
+          },
+          {
+            "itemId": "12346",
+            "scanCode": "00980349941",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12345"
+            }
+          },
+          {
+            "itemId": "12347",
+            "scanCode": "",
+            "quantityRequested": 5.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 0.430,
+            "quantityFulfilledUnit": "kilograms",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12",
+              "shopperProvidedName": "Oranges",
+              "shopperProvidedPrice": 1.23
+            }
+          }
+        ],
+        "bagsCount": 1
+      }
+    }
+    ```
+
+    ### ORDER_IN_TRANSIT
+    Order on its way to the customer.
+    ```json
+    {
+      "eventId": 1201895966044343907,
+      "eventName": "order.in.transit",
+      "eventTimestamp": "2023-01-12T10:18:12Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeslot": {
+          "id": "slot45",
+          "fromDate": "2023-01-12T10:00:00+00:00",
+          "toDate": "2023-01-12T11:00:00+00:00"
+        },
+        "shopper": {
+          "id": "shopper-01",
+          "name": "Lukasz",
+          "avatarUrl": "https:\/\/media.lolamarket.com\/shopper\/lsdfdsf-sfdfs123-asd2.jpg"
+        },
+        "serviceType": "DELIVERY",
+        "express": false,
+        "articles": [
+          {
+            "itemId": "12345",
+            "scanCode": "00980349940",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": false
+          },
+          {
+            "itemId": "12346",
+            "scanCode": "00980349941",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12345"
+            }
+          },
+          {
+            "itemId": "12347",
+            "scanCode": "",
+            "quantityRequested": 5.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 0.430,
+            "quantityFulfilledUnit": "kilograms",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12",
+              "shopperProvidedName": "Oranges",
+              "shopperProvidedPrice": 1.23
+            }
+          }
+        ],
+        "bagsCount": 1
+      }
+    }
+    ```
+
+    ### ORDER_DELIVERED
+    Order delivered to the customer.
+    ```json
+    {
+      "eventId": 1201895966044343908,
+      "eventName": "order.delivered",
+      "eventTimestamp": "2023-01-12T10:43:11Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeslot": {
+          "id": "slot45",
+          "fromDate": "2023-01-12T10:00:00+00:00",
+          "toDate": "2023-01-12T11:00:00+00:00"
+        },
+        "shopper": {
+          "id": "shopper-01",
+          "name": "Lukasz",
+          "avatarUrl": "https:\/\/media.lolamarket.com\/shopper\/lsdfdsf-sfdfs123-asd2.jpg"
+        },
+        "serviceType": "DELIVERY",
+        "express": false,
+        "articles": [
+          {
+            "itemId": "12345",
+            "scanCode": "00980349940",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": false
+          },
+          {
+            "itemId": "12346",
+            "scanCode": "00980349941",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12345"
+            }
+          },
+          {
+            "itemId": "12347",
+            "scanCode": "",
+            "quantityRequested": 5.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 0.430,
+            "quantityFulfilledUnit": "kilograms",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12",
+              "shopperProvidedName": "Oranges",
+              "shopperProvidedPrice": 1.23
+            }
+          }
+        ],
+        "bagsCount": 1
+      }
+    }
+    ```
+
+    ### ORDER_ON_HOLD
+    Order on hold for some reason that may include:
+    ```json
+    {
+      "eventId": 1201895966044343909,
+      "eventName": "order.onHold",
+      "eventTimestamp": "2023-01-12T10:34:11Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "timeSlot": {
+          "id": "slot1",
+          "fromDate": "2023-01-11T14:00:00+00:00",
+          "toDate": "2023-01-11T15:00:00+00:00"
+        },
+        "reason": {
+          "code": "CUSTOMER_NO_SHOW",
+          "description": "Customer not abailable at delivery location."
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_REJECTED
+    Order rejected by the OMS for some reason.
+    ```json
+    {
+      "eventId": 1201895966044343910,
+      "eventName": "order.rejected",
+      "eventTimestamp": "2023-01-11T19:00:00Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "reason": {
+          "code": "TIMESLOT_NOT_AVAILABLE",
+          "description": "The timeslot provided is not available."
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_CANCELED
+    Order has been canceled before left the store. A cancelation could be initiated by the customer, the retailer, the shopper, or the OMS
+    ```json
+    {
+      "eventId": 1201895966044343911,
+      "eventName": "order.canceled",
+      "eventTimestamp": "2023-01-11T19:00:00Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "reason": {
+          "code": "PICKING_LOCATION_NOT_AVAILABLE",
+          "description": "Picking location is not available."
+        },
+        "serviceType": "DELIVERY",
+        "express": false
+      }
+    }
+    ```
+
+    ### ORDER_RETURNED
+    Order has been canceled after leaving the store so need to be returned to picking location.
+    ```json
+    {
+      "eventId": 1201895966044343912,
+      "eventName": "order.returned",
+      "eventTimestamp": "2023-01-12T19:00:00Z",
+      "eventPayload": {
+        "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
+        "pickingLocation": {
+           "id": "123",
+           "name": "NORTH-21242"
+        },
+        "reason": {
+          "code": "CUSTOMER_NO_SHOW",
+          "description": "Customer not abailable at delivery location."
+        },
+        "serviceType": "DELIVERY",
+        "express": false,
+        "articles": [
+          {
+            "itemId": "12345",
+            "scanCode": "00980349940",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": false,
+            "returned": true
+          },
+          {
+            "itemId": "12346",
+            "scanCode": "00980349941",
+            "quantityRequested": 2.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 1.0,
+            "quantityFulfilledUnit": "unit",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12345"
+            },
+            "returned": true
+          },
+          {
+            "itemId": "12347",
+            "scanCode": "",
+            "quantityRequested": 5.0,
+            "quantityRequestedUnit": "unit",
+            "quantityFulfilled": 0.430,
+            "quantityFulfilledUnit": "kilograms",
+            "replaced": true,
+            "replacement": {
+              "itemId": "12",
+              "shopperProvidedName": "Oranges",
+              "shopperProvidedPrice": 1.23
+            },
+            "returned": true
+          }
+        ]
+      }
+    }
+    ```
 
 servers:
   - url: https://api.example.com/retailer/v1
@@ -26,6 +519,7 @@ tags:
   - name: service-availability
   - name: timeslots
   - name: orders
+  - name: webhooks
 
 paths:
   # Authentication
@@ -67,7 +561,7 @@ paths:
                 - clientSecret
                 - grantType
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -101,7 +595,7 @@ paths:
                 - clientSecret
                 - token
       responses:
-        200:
+        '200':
           description: OK
 
   # Service availability
@@ -117,40 +611,26 @@ paths:
           in: query
           description: The postal code to check service availability for.
           required: true
-          type: string
+          schema:
+            type: string
         - name: countryCode
           in: query
           description: The ISO 3166 country code corresponding to the given postal code.
           required: true
-          type: string
-          format: ISO 3166-1
+          schema:
+            type: string
+            format: ISO 3166-1
 
       responses:
-        200:
+        '200':
           description: Service is available for the given postal code.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    serviceType:
-                      type: string
-                      enum: [delivery, picking]
-                      description: The logistical service type offered; `delivery` means that picking and delivering goods through couriers is supported; `picking` means that only picking up goods from picking locations is supported.
-                    deliveryAreaId:
-                      type: string
-                      description: The Delivery Area identifier.Nnecessary to request `delivery` TimeSlots
-                    pickingLocationIds:
-                      type: array
-                      description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier  corresponding to the Picking Location closest to the delivery location.
-                      items:
-                        type: string
-                        description: The Picking Location identifier.
-        400:
+                $ref: '#/components/schemas/ServiceAvailability'
+        '400':
           description: Invalid postal code or country code format.
-        404:
+        '404':
           description: Service not available for the given postal code and country code.
 
   # Picking Locations
@@ -174,14 +654,14 @@ paths:
                 - addressLine1
                 - countryCode
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PickingLocation'
                 description: The created picking location object
-        400:
+        '400':
           description: Bad Request
           content:
             application/json:
@@ -208,13 +688,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PickingLocation'
-        400:
+        '400':
           description: Bad Request
           content:
             application/json:
@@ -224,7 +704,7 @@ paths:
                   message:
                     type: string
                     example: "Invalid request, some fields are missing"
-        404:
+        '404':
           description: Picking Location not found
 
     patch:
@@ -245,22 +725,21 @@ paths:
         content:
           application/json:
             schema:
-              schema:
-                $ref: '#/components/schemas/PickingLocation'
-                required:
-                  - name
-                  - coords
-                  - postalCode
-                  - addressLine1
-                  - countryCode
+              $ref: '#/components/schemas/PickingLocation'
+              required:
+                - name
+                - coords
+                - postalCode
+                - addressLine1
+                - countryCode
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PickingLocation'
-        400:
+        '400':
           description: Bad Request
           content:
             application/json:
@@ -270,7 +749,7 @@ paths:
                   message:
                     type: string
                     example: "Invalid request, some fields are missing"
-        404:
+        '404':
           description: Picking Location not found
 
     delete:
@@ -287,9 +766,9 @@ paths:
           schema:
             type: string
       responses:
-        204:
+        '204':
           description: No Content
-        404:
+        '404':
           description: Picking Location not found
 
   /picking-locations/{id}/schedule:
@@ -307,13 +786,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PickingLocationSchedule'
-        404:
+        '404':
           description: Picking Location not found
 
     post:
@@ -322,6 +801,13 @@ paths:
       operationId: createPickingLocationSchedule
       tags:
         - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location identifier
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -332,7 +818,7 @@ paths:
                 - id
                 - openingHours
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -342,7 +828,7 @@ paths:
                   message:
                     type: string
                     example: "Picking Location schedule updated successfully"
-        400:
+        '400':
           description: Bad Request
           content:
             application/json:
@@ -352,7 +838,7 @@ paths:
                   message:
                     type: string
                     example: "Invalid request, some fields are missing"
-        404:
+        '404':
           description: Picking Location not found
 
     patch:
@@ -361,6 +847,13 @@ paths:
       operationId: updatePickingLocationSchedule
       tags:
         - picking-locations
+      parameters:
+        - name: id
+          in: path
+          description: Picking location identifier
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -371,7 +864,7 @@ paths:
                 - id
                 - openingHours
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -381,7 +874,7 @@ paths:
                   message:
                     type: string
                     example: "Picking Location schedule updated successfully"
-        400:
+        '400':
           description: Bad Request
           content:
             application/json:
@@ -391,22 +884,22 @@ paths:
                   message:
                     type: string
                     example: "Invalid request, some fields are missing"
-        404:
+        '404':
           description: Picking Location not found
 
   # Timeslots
 
   /timeslots:
     get:
-      summary: Get the Time Slots and their availability for a given Delivery Area
-      description: This endpoint allows retailers to retrieve the available time slots for a given delivery area. The retailer can specify the delivery area by passing its identifier in the id query parameter. The fromDate parameter is used to specify the starting date of the time slots to be retrieved. The date must be in ISO 8601 format. The quantity parameter limits the number of time slots to be returned. Use this parameter to limit the request and retrieve just the nearest available time slots.
-      operationId: getTimeSlotsAvailability
+      summary: Get the Timeslots and their availability for a given Picking Location
+      description: This endpoint allows retailers to retrieve the available timeslots for a given picking location. The retailer can specify the picking location by passing its identifier in the id query parameter. The fromDate parameter is used to specify the starting date of the timeslots to be retrieved. The date must be in ISO 8601 format. The quantity parameter limits the number of timeslots to be returned. Use this parameter to limit the request and retrieve just the nearest available timeslots.
+      operationId: getTimeslotsAvailability
       tags:
         - timeslots
       parameters:
-        - name: id
+        - name: pickingLocationId
           in: query
-          description: Delivery Area identifier
+          description: Picking Location identifier
           required: true
           schema:
             type: string
@@ -419,20 +912,159 @@ paths:
         - name: quantity
           in: query
           required: true
-          description: Number of Time Slots to be displayed
+          description: Number of Timeslots to be displayed
           schema:
             type: number
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TimeSlotAvailability'
-        400:
+                $ref: '#/components/schemas/TimeslotAvailability'
+        '400':
           description: Invalid ID
+  /timeslots/{id}/reservations:
+    post:
+      summary: Reserve a timeslot
+      description: Create a new Timeslot reservation
+      operationId: createTimeslotReservation
+      tags:
+        - timeslots
+      parameters:
+        - name: id
+          in: path
+          description: Timeslot identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+             schema:
+                $ref: '#/components/schemas/TimeslotReservation'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/TimeslotReservation'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "TIMESLOT_NOT_AVAILABLE"
+                      - "TOTAL_ARTICLES_TOO_HEAVY"
+                      - "INVALID_SHIPPING_ADDRESS"
+                      - "INVALID_CUSTOMER_DATA"
+                      - "INVALID_ARTICLE_ITEM_QUANTITY"
+                      - "TOTAL_MISMATCH"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
 
-  #TODO: Time Slots
+  /timeslots/{timeslotId}/reservations/{reservationId}/cancel:
+    post:
+      summary: Cancel a reservation of a given timeslot
+      description: Cancel a reservation of a given timeslot
+      operationId: cancelTimeslotReservation
+      tags:
+        - timeslots
+      parameters:
+        - name: timeslotId
+          in: path
+          description: Timeslot identifier
+          required: true
+          schema:
+            type: string
+        - name: reservationId
+          in: path
+          description: Timeslot Reservation identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+             schema:
+                type: object
+                properties:
+                  reason:
+                    type: object
+                    properties:
+                      code:
+                        description: |-
+                          - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+                          - `OMS_DRIVEN`	The OMS triggered the cancelation.
+                          - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+                          - `OTHER`	The cancelation was triggered by another source.
+                        enum:
+                          - CUSTOMER_DRIVEN
+                          - OMS_DRIVEN
+                          - RETAILER_DRIVEN
+                          - OTHER
+                      type:
+                        type: string
+                        description: Cancelation reasons type
+                        enum:
+                          - 'payment failed'
+                          - 'fraudulent customer'
+                          - 'incorrect customer information'
+                          - 'customer requested to cancel'
+                          - 'too many out of stock items'
+                          - 'system error'
+                          - 'other'
+                          - 'unknown'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeslotReservationCancelation'
+                required: ['id', 'status', 'createdAt', 'timeslotReservation']
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "TOO_LATE_TO_CANCEL"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
+        '404':
+          description: Not Found
+
+
+  #TODO: Timeslots
     #  possibilites :
     # /picking-locations/{id}/time-slots/availability
     # /picking-locations/{id}/time-slots/preview
@@ -466,13 +1098,15 @@ paths:
             schema:
               $ref: '#/components/schemas/Order'
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
-        400:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Order'
+        '400':
           description: Bad Request
           content:
             application/json:
@@ -499,6 +1133,421 @@ paths:
                       type: string
                       description: List of error details
 
+  /orders/{id}:
+     get:
+      summary: Get an order
+      description: Retrieves order details by order ID.
+      operationId: getOrderById
+      tags:
+        - orders
+      parameters:
+        - name: id
+          in: path
+          description: Order identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Order not found
+
+     patch:
+      summary: Update an existing order
+      description: Update an existing order with the provided information
+      operationId: updateOrder
+      tags:
+        - orders
+      parameters:
+        - name: id
+          in: path
+          description: Order identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "TIMESLOT_NOT_AVAILABLE"
+                      - "ORDER_TOO_HEAVY"
+                      - "INVALID_SHIPPING_ADDRESS"
+                      - "INVALID_CUSTOMER_DATA"
+                      - "INVALID_PRODUCT_QUANTITY"
+                      - "ORDER_TOTAL_MISMATCH"
+                      - "DUPLICATED_ORDER"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
+
+  /orders/{id}/cancel:
+    post:
+      summary: Cancel an order
+      description: Cancel an order
+      operationId: cancelOrder
+      tags:
+        - orders
+      parameters:
+        - name: id
+          in: path
+          description: Order identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: object
+                  properties:
+                    code:
+                      description: |-
+                        Cancelation reason code:
+                        - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+                        - `OMS_DRIVEN`	The OMS triggered the cancelation.
+                        - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+                        - `SHOPPER_DRIVEN`	The shopper triggered the cancelation.
+                        - `OTHER`	The cancelation was triggered by another source.
+                      enum:
+                        - CUSTOMER_DRIVEN
+                        - OMS_DRIVEN
+                        - RETAILER_DRIVEN
+                        - SHOPPER_DRIVEN
+                        - OTHER
+                    type:
+                      type: string
+                      description: Cancelation reason type
+                      enum:
+                        - 'duplicate order'
+                        - 'customer requested since order is early'
+                        - 'customer requested since order is late'
+                        - 'customer is unavailable'
+                        - 'customer requested to cancel'
+                        - 'shopper unable to complete order'
+                        - 'shopper could not find address'
+                        - 'too many out of stock items'
+                        - 'canceled by retailer'
+                        - 'fraudulent customer'
+                        - 'store early closure'
+                        - 'system error'
+                        - 'other'
+                        - 'unknown'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderCancelation'
+                required: ['id', 'status', 'createdAt', 'order']
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                  errorCode:
+                    type: string
+                    description: Error code
+                    enum:
+                      - "ALREADY_CANCELED"
+                      - "TOO_LATE_TO_CANCEL"
+                      - "INVALID_REASON"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: List of error details
+        '404':
+          description: Order Not Found
+
+
+  /webhooks/subscriptions/event-types:
+    get:
+      summary: List webhook event types
+      description: Endpoint to see all the event types that you can subscribe to.
+      operationId: listWebhookEventTypes
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eventTypes:
+                    type: array
+                    description: List of events to be subscribed.
+                    items:
+                      $ref: '#/components/schemas/EventTypesEnum'
+                  metadata:
+                    $ref: '#/components/schemas/WebhookEventTypeMetadata'
+                example: {
+                  "eventTypes": [ "order.received", "order.delivered"],
+                  "metadata": [
+                    {
+                      "eventId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                      "eventName": "order.received",
+                      "eventStatus": "PUBLISHED",
+                      "eventVersion": "v1.0.0",
+                      "createdAt": "2023-02-01T14:48:00.000Z",
+                      "updatedAt": "2023-02-01T14:48:00.000Z"
+                    }, {
+                      "eventId": "2ba85f62-5717-4562-b3fc-2c963f66ac95",
+                      "eventName": "order.delivered",
+                      "eventStatus": "PUBLISHED",
+                      "eventVersion": "v1.0.1",
+                      "createdAt": "2023-02-01T14:48:00.000Z",
+                      "updatedAt": "2023-02-08T14:48:00.000Z"
+                    }
+                  ]
+                }
+        '400':
+          description: Bad Request
+
+  /webhooks/subscriptions/{id}/test:
+    post:
+      summary: Test webhook subscription
+      description: Tests a webhook subscription by sending a test event to the notification URL.
+      operationId: testWebhookSubscription
+      tags:
+        - webhooks
+      parameters:
+        - name: id
+          in: path
+          description: Picking location identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventType:
+                    $ref: '#/components/schemas/EventTypesEnum'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionTestResult'
+        '400':
+          description: Bad Request
+
+  /webhooks/subscriptions:
+    get:
+      summary: List webhook subscriptions
+      description: Lists all webhook subscriptions owned by an application.
+      operationId: listWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscriptions:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/ID'
+                        - $ref: '#/components/schemas/Subscription'
+                    example: [ 
+                      {
+                        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "subscriberId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "eventTypes": [
+                          "order.received",
+                          "order.delivered"
+                        ],
+                        "notificationUrl": "https://retailer.example-webhook-url.com",
+                        "createdAt": "string",
+                        "updatedAt": "string",
+                        "name": "Example Webhook Subscription",
+                        "enabled": true
+                      }
+                    ]
+        '400':
+          description: Bad Request
+
+    post:
+      summary: Create new webhook subscription
+      description: |-
+        Subscribe to receive events.
+        
+        Use this endpoint to add your notification URL and list of events that you want your application to subscribe to.
+      operationId: createWebhookSubscription
+      tags:
+        - webhooks
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventTypes:
+                    type: array
+                    description: List of events to be subscribed.
+                    example:
+                        - "order.received"
+                        - "order.delivered"
+                    items:
+                      $ref: '#/components/schemas/EventTypesEnum'
+                notificationUrl:
+                  example: "https://retailer.example-webhook-url.com"
+                name:
+                  type: string
+                  example: "Example App Webhook Subscription"
+              required:
+                - "eventTypes"
+                - "notificationUrl"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
+
+  /webhooks/subscriptions/{id}:
+    get:
+      summary: Get webhook subscription
+      description: Retrieves a webhook subscription identified by its identifier.
+      operationId: getWebhookSubscription
+      tags:
+        - webhooks
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
+        '404':
+          description: Webhook subscription not found
+    
+    patch:
+      summary: Update webhook subscription
+      description: |-
+        This endpoint allows to partially update a webhook subscription for a given subscription identifier.
+        
+        Use this to update the list of event types of a single subscription.
+      operationId: updateWebhookSubscription
+      tags:
+        - webhooks
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
+        '404':
+          description: Webhook subscription not found
+    delete:
+      summary: Delete webhook subscription
+      description: Deletes a webhook subscription.
+      operationId: deleteWebhookSubscription
+      tags:
+        - webhooks
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Webhook subscription not found
+
 components:
   schemas:
 
@@ -514,7 +1563,8 @@ components:
         expiresIn:
           type: number
         createdAt:
-          type: date
+          type: string
+          format: ISO 8601
 
     PickingLocation:
       type: object
@@ -568,7 +1618,7 @@ components:
           type: string
           enum: [operating, closed, unpublished]
           description: The status of the Picking Location, whether it is operating or closed. The `unpublished` status indicates a Picking Location will not be displayed when querying for service availability. Useful for inputting data into the system without immediately making it available to the public.
-          example: "active"
+          example: "operating"
 
 
     PickingLocationSchedule:
@@ -647,37 +1697,93 @@ components:
           description: Occupied capacity of the location
           example: 20
 
-    TimeSlot:
+    Timeslot:
       type: object
       properties:
         id:
           type: string
-          description: Unique identifier of the Time Slot
+          description: Unique identifier of the Timeslot
           example: "slot1"
         fromDate:
           type: string
           format: ISO 8601
-          description: The starting time of the Time Slot
+          description: The starting time of the Timeslot
           example: "2023-01-11T14:00:00+00:00"
         toDate:
           type: string
           format: ISO 8601
-          description: The ending time of the Time Slot
+          description: The ending time of the Timeslot
           example: "2023-01-11T15:00:00+00:00"
 
-    TimeSlotAvailability:
+    TimeslotAvailability:
       type: array
       items:
         type: object
         properties:
-          timeSlot:
-            $ref: '#/components/schemas/TimeSlot'
+          timeslot:
+            $ref: '#/components/schemas/Timeslot'
           capacity:
             $ref: '#/components/schemas/Capacity'
           available:
             type: boolean
-            description: Indicates if the user can book this Time Slot.
+            description: Indicates if the user can book this Timeslot.
             example: true
+
+    TimeslotReservation:
+      type: object
+      properties:
+        timeslotId:
+          type: string
+          description: The Timeslot's identifier selected for the Order
+          example: "slot2"
+        serviceType:
+          $ref: '#/components/schemas/ServiceType'
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderArticle'
+          description: The array of articles included in the Order
+        customerInfo:
+          $ref: '#/components/schemas/CustomerInfo'
+          description: The customer information related to the Order
+        shippingAddress:
+          $ref: '#/components/schemas/ShippingAddress'
+          description: Where the Order should be delivered.
+        totalPrice:
+          type: number
+          format: currency
+          description: The total price of the Order
+          example: 119.9
+        estimatedWeight:
+          type: number
+          format: weight
+          description: The estimated weight of the Order
+          example: 12.5
+
+    TimeslotReservationCancelation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The cancelation identifier
+        status:
+          type: string
+          example: "canceled"
+        reason:
+          type: object
+          description: The cancelation reason
+          properties:
+            code:
+              type: string
+            type:
+              type: string
+        timeslotReservation:
+          allOf:
+           - $ref: '#/components/schemas/ID'
+           - $ref: '#/components/schemas/TimeslotReservation'
+        createdAt:
+          type: string
+          format: ISO 8601
 
     Schedule:
       type: object
@@ -687,7 +1793,7 @@ components:
         slots:
           type: array
           items:
-            $ref: '#/components/schemas/TimeSlotAvailability'
+            $ref: '#/components/schemas/TimeslotAvailability'
 
     OrderArticle:
       type: object
@@ -734,7 +1840,7 @@ components:
           items:
             type: string
             description: An array of preferred Stock Keeping Units to replace this Product in the case of a stockout.
-            example: ['53234', '232321']
+          example: ["53234", "232321"]
 
     CustomerInfo:
       type: object
@@ -803,11 +1909,7 @@ components:
     Order:
       type: object
       properties:
-        orderId:
-          type: string
-          description: The unique identifier of the Order
-          example: "order1"
-        timeSlotId:
+        timeslotId:
           type: string
           description: The Timeslot's identifier selected for the Order
           example: "slot2"
@@ -832,6 +1934,167 @@ components:
           format: weight
           description: The estimated weight of the Order
           example: 12.5
+
+    OrderCancelation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The order cancelation unique identifier
+        status:
+          type: string
+          example: "canceled"
+        reason:
+          type: object
+          description: The cancelation reason
+          properties:
+            code:
+              type: string
+            type:
+              type: string
+        order:
+          allOf:
+           - $ref: '#/components/schemas/ID'
+           - $ref: '#/components/schemas/Order'
+        createdAt:
+          type: string
+          format: ISO 8601
+
+    ServiceType:
+      type: string
+      enum: [delivery, picking]
+      description: The logistical service type offered; `delivery` means that picking and delivering goods through couriers is supported; `picking` means that only picking up goods from picking locations is supported.
+
+    ServiceAvailability:
+      type: array
+      properties:
+        items:
+          type: object
+          properties:
+            serviceType:
+              $ref: '#/components/schemas/ServiceType'
+            deliveryAreaId:
+              type: string
+              description: The Delivery Area identifier.Nnecessary to request `delivery` Timeslots
+            pickingLocationIds:
+              type: array
+              description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier  corresponding to the Picking Location closest to the delivery location.
+              items:
+                type: string
+                description: The Picking Location identifier.
+    ID:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          format: "uuid"
+
+    Subscription:
+      type: object
+      properties:
+        subscriberId:
+          type: string
+          format: "uuid"
+        eventTypes:
+          type: array
+          description: List of events to be subscribed.
+          example:
+              - "order.received"
+              - "order.delivered"
+          items:
+            $ref: '#/components/schemas/EventTypesEnum'
+        notificationUrl:
+          example: "https://retailer.example-webhook-url.com"
+        createdAt:
+          type: string
+          format: ISO 8601
+        updatedAt:
+          type: string
+          format: ISO 8601
+        name:
+          type: string
+          example: "Example Webhook Subscription"
+        enabled:
+          type: boolean
+
+    EventTypesEnum:
+      type: string
+      enum:
+        - "order.received"
+        - "order.confirmed"
+        - "order.allocated"
+        - "order.rescheduled"
+        - "order.in.picking"
+        - "order.picked"
+        - "order.in.transit"
+        - "order.delivered"
+        - "order.on.hold"
+        - "order.rejected"
+        - "order.canceled"
+        - "order.returned"
+        - "item.pending"
+        - "item.picked"
+        - "item.not.found"
+        - "item.replaced"
+
+    WebhookEventTypeMetadata:
+      type: array
+      items:
+        type: object
+        properties:
+          eventId:
+            type: string
+            format: "uuid"
+          eventName:
+            type: string
+            example: "order.delivered"
+          eventStatus:
+            type: string
+            enum:
+              - PUBLISHED
+              - DEPRECATED
+              - SOON_DEPRECATED
+          eventVersion:
+            type: string
+            example: "v1.0"
+          createdAt:
+            type: string
+            format: ISO 8601
+          updatedAt:
+            type: string
+            format: ISO 8601
+
+    SubscriptionTestResult:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The validation request identifier (idempotency key)
+          format: "uuid"
+        subscriberId:
+          type: string
+          format: "uuid"
+        notificationUrl:
+          type: string 
+        validationResult:
+          type: object
+          properties:
+            responseStatusCode:
+              type: number
+              description: HTTP status code
+              example: 200
+            responseCode:
+              type: string
+              example: "OK"
+            responseMessage: 
+              type: string
+              example: "Event sent successfully."
+            succeeded:
+              type: boolean
+            createdAt:
+              type: string
+              format: ISO 8601
 
     ApiResponse:
       type: object
