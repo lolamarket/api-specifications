@@ -1376,7 +1376,7 @@ paths:
                   type: array
                   items:
                     type: string
-                  example: [ "order.created", "order.updated"]
+                  example: [ "order.received", "order.delivered"]
                 notificationUrl:
                   example: "https://retailer.example-webhook-url.com"
                 name:
@@ -1414,7 +1414,17 @@ paths:
       responses:
         '200':
           description: OK
-    put:
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
+        '404':
+          description: Webhook subscription not found
+    patch:
       summary: Update webhook subscription
       description: Updates a webhook subscription.
       operationId: updateWebhookSubscription
@@ -1427,9 +1437,25 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ID'
+                  - $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad Request
+        '404':
+          description: Webhook subscription not found
     delete:
       summary: Delete webhook subscription
       description: Deletes a webhook subscription.
@@ -1898,7 +1924,7 @@ components:
           type: array
           items:
             type: string
-          example: [ "order.created", "order.updated"]
+          example: [ "order.received", "order.delivered"]
         notificationUrl:
           example: "https://retailer.example-webhook-url.com"
         createdAt:
