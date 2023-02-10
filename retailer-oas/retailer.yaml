@@ -2008,16 +2008,27 @@ components:
       items:
         type: object
         properties:
-          eventId: 
+          eventId:
             type: string
+            format: "uuid"
           eventName:
             type: string
             example: "order.delivered"
-          eventTimestamp:
+          eventStatus:
+            type: string
+            enum:
+              - PUBLISHED
+              - DEPRECATED
+              - SOON_DEPRECATED
+          eventVersion:
+            type: string
+            example: "v1.0"
+          createdAt:
             type: string
             format: ISO 8601
-          eventPayload:
-            type: object
+          updatedAt:
+            type: string
+            format: ISO 8601
 
     ApiResponse:
       type: object
