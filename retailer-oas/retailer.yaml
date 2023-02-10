@@ -20,7 +20,7 @@ info:
     Our API includes webhooks to notify you of status changes on an order.
     By subscribing to these webhooks, you can receive real-time updates on the status of your orders, without the need to continuously poll the API.
 
-    ![Order statuses](http://lolamarket.statics.prod.s3.amazonaws.com/lola-help/order_state_machine.jpg)
+    <img src="http://lolamarket.statics.prod.s3.amazonaws.com/lola-help/order_state_machine.jpg" />
     1. `order.received`: Order received on the OMS and waiting for processing.
     2. `order.confirmed`: Order confirmed by the OMS, waiting for shopper assignment.
     3. `order.allocated`: Order assigned and accepted by a shopper. In some cases, the order may be assigned to multiple resources (picker, courier).
