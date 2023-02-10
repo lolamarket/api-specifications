@@ -767,7 +767,7 @@ paths:
           schema:
             type: string
       responses:
-        204:
+        '204':
           description: No Content
         '404':
           description: Picking Location not found
@@ -1470,8 +1470,10 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
+        '404':
+          description: Webhook subscription not found
 
 components:
   schemas:
@@ -1913,13 +1915,14 @@ components:
         id:
           type: string
           description: Unique identifier
-          example: "uuid"
+          format: "uuid"
 
     Subscription:
       type: object
       properties:
         subscriberId:
-          $ref: '#/components/schemas/ID'
+          type: string
+          format: "uuid"
         eventTypes:
           type: array
           items:
