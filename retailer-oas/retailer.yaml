@@ -150,7 +150,7 @@ info:
     ```json
     {
       "eventId": 1201895966044343905,
-      "eventName": "order.in_picking",
+      "eventName": "order.in.picking",
       "eventTimestamp": "2023-01-12T09:10:20Z",
       "eventPayload": {
         "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
@@ -246,7 +246,7 @@ info:
     ```json
     {
       "eventId": 1201895966044343907,
-      "eventName": "order.in_transit",
+      "eventName": "order.in.transit",
       "eventTimestamp": "2023-01-12T10:18:12Z",
       "eventPayload": {
         "orderId": "b7fab7ae-11fc-4453-98e1-a2f5421a2b81",
@@ -1314,6 +1314,23 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eventTypes:
+                    type: array
+                    description: List of events to be subscribed.
+                    example:
+                        - "order.received"
+                        - "order.delivered"
+                    items:
+                      $ref: '#/components/schemas/EventTypesEnum'
+                  metadata:
+                    $ref: '#/components/schemas/WebhookEventTypeMetadata'
+        '400':
+          description: Bad Request
 
   # TODO: add this to test subscription
   # /webhooks/subscriptions/{id}/test:
@@ -1347,12 +1364,25 @@ paths:
                 properties:
                   subscriptions:
                     type: array
-                    properties:
-                      items:
-                        allOf:
-                          - $ref: '#/components/schemas/ID'
-                          - $ref: '#/components/schemas/Subscription'
-                        example: []
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/ID'
+                        - $ref: '#/components/schemas/Subscription'
+                    example: [ 
+                      {
+                        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "subscriberId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "eventTypes": [
+                          "order.received",
+                          "order.delivered"
+                        ],
+                        "notificationUrl": "https://retailer.example-webhook-url.com",
+                        "createdAt": "string",
+                        "updatedAt": "string",
+                        "name": "Example Webhook Subscription",
+                        "enabled": true
+                      }
+                    ]
         '400':
           description: Bad Request
 
@@ -1360,6 +1390,7 @@ paths:
       summary: Create new webhook subscription
       description: |-
         Subscribe to receive events.
+        
         Use this endpoint to add your notification URL and list of events that you want your application to subscribe to.
       operationId: createWebhookSubscription
       tags:
@@ -1373,10 +1404,13 @@ paths:
               type: object
               properties:
                 eventTypes:
-                  type: array
-                  items:
-                    type: string
-                  example: [ "order.received", "order.delivered"]
+                    type: array
+                    description: List of events to be subscribed.
+                    example:
+                        - "order.received"
+                        - "order.delivered"
+                    items:
+                      $ref: '#/components/schemas/EventTypesEnum'
                 notificationUrl:
                   example: "https://retailer.example-webhook-url.com"
                 name:
@@ -1400,7 +1434,7 @@ paths:
   /webhooks/subscriptions/{id}:
     get:
       summary: Get webhook subscription
-      description: Retrieves a webhook subscription identified by its ID.
+      description: Retrieves a webhook subscription identified by its identifier.
       operationId: getWebhookSubscription
       tags:
         - webhooks
@@ -1424,9 +1458,13 @@ paths:
           description: Bad Request
         '404':
           description: Webhook subscription not found
+    
     patch:
       summary: Update webhook subscription
-      description: Updates a webhook subscription.
+      description: |-
+        This endpoint allows to partially update a webhook subscription for a given subscription identifier.
+        
+        Use this to update the list of event types of a single subscription.
       operationId: updateWebhookSubscription
       tags:
         - webhooks
@@ -1925,9 +1963,12 @@ components:
           format: "uuid"
         eventTypes:
           type: array
+          description: List of events to be subscribed.
+          example:
+              - "order.received"
+              - "order.delivered"
           items:
-            type: string
-          example: [ "order.received", "order.delivered"]
+            $ref: '#/components/schemas/EventTypesEnum'
         notificationUrl:
           example: "https://retailer.example-webhook-url.com"
         createdAt:
@@ -1942,6 +1983,41 @@ components:
         enabled:
           type: boolean
 
+    EventTypesEnum:
+      type: string
+      enum:
+        - "order.received"
+        - "order.confirmed"
+        - "order.allocated"
+        - "order.rescheduled"
+        - "order.in.picking"
+        - "order.picked"
+        - "order.in.transit"
+        - "order.delivered"
+        - "order.on.hold"
+        - "order.rejected"
+        - "order.canceled"
+        - "order.returned"
+        - "item.pending"
+        - "item.picked"
+        - "item.not.found"
+        - "item.replaced"
+
+    WebhookEventTypeMetadata:
+      type: array
+      items:
+        type: object
+        properties:
+          eventId: 
+            type: string
+          eventName:
+            type: string
+            example: "order.delivered"
+          eventTimestamp:
+            type: string
+            format: ISO 8601
+          eventPayload:
+            type: object
 
     ApiResponse:
       type: object
