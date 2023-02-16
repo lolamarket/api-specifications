@@ -532,12 +532,9 @@ paths:
       summary: Generate an access token
       description: |
         Returns a new access token.
-
         The access token must be included in all other requests as a Bearer token for authentication purposes.
-
         Before you start, make sure you have been given a `clientId` and `clientSecret`.
-
-        The token is valid for ***[X time]***. During this period, reuse the same token. After that, a new token must be generated.
+        The token is valid for 24 hours. During this period, reuse the same token. After that, a new token must be generated.
       operationId: generateAccessToken
       requestBody:
         required: true
@@ -548,16 +545,28 @@ paths:
               properties:
                 clientId:
                   type: string
+                  description: The ID of the client requesting the access token.
+                  example: "BIEDRONKA123"
                 clientSecret:
                   type: string
+                  description: The secret key associated with the client ID.
+                  example: "IyJT0xWC95GJtjYX9r0gZvmDhLH49Pp8"
                 grantType:
                   type: string
+                  description: The grant type used to obtain the access token.
+                  example: "oms"
                 scope:
                   type: string
+                  description: The scope of the access token, which defines the set of permissions associated with the token.
+                  example: "RW"
                 code:
                   type: string
+                  description: The authorization code received from the authorization server. This field is required for the authorization code grant type.
+                  example: "a1b2c3d4e5f6g7h8i9j0"
                 redirectUri:
                   type: string
+                  description: The redirect URI associated with the client ID. This field is required for the authorization code grant type.
+                  example: "https://example.com/callback"
               required:
                 - clientId
                 - clientSecret
@@ -569,6 +578,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccessToken'
+
   /oauth/token/revoke:
     post:
       tags:
@@ -576,8 +586,7 @@ paths:
       summary: Revoke an access token
       description: |
         Revokes any access token.
-
-        You need to include your `clientId` and secret and the access token in the request body.
+        You need to include your `clientId` and `clientSecret` and the access token in the request body.
       operationId: revokeAccessToken
       requestBody:
         required: true
@@ -588,10 +597,16 @@ paths:
               properties:
                 clientId:
                   type: string
+                  description: The ID of the client requesting the access token.
+                  example: "BIEDRONKA123"
                 clientSecret:
                   type: string
+                  description: The secret key associated with the client ID.
+                  example: "IyJT0xWC95GJtjYX9r0gZvmDhLH49Pp8"
                 token:
                   type: string
+                  description: The token that will be revoked.
+                  example: "3e5f75b44b6f473d96fa1651a2b59e22"
               required:
                 - clientId
                 - clientSecret
@@ -611,18 +626,19 @@ paths:
       parameters:
         - name: postalCode
           in: query
-          description: The postal code to check service availability for.
           required: true
+          description: The postal code to check service availability for.
+          example: "101-400"
           schema:
             type: string
         - name: countryCode
           in: query
-          description: The ISO 3166 country code corresponding to the given postal code.
           required: true
+          description: The ISO 3166 country code corresponding to the given postal code.
+          example: "PL"
           schema:
             type: string
             format: ISO 3166-1
-
       responses:
         '200':
           description: Service is available for the given postal code.
@@ -889,35 +905,43 @@ paths:
         '404':
           description: Picking Location not found
 
+
   # Timeslots
 
   /timeslots:
     get:
       summary: Get the Timeslots and their availability for a given Picking Location
-      description: This endpoint allows retailers to retrieve the available timeslots for a given picking location.
-      The retailer can specify the picking location by passing its identifier in the id query parameter.
-      The fromDate parameter is used to specify the starting date of the timeslots to be retrieved, and toDate to
-      limit at the end. The result will be limited to a maximum of 7 days. The date must be in ISO 8601 format.
-      The quantity parameter limits the number of timeslots to be returned.
+      description: |-
+        This endpoint allows retailers to retrieve the available timeslots for a given picking location.
+        The retailer can specify the picking location by passing its identifier in the id query parameter.
+        The fromDate parameter is used to specify the starting date of the timeslots to be retrieved, and toDate to
+        limit at the end. The result will be limited to a maximum of 7 days. The date must be in ISO 8601 format.
+        The quantity parameter limits the number of timeslots to be returned.
+
       operationId: getTimeslotsAvailability
       tags:
         - timeslots
       parameters:
         - name: pickingLocationId
           in: query
-          description: Picking Location identifier
           required: true
+          description: Picking Location identifier
+          example: "123456"
           schema:
             type: string
         - name: fromDate
           in: query
           required: true
+          description: The first timeslot.
+          example: "2023-01-14T13:00:00Z"
           schema:
             type: string
             format: ISO 8601
         - name: toDate
           in: query
-          required: true
+          required: false
+          description: The first timeslot. Limited to 7 days.
+          example: "2023-01-19T22:00:00Z"
           schema:
             type: string
             format: ISO 8601
@@ -925,6 +949,7 @@ paths:
           in: query
           required: false
           description: Number of Timeslots to be displayed, use this parameter to limit the request and retrieve just (1) the nearest available timeslots.
+          example: 1
           schema:
             type: number
       responses:
@@ -936,6 +961,7 @@ paths:
                 $ref: '#/components/schemas/TimeslotAvailability'
         '400':
           description: Invalid ID
+
   /timeslots/{id}/reservations:
     post:
       summary: Reserve a timeslot
@@ -1674,19 +1700,6 @@ components:
             type: string
             format: date
 
-    DeliveryArea:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        coords:
-          $ref: '#/components/schemas/GeoCoordinates'
-        countryCode:
-          type: string
-          format: ISO 3166-1
-
     GeoCoordinates:
       type: object
       properties:
@@ -1743,13 +1756,17 @@ components:
 
     TimeslotReservation:
       type: object
+      required:
+        - articles
+        - customerInfo
+        - shippingAddress
+        - totalPrice
+        - estimatedWeight
       properties:
         timeslotId:
           type: string
           description: The Timeslot's identifier selected for the Order
           example: "slot2"
-        serviceType:
-          $ref: '#/components/schemas/ServiceType'
         articles:
           type: array
           items:
@@ -1757,20 +1774,18 @@ components:
           description: The array of articles included in the Order
         customerInfo:
           $ref: '#/components/schemas/CustomerInfo'
-          description: The customer information related to the Order
         shippingAddress:
           $ref: '#/components/schemas/ShippingAddress'
-          description: Where the Order should be delivered.
         totalPrice:
           type: number
           format: currency
-          description: The total price of the Order
+          description: The total price of the Order, will b eused as total budget to do replacements.
           example: 119.9
         estimatedWeight:
           type: number
           format: weight
-          description: The estimated weight of the Order
-          example: 12.5
+          description: The estimated weight of the Order in kilograms.
+          example: 12.500
 
     TimeslotReservationCancelation:
       type: object
@@ -1797,56 +1812,57 @@ components:
           type: string
           format: ISO 8601
 
-    Schedule:
-      type: object
-      properties:
-        id:
-          type: string
-        slots:
-          type: array
-          items:
-            $ref: '#/components/schemas/TimeslotAvailability'
-
     OrderArticle:
       type: object
+      required:
+        - sku
+        - quantityRequested
+        - quantityRequestedUnit
+        - unitPrice
+        - regularPrice
       properties:
         sku:
           type: string
           description: Stock Keeping Unit of the Product
           example: "12345"
-        requestedQuantity:
+        quantityRequested:
           type: number
           description: Requested quantity of the Product
-          example: 10
+          example: 3
+        quantityRequestedUnit:
+          type: string
+          description: The unit of the `quantityRequested` field. (pieces, grams, kilograms, litres, packages)
+          example: pieces
         customerNote:
           type: string
+          maxLength: 200
           description: A description of any request from the customer.
-          example: "I want it in small slices"
-        discount:
-          type: number
-          format: percent
-          description: The discount applied to the product
-          example: 0.1
-        buyingPrice:
-          type: number
-          format: currency
-          description: The buying price of the product
-          example: 10.99
+          example: "I want it very very fresh!"
         unitPrice:
           type: number
           format: currency
-          description: The unit price of the product
-          example: 11.99
-        totalPrice:
+          description: The price paid for a single quantityRequestedUnit with no discounts.
+          example: 1.50
+        buyingPrice:
           type: number
           format: currency
-          description: The total price of the product considering the quantity
-          example: 119.9
+          description: The total price the customer is paying for this line, including discounts.
+          example: 4.00
+        regularPrice:
+          type: number
+          format: currency
+          description: The total price of the product considering the quantity and no discounts.
+          example: 4.50
+        discount:
+          type: number
+          format: percent
+          description: The discount applied to the line.
+          example: 0.1111111111
         estimatedWeight:
           type: number
           format: weight
-          description: The estimated weight of the product
-          example: 12.5
+          description: The estimated weight of the product in kilograms.
+          example: 1.250
         replacementPreferences:
           type: array
           items:
@@ -1856,15 +1872,19 @@ components:
 
     CustomerInfo:
       type: object
+      required:
+        - customerId
+        - phone
       properties:
+        customerId:
+          type: string
+          description: Must uniquely identify a customer
+          example: "001"
         customerName:
           type: string
           description: The name of the Customer
+          maxLength: 100
           example: "John Smith"
-        customerId:
-          type: string
-          description: The unique identifier of the Customer
-          example: "customer1"
         email:
           type: string
           format: email
@@ -1873,53 +1893,74 @@ components:
         phone:
           type: string
           format: phone
-          description: The phone number of the Customer (should include phone country code)
+          description: The phone number of the Customer (should include phone country code) will be used to contact the customer in case of incidece or replacement.
           example: "+1 (555) 555-5555"
         billingName:
           type: string
           description: The name of the Customer for billing purposes
+          maxLength: 100
           example: "John Smith"
         billingAddress:
           type: string
           description: The billing address of the Customer
+          maxLength: 200
           example: "123 Main St, Suite 200, Anytown USA 12345"
         vatNumber:
           type: string
           description: The VAT number of the Customer, if applicable
+          maxLength: 20
           example: "1234567890"
 
     ShippingAddress:
       type: object
+      required:
+        - addressLine1
+        - city
+        - state
+        - postalCode
       properties:
         addressLine1:
           type: string
           description: The first address line of the Shipping Address
+          maxLength: 300
           example: "123 Main St"
         addressLine2:
           type: string
           description: The second address line of the Shipping Address
+          maxLength: 300
           example: "Suite 200"
         additionalInfo:
           type: string
           description: Any additional info that the customer would like to specify
+          maxLength: 300
           example: "If I am not at home please deliver it to the neighbor in Suite 201"
         city:
           type: string
           description: The city of the Shipping Address
+          maxLength: 50
           example: "Warsaw"
         state:
           type: string
           description: The state or province of the Shipping Address
+          maxLength: 50
           example: "Poland"
         postalCode:
           type: string
           description: The postal code of the Shipping Address
+          maxLength: 10
           example: "123-545"
         coords:
           $ref: '#/components/schemas/GeoCoordinates'
 
     Order:
       type: object
+      required:
+        - timeslotId
+        - articles
+        - customerInfo
+        - shippingAddress
+        - totalPrice
+        - estimatedWeight
       properties:
         timeslotId:
           type: string
@@ -1930,12 +1971,16 @@ components:
           items:
             $ref: '#/components/schemas/OrderArticle'
           description: The array of articles included in the Order
+          required:
+            - sku
+            - quantityRequested
+            - quantityRequestedUnit
+            - buyingPrice
+            - estimatedWeight
         customerInfo:
           $ref: '#/components/schemas/CustomerInfo'
-          description: The customer information related to the Order
         shippingAddress:
           $ref: '#/components/schemas/ShippingAddress'
-          description: Where the Order should be delivered.
         totalPrice:
           type: number
           format: currency
@@ -1984,12 +2029,9 @@ components:
         properties:
           serviceType:
             $ref: '#/components/schemas/ServiceType'
-          deliveryAreaId:
-            type: string
-            description: The Delivery Area identifier.Nnecessary to request `delivery` Timeslots
           pickingLocationIds:
             type: array
-            description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier  corresponding to the Picking Location closest to the delivery location.
+            description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier corresponding to the Picking Location closest to the delivery location.
             items:
               type: string
               description: The Picking Location identifier.
