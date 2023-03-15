@@ -1,0 +1,96 @@
+get:
+  summary: Find a Picking Location by identifier
+  description: Get a single Picking Location for a given identifier.
+  operationId: findPickingLocationById
+  tags:
+    - picking-locations
+  parameters:
+    - name: id
+      in: path
+      description: Picking location identifier
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/PickingLocation.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Invalid request, some fields are missing"
+    '404':
+      description: Picking Location not found
+
+patch:
+  summary: Update an existing Picking Location
+  description: Update a Picking Location for a given identifier.
+  operationId: updatePickingLocation
+  tags:
+    - picking-locations
+  parameters:
+    - name: id
+      in: path
+      description: Picking Location identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/PickingLocation.yaml'
+          required:
+            - name
+            - coords
+            - postalCode
+            - addressLine1
+            - countryCode
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/PickingLocation.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Invalid request, some fields are missing"
+    '404':
+      description: Picking Location not found
+
+delete:
+  summary: Delete an existing Picking Location
+  description: Update a Picking Location for a given identifier.
+  operationId: deletePickingLocation
+  tags:
+    - picking-locations
+  parameters:
+    - name: id
+      in: path
+      description: Picking Location identifier
+      required: true
+      schema:
+        type: string
+  responses:
+    '204':
+      description: No Content
+    '404':
+      description: Picking Location not found

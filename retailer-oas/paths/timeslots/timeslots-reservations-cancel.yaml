@@ -1,0 +1,82 @@
+post:
+  summary: Cancel a reservation of a given timeslot
+  description: Cancel a reservation of a given timeslot
+  operationId: cancelTimeslotReservation
+  tags:
+    - timeslots
+  parameters:
+    - name: timeslotId
+      in: path
+      description: Timeslot identifier
+      required: true
+      schema:
+        type: string
+    - name: reservationId
+      in: path
+      description: Timeslot Reservation identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+          schema:
+            type: object
+            properties:
+              reason:
+                type: object
+                properties:
+                  code:
+                    description: |-
+                      - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+                      - `OMS_DRIVEN`	The OMS triggered the cancelation.
+                      - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+                      - `OTHER`	The cancelation was triggered by another source.
+                    enum:
+                      - CUSTOMER_DRIVEN
+                      - OMS_DRIVEN
+                      - RETAILER_DRIVEN
+                      - OTHER
+                  type:
+                    type: string
+                    description: Cancelation reasons type
+                    enum:
+                      - 'payment failed'
+                      - 'fraudulent customer'
+                      - 'incorrect customer information'
+                      - 'customer requested to cancel'
+                      - 'too many out of stock items'
+                      - 'system error'
+                      - 'other'
+                      - 'unknown'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/TimeslotReservationCancelation.yaml'
+            required: ['id', 'status', 'createdAt', 'timeslotReservation']
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+              errorCode:
+                type: string
+                description: Error code
+                enum:
+                  - "TOO_LATE_TO_CANCEL"
+              errors:
+                type: array
+                items:
+                  type: string
+                  description: List of error details
+    '404':
+      description: Not Found

@@ -1,0 +1,38 @@
+type: object
+required:
+  - timeslotId
+  - articles
+  - customerInfo
+  - shippingAddress
+  - totalPrice
+  - estimatedWeight
+properties:
+  timeslotId:
+    type: string
+    description: The Timeslot's identifier selected for the Order
+    example: "slot2"
+  articles:
+    type: array
+    items:
+      $ref: './OrderArticle.yaml'
+    description: The array of articles included in the Order
+    required:
+      - sku
+      - quantityRequested
+      - quantityRequestedUnit
+      - buyingPrice
+      - estimatedWeight
+  customerInfo:
+    $ref: './CustomerInfo.yaml'
+  shippingAddress:
+    $ref: './ShippingAddress.yaml'
+  totalPrice:
+    type: number
+    format: currency
+    description: The total price of the Order
+    example: 119.9
+  estimatedWeight:
+    type: number
+    format: weight
+    description: The estimated weight of the Order
+    example: 12.5

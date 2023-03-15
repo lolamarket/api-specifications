@@ -1,0 +1,115 @@
+post:
+  summary: Create a Picking Location Schedule
+  description: Set opening hours and closed days of a Picking Location.
+  operationId: createPickingLocationSchedule
+  tags:
+    - picking-locations
+  parameters:
+    - name: id
+      in: path
+      description: Picking location identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/PickingLocationSchedule.yaml'
+          required:
+            - id
+            - openingHours
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Picking Location schedule updated successfully"
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Invalid request, some fields are missing"
+    '404':
+      description: Picking Location not found
+
+
+get:
+  summary: Get a Picking Location's Schedule
+  description: Get the opening hours and closed days of a Picking Location.
+  operationId: getPickingLocationSchedule
+  tags:
+    - picking-locations
+  parameters:
+    - name: id
+      in: path
+      description: Picking location identifier
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/PickingLocationSchedule.yaml'
+    '404':
+      description: Picking Location not found
+
+patch:
+  summary: Update a Picking Location Schedule
+  description: Update opening hours and closed days of a Picking Location.
+  operationId: updatePickingLocationSchedule
+  tags:
+    - picking-locations
+  parameters:
+    - name: id
+      in: path
+      description: Picking location identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/PickingLocationSchedule.yaml'
+          required:
+            - id
+            - openingHours
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Picking Location schedule updated successfully"
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Invalid request, some fields are missing"
+    '404':
+      description: Picking Location not found

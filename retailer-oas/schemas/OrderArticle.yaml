@@ -1,0 +1,56 @@
+type: object
+required:
+  - sku
+  - quantityRequested
+  - quantityRequestedUnit
+  - unitPrice
+  - regularPrice
+properties:
+  sku:
+    type: string
+    description: Stock Keeping Unit of the Product
+    example: "12345"
+  quantityRequested:
+    type: number
+    description: Requested quantity of the Product
+    example: 3
+  quantityRequestedUnit:
+    type: string
+    description: The unit of the `quantityRequested` field. (pieces, grams, kilograms, litres, packages)
+    example: pieces
+  customerNote:
+    type: string
+    maxLength: 200
+    description: A description of any request from the customer.
+    example: "I want it very very fresh!"
+  unitPrice:
+    type: number
+    format: currency
+    description: The price paid for a single quantityRequestedUnit with no discounts.
+    example: 1.50
+  buyingPrice:
+    type: number
+    format: currency
+    description: The total price the customer is paying for this line, including discounts.
+    example: 4.00
+  regularPrice:
+    type: number
+    format: currency
+    description: The total price of the product considering the quantity and no discounts.
+    example: 4.50
+  discount:
+    type: number
+    format: percent
+    description: The discount applied to the line.
+    example: 0.1111111111
+  estimatedWeight:
+    type: number
+    format: weight
+    description: The estimated weight of the product in kilograms.
+    example: 1.250
+  replacementPreferences:
+    type: array
+    items:
+      type: string
+      description: An array of preferred Stock Keeping Units to replace this Product in the case of a stockout.
+    example: ["53234", "232321"]

@@ -1,0 +1,12 @@
+type: array
+items:
+  type: object
+  properties:
+    serviceType:
+      $ref: './ServiceType.yaml'
+    pickingLocationIds:
+      type: array
+      description: An array of Picking Location identifiers where the service type is available. Necessary to identify which product assortment to show the customer. In the case of the `delivery` service type, it will be a single identifier corresponding to the Picking Location closest to the delivery location.
+      items:
+        type: string
+        description: The Picking Location identifier.

@@ -1,0 +1,26 @@
+type: object
+properties:
+  subscriberId:
+    type: string
+    format: "uuid"
+  eventTypes:
+    type: array
+    description: List of events to be subscribed.
+    example:
+        - "order.received"
+        - "order.delivered"
+    items:
+      $ref: './EventTypesEnum.yaml'
+  notificationUrl:
+    example: "https://retailer.example-webhook-url.com"
+  createdAt:
+    type: string
+    format: ISO 8601
+  updatedAt:
+    type: string
+    format: ISO 8601
+  name:
+    type: string
+    example: "Example Webhook Subscription"
+  enabled:
+    type: boolean

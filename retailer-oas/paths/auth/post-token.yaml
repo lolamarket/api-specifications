@@ -1,0 +1,52 @@
+post:
+  tags:
+    - auth
+  summary: Generate an access token
+  description: |
+    Returns a new access token.
+    The access token must be included in all other requests as a Bearer token for authentication purposes.
+    Before you start, make sure you have been given a `clientId` and `clientSecret`.
+    The token is valid for 24 hours. During this period, reuse the same token. After that, a new token must be generated.
+  operationId: generateAccessToken
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            clientId:
+              type: string
+              description: The ID of the client requesting the access token.
+              example: "BIEDRONKA123"
+            clientSecret:
+              type: string
+              description: The secret key associated with the client ID.
+              example: "IyJT0xWC95GJtjYX9r0gZvmDhLH49Pp8"
+            grantType:
+              type: string
+              description: The grant type used to obtain the access token.
+              example: "oms"
+            scope:
+              type: string
+              description: The scope of the access token, which defines the set of permissions associated with the token.
+              example: "RW"
+            code:
+              type: string
+              description: The authorization code received from the authorization server. This field is required for the authorization code grant type.
+              example: "a1b2c3d4e5f6g7h8i9j0"
+            redirectUri:
+              type: string
+              description: The redirect URI associated with the client ID. This field is required for the authorization code grant type.
+              example: "https://example.com/callback"
+          required:
+            - clientId
+            - clientSecret
+            - grantType
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/AccessToken.yaml'

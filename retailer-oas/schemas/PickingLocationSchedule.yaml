@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The unique identifier of the Picking Location
+  openingHours:
+    type: array
+    description: An array of objects that represent the opening days and hours of the Picking Location.
+    items:
+      type: object
+      properties:
+        day:
+          type: string
+          enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+          description: The day of the week.
+        schedule:
+          type: array
+          description: An array of objects that represent the opening days and hours of the Picking Location.
+          items:
+            type: object
+            properties:
+              start:
+                type: string
+                format: time
+                description: The starting time of the schedule block.
+                example: "09:00:00"
+              end:
+                type: string
+                format: time
+                description: The ending time of the schedule block
+                example: "17:00:00"
+    example: [{ "day": "monday", schedule: [{"start": "09:00:00", "end": "12:00:00"},{"start": "15:00:00", "end": "17:00:00"}]}, { "day": "saturday", schedule: [{"start": "09:00:00", "end": "12:00:00"}, {"start": "13:00:00", "end": "17:00:00"}] }]
+  closedDays:
+    type: array
+    description: An array of dates when the Picking Location will be closed.
+    example: ["2022-12-25", "2022-12-26"]
+    items:
+      type: string
+      format: date

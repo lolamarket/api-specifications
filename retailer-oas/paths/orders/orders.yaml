@@ -1,0 +1,47 @@
+post:
+  summary: Create a new order
+  description: Create a new order with the provided information
+  operationId: createOrder
+  tags:
+    - orders
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/Order.yaml'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/Order.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+              errorCode:
+                type: string
+                description: Error code
+                enum:
+                  - "TIMESLOT_NOT_AVAILABLE"
+                  - "ORDER_TOO_HEAVY"
+                  - "INVALID_SHIPPING_ADDRESS"
+                  - "INVALID_CUSTOMER_DATA"
+                  - "INVALID_PRODUCT_QUANTITY"
+                  - "ORDER_TOTAL_MISMATCH"
+                  - "DUPLICATED_ORDER"
+              errors:
+                type: array
+                items:
+                  type: string
+                  description: List of error details

@@ -1,0 +1,52 @@
+get:
+  summary: Get the Timeslots and their availability for a given Picking Location
+  description: |-
+    This endpoint allows retailers to retrieve the available timeslots for a given picking location.
+    The retailer can specify the picking location by passing its identifier in the id query parameter.
+    The fromDate parameter is used to specify the starting date of the timeslots to be retrieved, and toDate to
+    limit at the end. The result will be limited to a maximum of 7 days. The date must be in ISO 8601 format.
+    The quantity parameter limits the number of timeslots to be returned.
+
+  operationId: getTimeslotsAvailability
+  tags:
+    - timeslots
+  parameters:
+    - name: pickingLocationId
+      in: query
+      required: true
+      description: Picking Location identifier
+      example: "123456"
+      schema:
+        type: string
+    - name: fromDate
+      in: query
+      required: true
+      description: The first timeslot.
+      example: "2023-01-14T13:00:00Z"
+      schema:
+        type: string
+        format: ISO 8601
+    - name: toDate
+      in: query
+      required: false
+      description: The first timeslot. Limited to 7 days.
+      example: "2023-01-19T22:00:00Z"
+      schema:
+        type: string
+        format: ISO 8601
+    - name: quantity
+      in: query
+      required: false
+      description: Number of Timeslots to be displayed, use this parameter to limit the request and retrieve just (1) the nearest available timeslots.
+      example: 1
+      schema:
+        type: number
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/TimeslotAvailability.yaml'
+    '400':
+      description: Invalid ID

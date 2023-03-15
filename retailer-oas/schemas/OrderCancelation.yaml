@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The order cancelation unique identifier
+  status:
+    type: string
+    example: "canceled"
+  reason:
+    type: object
+    description: The cancelation reason
+    properties:
+      code:
+        type: string
+      type:
+        type: string
+  order:
+    allOf:
+      - $ref: './ID.yaml'
+      - $ref: './Order.yaml'
+  createdAt:
+    type: string
+    format: ISO 8601

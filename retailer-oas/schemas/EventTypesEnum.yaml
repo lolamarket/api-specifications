@@ -1,0 +1,18 @@
+type: string
+enum:
+  - "order.received"
+  - "order.confirmed"
+  - "order.allocated"
+  - "order.rescheduled"
+  - "order.in.picking"
+  - "order.picked"
+  - "order.in.transit"
+  - "order.delivered"
+  - "order.on.hold"
+  - "order.rejected"
+  - "order.canceled"
+  - "order.returned"
+  - "item.pending"
+  - "item.picked"
+  - "item.not.found"
+  - "item.replaced"
