@@ -26,13 +26,13 @@ properties:
     $ref: './CustomerInfo.yaml'
   shippingAddress:
     $ref: './ShippingAddress.yaml'
-  totalPrice:
+  amountCharged:
     type: number
     format: currency
-    description: The total price of the Order
+    description: The total amount charged to the customer, may includes surcharges. This value will be the one to be considered as maximum budget for replacements.
     example: 119.9
   estimatedWeight:
     type: number
     format: weight
-    description: The estimated weight of the Order
+    description: The estimated total weight of the Order.
     example: 12.5

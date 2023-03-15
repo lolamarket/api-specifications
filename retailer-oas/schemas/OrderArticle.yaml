@@ -1,4 +1,6 @@
 type: object
+summary: List webhook event types
+description: Endpoint to see all the event types that you can subscribe to.
 required:
   - sku
   - quantityRequested
@@ -26,23 +28,13 @@ properties:
   unitPrice:
     type: number
     format: currency
-    description: The price paid for a single quantityRequestedUnit with no discounts.
+    description: The price paid for a single `quantityRequestedUnit`, including discounts
     example: 1.50
   buyingPrice:
     type: number
     format: currency
     description: The total price the customer is paying for this line, including discounts.
     example: 4.00
-  regularPrice:
-    type: number
-    format: currency
-    description: The total price of the product considering the quantity and no discounts.
-    example: 4.50
-  discount:
-    type: number
-    format: percent
-    description: The discount applied to the line.
-    example: 0.1111111111
   estimatedWeight:
     type: number
     format: weight

@@ -130,6 +130,8 @@ Shopper started picking items. Each product in the order will have their own sta
 
 ### ORDER_PICKED
 Shopper finished picking order items and will go to the cashier.
+This payload includes all the information regarding product-not-found, out-of-stock, and replacements.
+In case of replacement only fully replaced product will appear as replaced, partial replaced product will appear as a partial stock out and a new (or more) items in the order.
 ```json
 {
     "eventId": 1201895966044343906,
@@ -155,8 +157,29 @@ Shopper finished picking order items and will go to the cashier.
     "express": false,
     "articles": [
         {
-        "itemId": "12345",
+        "itemId": "1111",
         "scanCode": "00980349940",
+        "quantityRequested": 2.0,
+        "quantityRequestedUnit": "unit",
+        "quantityFulfilled": 2.0,
+        "quantityFulfilledUnit": "unit",
+        "replaced": false
+        },
+        {
+        "itemId": "2222",
+        "scanCode": "00980349941",
+        "quantityRequested": 2.0,
+        "quantityRequestedUnit": "unit",
+        "quantityFulfilled": 2.0,
+        "quantityFulfilledUnit": "unit",
+        "replaced": true,
+        "replacement": {
+            "itemId": "9999"
+        }
+        },
+        {
+        "itemId": "3333",
+        "scanCode": "00980349942",
         "quantityRequested": 2.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 1.0,
@@ -164,19 +187,7 @@ Shopper finished picking order items and will go to the cashier.
         "replaced": false
         },
         {
-        "itemId": "12346",
-        "scanCode": "00980349941",
-        "quantityRequested": 2.0,
-        "quantityRequestedUnit": "unit",
-        "quantityFulfilled": 1.0,
-        "quantityFulfilledUnit": "unit",
-        "replaced": true,
-        "replacement": {
-            "itemId": "12345"
-        }
-        },
-        {
-        "itemId": "12347",
+        "itemId": "4444",
         "scanCode": "",
         "quantityRequested": 5.0,
         "quantityRequestedUnit": "unit",
@@ -184,10 +195,26 @@ Shopper finished picking order items and will go to the cashier.
         "quantityFulfilledUnit": "kilograms",
         "replaced": true,
         "replacement": {
-            "itemId": "12",
-            "shopperProvidedName": "Oranges",
-            "shopperProvidedPrice": 1.23
+            "itemId": "7777"
         }
+        },
+        {
+        "itemId": "5555",
+        "scanCode": "",
+        "quantityRequested": 2.0,
+        "quantityRequestedUnit": "unit",
+        "quantityFulfilled": 0.0,
+        "quantityFulfilledUnit": "unit",
+        "replaced": false
+        },
+        {
+        "itemId": "6666",
+        "scanCode": "",
+        "quantityRequested": 0.0,
+        "quantityRequestedUnit": "unit",
+        "quantityFulfilled": 1.0,
+        "quantityFulfilledUnit": "unit",
+        "replaced": false
         }
     ],
     "bagsCount": 1

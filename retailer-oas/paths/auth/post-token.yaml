@@ -4,9 +4,12 @@ post:
   summary: Generate an access token
   description: |
     Returns a new access token.
+
     The access token must be included in all other requests as a Bearer token for authentication purposes.
+    
     Before you start, make sure you have been given a `clientId` and `clientSecret`.
-    The token is valid for 24 hours. During this period, reuse the same token. After that, a new token must be generated.
+
+    The token is valid for 1 hours. During this period, reuse the same token. After that, a new token must be generated.
   operationId: generateAccessToken
   requestBody:
     required: true

@@ -1,6 +1,11 @@
 post:
-  summary: Reserve a timeslot
-  description: Create a new Timeslot reservation
+  summary: Reserve a timeslot. 
+  description: |
+    Create a new Timeslot reservation. 
+    
+    Reservations will automatically expire after 15 minutes in order to free resources for other customers. 
+    
+    The address, articles and customer info must not have changes between a resrvation or placing an order, if there are changes the reservation will not have effect.
   operationId: createTimeslotReservation
   tags:
     - timeslots
