@@ -1,0 +1,36 @@
+post:
+  summary: Create a Picking Location
+  description: Create a Picking Location.
+  operationId: createPickingLocation
+  tags:
+    - picking-locations
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/PickingLocation.yaml'
+          required:
+            - name
+            - coords
+            - postalCode
+            - addressLine1
+            - countryCode
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/PickingLocation.yaml'
+            description: The created picking location object
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Invalid request, some fields are missing"

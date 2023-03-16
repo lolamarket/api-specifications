@@ -1,0 +1,34 @@
+post:
+  tags:
+    - auth
+  summary: Revoke an access token
+  description: |
+    Revokes any access token.
+    You need to include your `clientId` and `clientSecret` and the access token in the request body.
+  operationId: revokeAccessToken
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            clientId:
+              type: string
+              description: The ID of the client requesting the access token.
+              example: "BIEDRONKA123"
+            clientSecret:
+              type: string
+              description: The secret key associated with the client ID.
+              example: "IyJT0xWC95GJtjYX9r0gZvmDhLH49Pp8"
+            token:
+              type: string
+              description: The token that will be revoked.
+              example: "3e5f75b44b6f473d96fa1651a2b59e22"
+          required:
+            - clientId
+            - clientSecret
+            - token
+  responses:
+    '200':
+      description: OK

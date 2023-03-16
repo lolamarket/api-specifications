@@ -1,0 +1,83 @@
+post:
+  summary: Create new webhook subscription
+  description: |-
+    Subscribe to receive events.
+
+    Use this endpoint to add your notification URL and list of events that you want your application to subscribe to.
+  operationId: createWebhookSubscription
+  tags:
+    - webhooks
+  parameters: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            eventTypes:
+                type: array
+                description: List of events to be subscribed.
+                example:
+                    - "order.received"
+                    - "order.delivered"
+                items:
+                  $ref: '../../schemas/EventTypesEnum.yaml'
+            notificationUrl:
+              example: "https://retailer.example-webhook-url.com"
+            name:
+              type: string
+              example: "Example App Webhook Subscription"
+          required:
+            - "eventTypes"
+            - "notificationUrl"
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/Subscription.yaml'
+    '400':
+      description: Bad Request
+
+get:
+  summary: List webhook subscriptions
+  description: Lists all webhook subscriptions owned by an application.
+  operationId: listWebhookSubscription
+  tags:
+    - webhooks
+  parameters: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              subscriptions:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '../../schemas/ID.yaml'
+                    - $ref: '../../schemas/Subscription.yaml'
+                example: [
+                  {
+                    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "subscriberId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "eventTypes": [
+                      "order.received",
+                      "order.delivered"
+                    ],
+                    "notificationUrl": "https://retailer.example-webhook-url.com",
+                    "createdAt": "string",
+                    "updatedAt": "string",
+                    "name": "Example Webhook Subscription",
+                    "enabled": true
+                  }
+                ]
+    '400':
+      description: Bad Request

@@ -1,0 +1,39 @@
+type: object
+required:
+  - addressLine1
+  - city
+  - state
+  - postalCode
+properties:
+  addressLine1:
+    type: string
+    description: The first address line of the Shipping Address
+    maxLength: 300
+    example: "123 Main St"
+  addressLine2:
+    type: string
+    description: The second address line of the Shipping Address
+    maxLength: 300
+    example: "Suite 200"
+  additionalInfo:
+    type: string
+    description: Any additional info that the customer would like to specify
+    maxLength: 300
+    example: "If I am not at home please deliver it to the neighbor in Suite 201"
+  city:
+    type: string
+    description: The city of the Shipping Address
+    maxLength: 50
+    example: "Warsaw"
+  state:
+    type: string
+    description: The state or province of the Shipping Address
+    maxLength: 50
+    example: "Poland"
+  postalCode:
+    type: string
+    description: The postal code of the Shipping Address
+    maxLength: 10
+    example: "123-545"
+  coords:
+    $ref: './GeoCoordinates.yaml'

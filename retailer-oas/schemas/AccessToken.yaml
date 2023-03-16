@@ -1,0 +1,13 @@
+type: object
+properties:
+  token:
+    type: string
+  tokenType:
+    type: string
+  scope:
+    type: string
+  expiresIn:
+    type: number
+  createdAt:
+    type: string
+    format: ISO 8601

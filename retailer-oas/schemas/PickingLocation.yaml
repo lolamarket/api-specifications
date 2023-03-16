@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: string
+    readOnly: true
+    description: The unique identifier of the Picking Location
+  name:
+    type: string
+    description: The name of the Picking Location.
+    example: "Main Street Store"
+  coords:
+    $ref: './GeoCoordinates.yaml'
+  postalCode:
+    type: string
+    description: The postal code of the Picking Location
+    example: "90210"
+  addressLine1:
+    type: string
+    description: The first line of the address of the Picking Location (usually identifies the street's name and door number)
+    example: "123 Main St"
+  addressLine2:
+    type: string
+    description: The second line of the address of the Picking Location (usually identifies floor/apartment numbers and any other relevant address information)
+    example: "Suite 456"
+  countryCode:
+    type: string
+    format: ISO 3166-1
+    description: The country code of the Picking Location
+    example: "PL"
+  personOfContact:
+    type: string
+    description: The person of contact at the Picking Location
+    example: "John Smith"
+  email:
+    type: string
+    format: email
+    description: The email of the person of contact
+    example: "john.smith@mainstreetstore.com"
+  phone:
+    type: string
+    format: phone
+    description: The phone number of the person of contact (should include phone country code)
+    example: "+1 555 555 5555"
+  hasParking:
+    type: boolean
+    description: Indicates if the Picking Location has parking available
+    example: true
+  status:
+    type: string
+    enum: [operating, closed, unpublished]
+    description: The status of the Picking Location, whether it is operating or closed. The `unpublished` status indicates a Picking Location will not be displayed when querying for service availability. Useful for inputting data into the system without immediately making it available to the public.
+    example: "operating"

@@ -1,0 +1,77 @@
+get:
+  summary: Get an order
+  description: Retrieves order details by order ID.
+  operationId: getOrderById
+  tags:
+    - orders
+  parameters:
+    - name: id
+      in: path
+      description: Order identifier
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/Order.yaml'
+    '404':
+      description: Order not found
+
+patch:
+  summary: Update an existing order
+  description: Update an existing order with the provided information
+  operationId: updateOrder
+  tags:
+    - orders
+  parameters:
+    - name: id
+      in: path
+      description: Order identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/Order.yaml'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/Order.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+              errorCode:
+                type: string
+                description: Error code
+                enum:
+                  - "TIMESLOT_NOT_AVAILABLE"
+                  - "ORDER_TOO_HEAVY"
+                  - "INVALID_SHIPPING_ADDRESS"
+                  - "INVALID_CUSTOMER_DATA"
+                  - "INVALID_PRODUCT_QUANTITY"
+                  - "ORDER_TOTAL_MISMATCH"
+                  - "DUPLICATED_ORDER"
+              errors:
+                type: array
+                items:
+                  type: string
+                  description: List of error details

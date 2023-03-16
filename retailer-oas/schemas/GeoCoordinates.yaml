@@ -1,0 +1,8 @@
+type: object
+properties:
+  lat:
+    type: number
+    description: Latitude in decimal degrees
+  lon:
+    type: number
+    description: Longitude in decimal degrees

@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The cancelation identifier
+  status:
+    type: string
+    example: "canceled"
+  reason:
+    type: object
+    description: The cancelation reason
+    properties:
+      code:
+        type: string
+      type:
+        type: string
+  timeslotReservation:
+    allOf:
+      - $ref: './ID.yaml'
+      - $ref: './TimeslotReservation.yaml'
+  createdAt:
+    type: string
+    format: ISO 8601

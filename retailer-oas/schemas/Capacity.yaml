@@ -1,0 +1,10 @@
+type: object
+properties:
+  total:
+    type: number
+    description: Total capacity of the location
+    example: 100
+  occupied:
+    type: number
+    description: Occupied capacity of the location
+    example: 20

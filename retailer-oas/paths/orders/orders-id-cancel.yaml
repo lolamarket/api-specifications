@@ -1,0 +1,87 @@
+post:
+  summary: Cancel an order
+  description: Cancel an order
+  operationId: cancelOrder
+  tags:
+    - orders
+  parameters:
+    - name: id
+      in: path
+      description: Order identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            reason:
+              type: object
+              properties:
+                code:
+                  description: |-
+                    Cancelation reason code:
+                    - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+                    - `OMS_DRIVEN`	The OMS triggered the cancelation.
+                    - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+                    - `SHOPPER_DRIVEN`	The shopper triggered the cancelation.
+                    - `OTHER`	The cancelation was triggered by another source.
+                  enum:
+                    - CUSTOMER_DRIVEN
+                    - OMS_DRIVEN
+                    - RETAILER_DRIVEN
+                    - SHOPPER_DRIVEN
+                    - OTHER
+                type:
+                  type: string
+                  description: Cancelation reason type
+                  enum:
+                    - 'duplicate order'
+                    - 'customer requested since order is early'
+                    - 'customer requested since order is late'
+                    - 'customer is unavailable'
+                    - 'customer requested to cancel'
+                    - 'shopper unable to complete order'
+                    - 'shopper could not find address'
+                    - 'too many out of stock items'
+                    - 'canceled by retailer'
+                    - 'fraudulent customer'
+                    - 'store early closure'
+                    - 'system error'
+                    - 'other'
+                    - 'unknown'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/OrderCancelation.yaml'
+            required: ['id', 'status', 'createdAt', 'order']
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+              errorCode:
+                type: string
+                description: Error code
+                enum:
+                  - "ALREADY_CANCELED"
+                  - "TOO_LATE_TO_CANCEL"
+                  - "INVALID_REASON"
+              errors:
+                type: array
+                items:
+                  type: string
+                  description: List of error details
+    '404':
+      description: Order Not Found

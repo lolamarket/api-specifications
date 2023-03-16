@@ -1,0 +1,3 @@
+type: string
+enum: [delivery, picking]
+description: The logistical service type offered; `delivery` means that picking and delivering goods through couriers is supported; `picking` means that only picking up goods from picking locations is supported.

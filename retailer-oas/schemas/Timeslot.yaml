@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Unique identifier of the Timeslot
+    example: "slot1"
+  fromDate:
+    type: string
+    format: ISO 8601
+    description: The starting time of the Timeslot
+    example: "2023-01-11T14:00:00+00:00"
+  toDate:
+    type: string
+    format: ISO 8601
+    description: The ending time of the Timeslot
+    example: "2023-01-11T15:00:00+00:00"

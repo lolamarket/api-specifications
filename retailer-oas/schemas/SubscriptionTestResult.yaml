@@ -1,0 +1,29 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The validation request identifier (idempotency key)
+    format: "uuid"
+  subscriberId:
+    type: string
+    format: "uuid"
+  notificationUrl:
+    type: string
+  validationResult:
+    type: object
+    properties:
+      responseStatusCode:
+        type: number
+        description: HTTP status code
+        example: 200
+      responseCode:
+        type: string
+        example: "OK"
+      responseMessage:
+        type: string
+        example: "Event sent successfully."
+      succeeded:
+        type: boolean
+      createdAt:
+        type: string
+        format: ISO 8601

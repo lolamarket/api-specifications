@@ -1,0 +1,39 @@
+type: object
+required:
+  - customerId
+  - phone
+properties:
+  customerId:
+    type: string
+    description: Must uniquely identify a customer
+    example: "001"
+  customerName:
+    type: string
+    description: The name of the Customer
+    maxLength: 100
+    example: "John Smith"
+  email:
+    type: string
+    format: email
+    description: The email of the Customer
+    example: "john.smith@example.com"
+  phone:
+    type: string
+    format: phone
+    description: The phone number of the Customer (should include phone country code) will be used to contact the customer in case of incidece or replacement.
+    example: "+1 (555) 555-5555"
+  billingName:
+    type: string
+    description: The name of the Customer for billing purposes
+    maxLength: 100
+    example: "John Smith"
+  billingAddress:
+    type: string
+    description: The billing address of the Customer
+    maxLength: 200
+    example: "123 Main St, Suite 200, Anytown USA 12345"
+  vatNumber:
+    type: string
+    description: The VAT number of the Customer, if applicable
+    maxLength: 20
+    example: "1234567890"

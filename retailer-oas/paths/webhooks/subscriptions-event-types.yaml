@@ -1,0 +1,44 @@
+get:
+  summary: List webhook event types
+  description: Endpoint to see all the event types that you can subscribe to.
+  operationId: listWebhookEventTypes
+  tags:
+    - webhooks
+  parameters: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              eventTypes:
+                type: array
+                description: List of events to be subscribed.
+                items:
+                  $ref: '../../schemas/EventTypesEnum.yaml'
+              metadata:
+                $ref: '../../schemas/WebhookEventTypeMetadata.yaml'
+            example: {
+              "eventTypes": [ "order.received", "order.delivered"],
+              "metadata": [
+                {
+                  "eventId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "eventName": "order.received",
+                  "eventStatus": "PUBLISHED",
+                  "eventVersion": "v1.0.0",
+                  "createdAt": "2023-02-01T14:48:00.000Z",
+                  "updatedAt": "2023-02-01T14:48:00.000Z"
+                }, {
+                  "eventId": "2ba85f62-5717-4562-b3fc-2c963f66ac95",
+                  "eventName": "order.delivered",
+                  "eventStatus": "PUBLISHED",
+                  "eventVersion": "v1.0.1",
+                  "createdAt": "2023-02-01T14:48:00.000Z",
+                  "updatedAt": "2023-02-08T14:48:00.000Z"
+                }
+              ]
+            }
+    '400':
+      description: Bad Request

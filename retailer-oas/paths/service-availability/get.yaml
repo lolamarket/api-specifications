@@ -1,0 +1,33 @@
+get:
+  summary: Check service availability
+  description: Return service availability information for a given postal code.
+  operationId: checkAvailability
+  tags:
+    - service-availability
+  parameters:
+    - name: postalCode
+      in: query
+      required: true
+      description: The postal code to check service availability for.
+      example: "101-400"
+      schema:
+        type: string
+    - name: countryCode
+      in: query
+      required: true
+      description: The ISO 3166 country code corresponding to the given postal code.
+      example: "PL"
+      schema:
+        type: string
+        format: ISO 3166-1
+  responses:
+    '200':
+      description: Service is available for the given postal code.
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/ServiceAvailability.yaml'
+    '400':
+      description: Invalid postal code or country code format.
+    '404':
+      description: Service not available for the given postal code and country code.

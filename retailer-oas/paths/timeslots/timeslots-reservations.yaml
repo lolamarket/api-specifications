@@ -1,0 +1,58 @@
+post:
+  summary: Reserve a timeslot. 
+  description: |
+    Create a new Timeslot reservation. 
+    
+    Reservations will automatically expire after 15 minutes in order to free resources for other customers. 
+    
+    The address, articles and customer info must not have changes between a resrvation or placing an order, if there are changes the reservation will not have effect.
+  operationId: createTimeslotReservation
+  tags:
+    - timeslots
+  parameters:
+    - name: id
+      in: path
+      description: Timeslot identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+          schema:
+            $ref: '../../schemas/TimeslotReservation.yaml'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/TimeslotReservation.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+              errorCode:
+                type: string
+                description: Error code
+                enum:
+                  - "TIMESLOT_NOT_AVAILABLE"
+                  - "TOTAL_ARTICLES_TOO_HEAVY"
+                  - "INVALID_SHIPPING_ADDRESS"
+                  - "INVALID_CUSTOMER_DATA"
+                  - "INVALID_ARTICLE_ITEM_QUANTITY"
+                  - "TOTAL_MISMATCH"
+              errors:
+                type: array
+                items:
+                  type: string
+                  description: List of error details

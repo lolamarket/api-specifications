@@ -1,0 +1,80 @@
+get:
+  summary: Get webhook subscription
+  description: Retrieves a webhook subscription identified by its identifier.
+  operationId: getWebhookSubscription
+  tags:
+    - webhooks
+  parameters:
+    - name: id
+      in: path
+      description: Webhook subscription identifier
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/Subscription.yaml'
+    '400':
+      description: Bad Request
+    '404':
+      description: Webhook subscription not found
+
+patch:
+  summary: Update webhook subscription
+  description: |-
+    This endpoint allows to partially update a webhook subscription for a given subscription identifier.
+
+    Use this to update the list of event types of a single subscription.
+  operationId: updateWebhookSubscription
+  tags:
+    - webhooks
+  parameters:
+    - name: id
+      in: path
+      description: Webhook subscription identifier
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/Subscription.yaml'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/Subscription.yaml'
+    '400':
+      description: Bad Request
+    '404':
+      description: Webhook subscription not found
+delete:
+  summary: Delete webhook subscription
+  description: Deletes a webhook subscription.
+  operationId: deleteWebhookSubscription
+  tags:
+    - webhooks
+  parameters:
+    - name: id
+      in: path
+      description: Webhook subscription identifier
+      required: true
+      schema:
+        type: string
+  responses:
+    '204':
+      description: No Content
+    '404':
+      description: Webhook subscription not found
