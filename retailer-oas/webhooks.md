@@ -1,4 +1,4 @@
-# Webhook events for order status traclking
+# Webhook events for order status tracking
 <img src="http://lolamarket.statics.prod.s3.amazonaws.com/lola-help/order_state_machine.jpg" />
     
 1. [order.received](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_received) 
@@ -15,7 +15,7 @@
 12. [order.returned](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned) 
 
 ### ORDER_RECEIVED
-Order received on the OMS and waiting for processing.
+`order.received` indicates that an order has been received by the OMS (Order Management System) and is now waiting to be processed. This event is triggered when the order details are successfully captured in the system. The event payload includes all the relevant order information, such as the order ID, picking location ID and name, time slot details, service type, and express delivery status.
 ```json
 {
     "eventId": 1201895966044343901,
@@ -39,7 +39,9 @@ Order received on the OMS and waiting for processing.
 ```
 
 ### ORDER_CONFIRMED
-Order confirmed by the OMS, waiting for shopper assignment.
+The `order.confirmed` event indicates that the order has been confirmed by the OMS and is waiting for shopper assignment. This event is triggered when the order has been reviewed and approved by the system, and is now ready for the next step in the process. By monitoring the `order.confirmed` event, the system can ensure that orders are processed in a timely and efficient manner. 
+If the order can not be confirmed instead of receiving this event you will receive `order.rejected`.
+
 ```json
 {
     "eventId": 1201895966044343902,
