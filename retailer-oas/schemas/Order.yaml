@@ -6,6 +6,7 @@ required:
   - shippingAddress
   - totalPrice
   - estimatedWeight
+  - amountCharged
 properties:
   timeslotId:
     type: string
@@ -14,7 +15,7 @@ properties:
   articles:
     type: array
     items:
-      $ref: './OrderArticle.yaml'
+      $ref: "./OrderArticle.yaml"
     description: The array of articles included in the Order
     required:
       - sku
@@ -22,10 +23,12 @@ properties:
       - quantityRequestedUnit
       - buyingPrice
       - estimatedWeight
+  customerPreferences:
+    $ref: "./CustomerPreferences.yaml"
   customerInfo:
-    $ref: './CustomerInfo.yaml'
+    $ref: "./CustomerInfo.yaml"
   shippingAddress:
-    $ref: './ShippingAddress.yaml'
+    $ref: "./ShippingAddress.yaml"
   amountCharged:
     type: number
     format: currency

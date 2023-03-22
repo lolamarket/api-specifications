@@ -41,5 +41,5 @@ properties:
       type: string
       description: An array of preferred Stock Keeping Units to replace this Product in the case of a stockout.
     example: ["53234", "232321"]
-  itemPreferences:
-    $ref: "./Preferences.yaml"
+  customerPreferences:
+    $ref: "./CustomerPreferences.yaml"
