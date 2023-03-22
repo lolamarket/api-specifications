@@ -1,8 +1,10 @@
 properties:
   replacementType:
     type: string
-    example: "SHOPPER_REPLACE, CALL_CUSTOMER, NO_REPLACEMENTS"
-    enum: ["SHOPPER_REPLACE", "CALL_CUSTOMER", "NO_REPLACEMENTS"]
+    enum:
+      - "SHOPPER_REPLACE"
+      - "CALL_CUSTOMER"
+      - "NO_REPLACEMENTS"
     default: "CALL_CUSTOMER"
     required: true
   note:

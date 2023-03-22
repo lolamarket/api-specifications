@@ -3,8 +3,8 @@ required:
   - articles
   - customerInfo
   - shippingAddress
-  - totalPrice
   - estimatedWeight
+  - amountCharged
 properties:
   timeslotId:
     type: string
@@ -15,8 +15,8 @@ properties:
     items:
       $ref: "./OrderArticle.yaml"
     description: The array of articles included in the Order
-  orderPreferences:
-    $ref: "./Preferences.yaml"
+  customerPreferences:
+    $ref: "./CustomerPreferences.yaml"
   customerInfo:
     $ref: "./CustomerInfo.yaml"
   shippingAddress:
