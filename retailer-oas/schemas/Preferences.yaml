@@ -1,0 +1,9 @@
+properties:
+  replacementsType:
+    type: string
+    example: "(replaceByShopper), callCustommer, noReplacements"
+    enum: [replaceByShopper, callCustommer, noReplacements]
+  customerNote:
+    type: string
+    example: "I want to add a note to this."
+    maxLength: 200

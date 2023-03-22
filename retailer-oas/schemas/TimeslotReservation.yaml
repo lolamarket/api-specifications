@@ -13,12 +13,14 @@ properties:
   articles:
     type: array
     items:
-      $ref: './OrderArticle.yaml'
+      $ref: "./OrderArticle.yaml"
     description: The array of articles included in the Order
+  orderPreferences:
+    $ref: "./Preferences.yaml"
   customerInfo:
-    $ref: './CustomerInfo.yaml'
+    $ref: "./CustomerInfo.yaml"
   shippingAddress:
-    $ref: './ShippingAddress.yaml'
+    $ref: "./ShippingAddress.yaml"
   totalPrice:
     type: number
     format: currency
