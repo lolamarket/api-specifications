@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Retailer API [DRAFT]
-  version: 1.0.1
+  version: 1.0.2
   description: |-
     This is the official OpenAPI specification for Retailer API V1.
 
