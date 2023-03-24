@@ -20,11 +20,6 @@ properties:
     type: string
     description: The unit of the `quantityRequested` field. (pieces, grams, kilograms, litres, packages)
     example: pieces
-  customerNote:
-    type: string
-    maxLength: 200
-    description: A description of any request from the customer.
-    example: "I want it very very fresh!"
   unitPrice:
     type: number
     format: currency
@@ -46,3 +41,5 @@ properties:
       type: string
       description: An array of preferred Stock Keeping Units to replace this Product in the case of a stockout.
     example: ["53234", "232321"]
+  customerPreferences:
+    $ref: "./CustomerPreferences.yaml"

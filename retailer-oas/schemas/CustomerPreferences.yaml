@@ -1,0 +1,13 @@
+properties:
+  replacementType:
+    type: string
+    enum:
+      - "SHOPPER_REPLACE"
+      - "CALL_CUSTOMER"
+      - "NO_REPLACEMENTS"
+    default: "CALL_CUSTOMER"
+    required: true
+  note:
+    type: string
+    example: "I want to add a note to this."
+    maxLength: 200

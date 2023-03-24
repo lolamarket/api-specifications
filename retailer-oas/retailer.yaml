@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Retailer API [DRAFT]
-  version: 1.0.1
+  version: 1.0.2
   description: |-
     This is the official OpenAPI specification for Retailer API V1.
 
@@ -106,4 +106,65 @@ paths:
 
 components:
   schemas:
-    $ref: "./schemas/_index.yaml"
+    AccessToken:
+      $ref: "./schemas/AccessToken.yaml"
+
+    PickingLocation:
+      $ref: "./schemas/PickingLocation.yaml"
+
+    PickingLocationSchedule:
+      $ref: "./schemas/PickingLocation.yaml"
+
+    GeoCoordinates:
+      $ref: "./schemas/GeoCoordinates.yaml"
+
+    Capacity:
+      $ref: "./schemas/Capacity.yaml"
+
+    Timeslot:
+      $ref: "./schemas/Timeslot.yaml"
+
+    TimeslotAvailability:
+      $ref: "./schemas/TimeslotAvailability.yaml"
+
+    TimeslotReservation:
+      $ref: "./schemas/TimeslotReservation.yaml"
+
+    TimeslotReservationCancelation:
+      $ref: "./schemas/TimeslotReservationCancelation.yaml"
+
+    OrderArticle:
+      $ref: "./schemas/OrderArticle.yaml"
+
+    CustomerInfo:
+      $ref: "./schemas/CustomerInfo.yaml"
+
+    ShippingAddress:
+      $ref: "./schemas/ShippingAddress.yaml"
+
+    Order:
+      $ref: "./schemas/Order.yaml"
+
+    OrderCancelation:
+      $ref: "./schemas/OrderCancelation.yaml"
+
+    ServiceType:
+      $ref: "./schemas/ServiceType.yaml"
+
+    ServiceAvailability:
+      $ref: "./schemas/ServiceAvailability.yaml"
+
+    ID:
+      $ref: "./schemas/ID.yaml"
+
+    Subscription:
+      $ref: "./schemas/Subscription.yaml"
+
+    EventTypesEnum:
+      $ref: "./schemas/EventTypesEnum.yaml"
+
+    WebhookEventTypeMetadata:
+      $ref: "./schemas/WebhookEventTypeMetadata.yaml"
+
+    SubscriptionTestResult:
+      $ref: "./schemas/SubscriptionTestResult.yaml"

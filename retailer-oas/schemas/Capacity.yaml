@@ -1,10 +1,10 @@
 type: object
 properties:
-  total:
+  available:
     type: number
-    description: Total capacity of the location
+    description: Available capacity of the location
     example: 100
-  occupied:
+  reserved:
     type: number
-    description: Occupied capacity of the location
+    description: Reserved capacity of the location
     example: 20
