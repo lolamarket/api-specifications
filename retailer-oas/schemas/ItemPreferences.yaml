@@ -7,11 +7,7 @@ properties:
       - "NO_REPLACEMENTS"
     default: "CALL_CUSTOMER"
     required: true
-  orderNote:
+  note:
     type: string
     example: "I want to add a note to this"
-    maxLength: 200
-  deliveryNote:
-    type: string
-    example: "For delivery I think I'll leave a note"
     maxLength: 200
