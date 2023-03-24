@@ -3,10 +3,10 @@ items:
   type: object
   properties:
     timeslot:
-      $ref: './Timeslot.yaml'
+      $ref: "./Timeslot.yaml"
     capacity:
-      $ref: './Capacity.yaml'
-    available:
+      $ref: "./Capacity.yaml"
+    availability:
       type: boolean
       description: Indicates if the user can book this Timeslot.
       example: true
