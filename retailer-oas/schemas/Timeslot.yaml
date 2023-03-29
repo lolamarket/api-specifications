@@ -2,8 +2,9 @@ type: object
 properties:
   id:
     type: string
+    format: uuid
     description: Unique identifier of the Timeslot
-    example: "slot1"
+    example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   fromDate:
     type: string
     format: ISO 8601

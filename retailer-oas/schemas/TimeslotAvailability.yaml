@@ -1,12 +1,10 @@
-type: array
-items:
-  type: object
-  properties:
-    timeslot:
-      $ref: "./Timeslot.yaml"
-    capacity:
-      $ref: "./Capacity.yaml"
-    availability:
-      type: boolean
-      description: Indicates if the user can book this Timeslot.
-      example: true
+allOf:
+  - $ref: "./Timeslot.yaml"
+  - type: object
+    properties:
+      capacity:
+        $ref: "./Capacity.yaml"
+      availability:
+        type: boolean
+        description: Indicates if the user can book this Timeslot.
+        example: true

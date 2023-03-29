@@ -15,9 +15,10 @@ get:
       in: query
       required: true
       description: Picking Location identifier
-      example: "123456"
+      example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
       schema:
         type: string
+        format: uuid
     - name: fromDate
       in: query
       required: true
@@ -47,6 +48,8 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/TimeslotAvailability.yaml'
+            type: array
+            items:
+              $ref: '../../schemas/TimeslotAvailability.yaml'
     '400':
       description: Invalid ID

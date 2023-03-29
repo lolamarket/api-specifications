@@ -69,11 +69,11 @@ paths:
   # Service availability
   /service-availability:
     $ref: "./paths/service-availability/get.yaml"
-    
+
   # Picking Locations
   /picking-locations:
     $ref: "./paths/picking-locations/picking-locations.yaml"
-  /picking-locations/{id}: 
+  /picking-locations/{id}:
     $ref: "./paths/picking-locations/picking-locations-id.yaml"
   /picking-locations/{id}/schedule:
     $ref: "./paths/picking-locations/picking-locations-schedule.yaml"
@@ -81,6 +81,8 @@ paths:
   # Timeslots
   /timeslots:
     $ref: "./paths/timeslots/timeslots.yaml"
+  /timeslots/{id}:
+    $ref: "./paths/timeslots/timeslots-id.yaml"
   /timeslots/{id}/reservations:
     $ref: "./paths/timeslots/timeslots-reservations.yaml"
   /timeslots/{timeslotId}/reservations/{reservationId}/cancel:
