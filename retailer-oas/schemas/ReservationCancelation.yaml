@@ -1,0 +1,27 @@
+type: object
+required:
+  - timeslotId
+properties:
+  timeslotId:
+    type: string
+    description: The Timeslot's identifier selected for the Reservation
+    example: "slot2"
+  customerInfo:
+    $ref: "./CustomerInfo.yaml"
+  createdAt:
+    type: string
+    format: ISO 8601
+    description: The starting time of the Timeslot
+    example: "2023-01-11T14:00:00+00:00"
+  expirationDate:
+    type: string
+    format: ISO 8601
+    description: The starting time of the Timeslot
+    example: "2023-01-11T14:15:00+00:00"
+  status:
+    enum:
+      - "VALID"
+      - "EXPIRED"
+      - "CANCELED"
+    default: "CANCELED"
+  

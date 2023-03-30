@@ -7,6 +7,14 @@ required:
   - estimatedWeight
   - amountCharged
 properties:
+  id:
+    type: string
+    description: Retailer Order id
+    example: "238120381238"
+  reservationId:
+    type: string
+    description: Reservation Id
+    format: "uuid"
   timeslotId:
     type: string
     description: The Timeslot's identifier selected for the Order
@@ -26,6 +34,8 @@ properties:
     $ref: "./CustomerPreferences.yaml"
   customerInfo:
     $ref: "./CustomerInfo.yaml"
+  billingInfo:
+    $ref: "./CustomerBillingInfo.yaml"
   shippingAddress:
     $ref: "./ShippingAddress.yaml"
   amountCharged:
@@ -38,3 +48,4 @@ properties:
     format: weight
     description: The estimated total weight of the Order.
     example: 12.5
+   

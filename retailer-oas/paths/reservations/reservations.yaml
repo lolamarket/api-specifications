@@ -1,27 +1,18 @@
 post:
   summary: Reserve a timeslot. 
   description: |
-    Create a new Timeslot reservation. 
+    Create a new reservation. 
     
-    Reservations will automatically expire after 15 minutes in order to free resources for other customers. 
-    
-    The address, articles and customer info must not have changes between a resrvation or placing an order, if there are changes the reservation will not have effect.
+    Reservations will automatically expire after 15 minutes in order to free resources for other customers.     
   operationId: createTimeslotReservation
   tags:
-    - timeslots
-  parameters:
-    - name: id
-      in: path
-      description: Timeslot identifier
-      required: true
-      schema:
-        type: string
+    - reservations
   requestBody:
     required: true
     content:
       application/json:
           schema:
-            $ref: '../../schemas/TimeslotReservation.yaml'
+            $ref: '../../schemas/Reservation.yaml'
   responses:
     '200':
       description: OK
@@ -30,7 +21,8 @@ post:
           schema:
             allOf:
               - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/TimeslotReservation.yaml'
+              - $ref: '../../schemas/Reservation.yaml'
+              - $ref: '../../schemas/ReservationStatus.yaml'
     '400':
       description: Bad Request
       content:

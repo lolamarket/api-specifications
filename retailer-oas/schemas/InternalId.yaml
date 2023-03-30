@@ -1,0 +1,6 @@
+type: object
+properties:
+  internalId:
+    type: string
+    description: Unique identifier
+    format: "uuid"

@@ -1,0 +1,27 @@
+properties:
+  createdAt:
+    type: string
+    format: ISO 8601
+    description: The starting time of the Timeslot
+    example: "2023-01-11T14:00:00+00:00"
+  updatedAt:
+    type: string
+    format: ISO 8601
+    description: The starting time of the Timeslot
+    example: "2023-01-11T14:15:00+00:00"
+  status:
+    enum:
+      - "ORDER_RECEIVED"
+      - "ORDER_CONFIRMED"
+      - "ORDER_RECEIVED"
+      - "ORDER_CONFIRMED"
+      - "ORDER_REJECTED"
+      - "ORDER_CANCELED"
+      - "ORDER_ALLOCATED"
+      - "ORDER_RESCHEDULED"
+      - "ORDER_IN_PICKING"
+      - "ORDER_ON_HOLD"
+      - "ORDER_IN_TRANSIT"
+      - "ORDER_RETURNED"
+      - "ORDER_DELIVERED"
+    default: "ORDER_RECEIVED"
