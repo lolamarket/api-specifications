@@ -1,19 +1,13 @@
 post:
-  summary: Cancel a reservation of a given timeslot
-  description: Cancel a reservation of a given timeslot
-  operationId: cancelTimeslotReservation
+  summary: Cancel a reservation
+  description: Cancel a reservation
+  operationId: cancelReservation
   tags:
-    - timeslots
+    - reservations
   parameters:
-    - name: timeslotId
+    - name: id
       in: path
-      description: Timeslot identifier
-      required: true
-      schema:
-        type: string
-    - name: reservationId
-      in: path
-      description: Timeslot Reservation identifier
+      description: Reservation identifier
       required: true
       schema:
         type: string
@@ -56,8 +50,11 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/TimeslotReservationCancelation.yaml'
-            required: ['id', 'status', 'createdAt', 'timeslotReservation']
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/ReservationCancelation.yaml'
+              - $ref: '../../schemas/ReservationCancelationReason.yaml'
+            required: ['id', 'status', 'createdAt', 'reason']
     '400':
       description: Bad Request
       content:

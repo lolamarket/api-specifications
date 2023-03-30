@@ -56,6 +56,7 @@ tags:
   - name: service-availability
   - name: picking-locations
   - name: timeslots
+  - name: reservations
   - name: orders
   - name: webhooks
 
@@ -81,10 +82,12 @@ paths:
   # Timeslots
   /timeslots:
     $ref: "./paths/timeslots/timeslots.yaml"
-  /timeslots/{id}/reservations:
-    $ref: "./paths/timeslots/timeslots-reservations.yaml"
-  /timeslots/{timeslotId}/reservations/{reservationId}/cancel:
-    $ref: "./paths/timeslots/timeslots-reservations-cancel.yaml"
+
+  #Reservations
+  /reservations:
+    $ref: "./paths/reservations/reservations.yaml"
+  /reservations/{id}/cancel:
+    $ref: "./paths/reservations/reservations-cancel.yaml"
 
   # Orders
   /orders:
@@ -106,65 +109,4 @@ paths:
 
 components:
   schemas:
-    AccessToken:
-      $ref: "./schemas/AccessToken.yaml"
-
-    PickingLocation:
-      $ref: "./schemas/PickingLocation.yaml"
-
-    PickingLocationSchedule:
-      $ref: "./schemas/PickingLocation.yaml"
-
-    GeoCoordinates:
-      $ref: "./schemas/GeoCoordinates.yaml"
-
-    Capacity:
-      $ref: "./schemas/Capacity.yaml"
-
-    Timeslot:
-      $ref: "./schemas/Timeslot.yaml"
-
-    TimeslotAvailability:
-      $ref: "./schemas/TimeslotAvailability.yaml"
-
-    TimeslotReservation:
-      $ref: "./schemas/TimeslotReservation.yaml"
-
-    TimeslotReservationCancelation:
-      $ref: "./schemas/TimeslotReservationCancelation.yaml"
-
-    OrderArticle:
-      $ref: "./schemas/OrderArticle.yaml"
-
-    CustomerInfo:
-      $ref: "./schemas/CustomerInfo.yaml"
-
-    ShippingAddress:
-      $ref: "./schemas/ShippingAddress.yaml"
-
-    Order:
-      $ref: "./schemas/Order.yaml"
-
-    OrderCancelation:
-      $ref: "./schemas/OrderCancelation.yaml"
-
-    ServiceType:
-      $ref: "./schemas/ServiceType.yaml"
-
-    ServiceAvailability:
-      $ref: "./schemas/ServiceAvailability.yaml"
-
-    ID:
-      $ref: "./schemas/ID.yaml"
-
-    Subscription:
-      $ref: "./schemas/Subscription.yaml"
-
-    EventTypesEnum:
-      $ref: "./schemas/EventTypesEnum.yaml"
-
-    WebhookEventTypeMetadata:
-      $ref: "./schemas/WebhookEventTypeMetadata.yaml"
-
-    SubscriptionTestResult:
-      $ref: "./schemas/SubscriptionTestResult.yaml"
+    $ref: "./schemas/_index.yaml"
