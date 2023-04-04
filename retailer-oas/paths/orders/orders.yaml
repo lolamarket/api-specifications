@@ -19,6 +19,7 @@ post:
             allOf:
               - $ref: '../../schemas/ID.yaml'
               - $ref: '../../schemas/Order.yaml'
+              - $ref: '../../schemas/OrderStatus.yaml'
     '400':
       description: Bad Request
       content:

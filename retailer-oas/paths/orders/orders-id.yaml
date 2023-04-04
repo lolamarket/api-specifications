@@ -17,7 +17,10 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/Order.yaml'
+            allOf:
+              - $ref: '../../schemas/ID.yaml'
+              - $ref: '../../schemas/Order.yaml'
+              - $ref: '../../schemas/OrderStatus.yaml'
     '404':
       description: Order not found
 
@@ -49,6 +52,7 @@ patch:
             allOf:
               - $ref: '../../schemas/ID.yaml'
               - $ref: '../../schemas/Order.yaml'
+              - $ref: '../../schemas/OrderStatus.yaml'
     '400':
       description: Bad Request
       content:
