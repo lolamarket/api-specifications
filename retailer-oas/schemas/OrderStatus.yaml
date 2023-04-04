@@ -13,8 +13,6 @@ properties:
     enum:
       - "ORDER_RECEIVED"
       - "ORDER_CONFIRMED"
-      - "ORDER_RECEIVED"
-      - "ORDER_CONFIRMED"
       - "ORDER_REJECTED"
       - "ORDER_CANCELED"
       - "ORDER_ALLOCATED"
