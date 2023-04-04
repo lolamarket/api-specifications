@@ -1,17 +1,21 @@
 type: object
 properties:
-  name:
-    type: string
-    description: The name of the Customer for billing purposes
-    maxLength: 100
-    example: "John Smith"
   address:
     type: string
     description: The billing address of the Customer
+    example: 123 Main St, Suite 200, Anytown USA 12345
     maxLength: 200
-    example: "123 Main St, Suite 200, Anytown USA 12345"
+  name:
+    type: string
+    description: The name of the Customer for billing purposes
+    example: John Smith
+    maxLength: 100
   vatNumber:
     type: string
     description: The VAT number of the Customer, if applicable
-    maxLength: 20
     example: "1234567890"
+    maxLength: 20
+required:
+  - name
+  - address
+  - vatNumber

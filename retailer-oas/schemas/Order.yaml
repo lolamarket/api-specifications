@@ -1,52 +1,33 @@
-type: object
-required:
-  - orderRef
-  - timeslotId
-  - articles
-  - customerInfo
-  - shippingAddress
-  - estimatedWeight
-  - amountCharged
-properties:
-  orderRef:
-    type: string
-    description: Retailer Order id
-    example: "238120381238"
-  reservationId:
-    type: string
-    description: Reservation Id
-    format: "uuid"
-  timeslotId:
-    type: string
-    description: The Timeslot's identifier selected for the Order
-    example: "slot2"
-  articles:
-    type: array
-    items:
-      $ref: "./OrderArticle.yaml"
-    description: The array of articles included in the Order
-    required:
-      - sku
-      - quantityRequested
-      - quantityRequestedUnit
-      - buyingPrice
-      - estimatedWeight
-  customerPreferences:
-    $ref: "./CustomerPreferences.yaml"
-  customerInfo:
-    $ref: "./CustomerInfo.yaml"
-  billingInfo:
-    $ref: "./CustomerBillingInfo.yaml"
-  shippingAddress:
-    $ref: "./ShippingAddress.yaml"
-  amountCharged:
-    type: number
-    format: currency
-    description: The total amount charged to the customer, may includes surcharges. This value will be the one to be considered as maximum budget for replacements.
-    example: 119.9
-  estimatedWeight:
-    type: number
-    format: weight
-    description: The estimated total weight of the Order.
-    example: 12.5
-   
+allOf:
+  - $ref: "./BaseOrder.yaml"
+  - type: object
+    properties:
+      createdAt:
+        allOf:
+          - type: object
+          - $ref: "./TimeStamp.yaml"
+          - description: The date and time the entity was created
+      updatedAt:
+        allOf:
+          - type: object
+          - $ref: "./TimeStamp.yaml"
+          - description: The date and time the entity was last updated
+      id:
+        $ref: "./Id.yaml"
+      shopperId:
+        $ref: "./Id.yaml"
+      reservationId:
+        type: string
+        description: Reservation Id
+        format: "uuid"
+      status:
+        $ref: "./OrderStatus.yaml"
+      totals:
+        allOf:
+          - $ref: "./OrderTotals.yaml"
+          - properties:
+              bagCount:
+                default: 0
+                description: Count of bags in order
+                example: 1
+                type: integer

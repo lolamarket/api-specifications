@@ -1,0 +1,37 @@
+properties:
+  articles:
+    description: The array of articles included in the Order
+    items:
+      $ref: "./OrderArticle.yaml"
+    required:
+      - sku
+      - quantity
+      - buyingPrice
+      - estimatedWeight
+    type: array
+  customer:
+    $ref: "./Customer.yaml"
+  customerBillingInfo:
+    $ref: "./CustomerBillingInfo.yaml"
+  customerPreferences:
+    $ref: "./CustomerOrderPreferences.yaml"
+  orderRef:
+    type: string
+    description: Retailer Order id
+    example: "238120381238"
+  shippingAddress:
+    $ref: "./ShippingAddress.yaml"
+  timeslotId:
+    description: The Timeslot"s identifier selected for the Order
+    example: slot2
+    type: string
+  totals:
+    $ref: "./OrderTotals.yaml"
+required:
+  - timeslotId
+  - articles
+  - customer
+  - billing
+  - shippingAddress
+  - totals
+type: object

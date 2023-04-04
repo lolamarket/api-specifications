@@ -1,0 +1,11 @@
+properties:
+  amountCharged:
+    allOf:
+      - $ref: "./Price.yaml"
+      - description: The total price of the Order
+  estimatedWeight:
+    description: The estimated weight of the Order in kilograms.
+    example: 12.5
+    format: weight
+    type: number
+type: object
