@@ -15,7 +15,7 @@ info:
     - **Order status**: The current stage of an order, reflecting its progress and whether it is confirmed, assigned, in transit, delivered, on hold, rejected, canceled, or returned.
     - **Item status**: The current stage of an individual item within an order, reflecting its progress and whether it is pending, picked, not found, or replaced.
     - **Order rescheduling**: The process of moving an order to a different timeslot, usually due to a change in delivery availability or customer preference.
-    - **Event**: An occurrence or change in the state of an order, such as receipt of the order, confirmation, assignment, delivery, or cancellation, that can trigger a webhook notification to subscribed parties.
+    - **Event**: An occurrence or change in the state of an order, such as receipt of the order, confirmation, assignment, delivery, or cancelation, that can trigger a webhook notification to subscribed parties.
 
     ## Webhooks
 
@@ -70,11 +70,11 @@ paths:
   # Service availability
   /service-availability:
     $ref: "./paths/service-availability/get.yaml"
-    
+
   # Picking Locations
   /picking-locations:
     $ref: "./paths/picking-locations/picking-locations.yaml"
-  /picking-locations/{id}: 
+  /picking-locations/{id}:
     $ref: "./paths/picking-locations/picking-locations-id.yaml"
   /picking-locations/{id}/schedule:
     $ref: "./paths/picking-locations/picking-locations-schedule.yaml"
