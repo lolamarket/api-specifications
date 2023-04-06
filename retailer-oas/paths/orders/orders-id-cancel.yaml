@@ -25,7 +25,6 @@ post:
         application/json:
           schema:
             allOf:
-              - $ref: '../../schemas/ID.yaml'
               - $ref: '../../schemas/Order.yaml'
               - $ref: '../../schemas/OrderCancelationReason.yaml'
               - $ref: '../../schemas/OrderCanceledStatus.yaml'
