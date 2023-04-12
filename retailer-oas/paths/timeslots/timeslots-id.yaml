@@ -1,0 +1,21 @@
+get:
+  summary: Get Timeslot by provided ID
+  operationId: getTimeslotById
+  tags:
+    - timeslots
+  parameters:
+    - name: id
+      in: path
+      description: Timeslot identifier
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/TimeslotAvailability.yaml"

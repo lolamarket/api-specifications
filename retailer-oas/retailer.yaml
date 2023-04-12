@@ -82,6 +82,8 @@ paths:
   # Timeslots
   /timeslots:
     $ref: "./paths/timeslots/timeslots.yaml"
+  /timeslots/{id}:
+    $ref: "./paths/timeslots/timeslots-id.yaml"
 
   #Reservations
   /reservations:
