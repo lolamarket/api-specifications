@@ -9,17 +9,14 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/Order.yaml'
+          $ref: '../../schemas/BaseOrder.yaml'
   responses:
     '200':
       description: OK
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/Order.yaml'
-              - $ref: '../../schemas/OrderStatus.yaml'
+            $ref: '../../schemas/Order.yaml'
     '400':
       description: Bad Request
       content:

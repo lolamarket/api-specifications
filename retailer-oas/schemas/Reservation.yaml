@@ -1,11 +1,15 @@
-type: object
-required:
-  - timeslotId
-properties:
-  timeslotId:
-    type: string
-    description: The Timeslot's identifier selected for the Reservation
-    example: "slot2"
-  customerInfo:
-    $ref: "./CustomerInfo.yaml"
-  
+allOf:
+  - type: object
+    properties:
+      id:
+        $ref: "../schemas/Id.yaml"
+      expirationDate:
+        type: string
+        format: date-time
+        description: The date and time the Reservation expires
+        example: "2020-01-01T12:00:00Z"
+      status:
+        $ref: "./ReservationStatus.yaml"
+      createdAt:
+        $ref: "./CreatedAt.yaml"
+  - $ref: "./ReservationBase.yaml"

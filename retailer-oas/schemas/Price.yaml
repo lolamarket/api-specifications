@@ -1,0 +1,19 @@
+type: object
+description: An object representing a monetary value and its associated currency.
+properties:
+  amount:
+    description: The monetary value.
+    example: 1.5
+    format: decimal
+    type: number
+  currency:
+    description:
+      The ISO 4217 currency code representing the currency of the monetary
+      value.
+    example: USD
+    maxLength: 3
+    minLength: 3
+    type: string
+required:
+  - amount
+  - currency

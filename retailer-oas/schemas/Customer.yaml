@@ -1,9 +1,11 @@
 type: object
 required:
-  - customerId
+  - id
   - phone
+  - name
+  - email
 properties:
-  customerId:
+  id:
     type: string
     description: Must uniquely identify a customer
     example: "001"
