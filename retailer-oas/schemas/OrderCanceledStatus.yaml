@@ -1,14 +1,8 @@
 properties:
   createdAt:
-    type: string
-    format: ISO 8601
-    description: The starting time of the Timeslot
-    example: "2023-01-11T14:00:00+00:00"
+    $ref: "./CreatedAt.yaml"
   updatedAt:
-    type: string
-    format: ISO 8601
-    description: The starting time of the Timeslot
-    example: "2023-01-11T14:15:00+00:00"
+   $ref: "./UpdatedAt.yaml"
   status:
     enum:
       - "ORDER_RECEIVED"

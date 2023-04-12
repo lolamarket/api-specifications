@@ -16,8 +16,7 @@ post:
     content:
       application/json:
         schema:
-          allOf:
-            - $ref: "../../schemas/OrderCancelationReason.yaml"
+          $ref: "../../schemas/OrderCancelationReason.yaml"
   responses:
     "200":
       description: OK
@@ -25,11 +24,8 @@ post:
         application/json:
           schema:
             allOf:
-              - $ref: "../schemas/Order.yaml"
-              - type: object
-                properties:
-                  reason:
-                    $ref: "../../schemas/OrderCancelationReason.yaml"
+              - $ref: "../../schemas/Order.yaml"
+              - $ref: "../../schemas/OrderCancelationReason.yaml"
             required: ["id", "status", "reason"]
     "400":
       description: Bad Request

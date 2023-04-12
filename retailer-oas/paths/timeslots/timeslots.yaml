@@ -17,24 +17,21 @@ get:
       description: Picking Location identifier
       example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
       schema:
-        type: string
-        format: uuid
+        $ref: '../../schemas/ID.yaml'
     - name: fromDate
       in: query
       required: true
       description: The first timeslot.
       example: "2023-01-14T13:00:00Z"
       schema:
-        type: string
-        format: ISO 8601
+        $ref: '../../schemas/TimeStamp.yaml'
     - name: toDate
       in: query
       required: false
       description: The first timeslot. Limited to 7 days.
       example: "2023-01-19T22:00:00Z"
       schema:
-        type: string
-        format: ISO 8601
+        $ref: '../../schemas/TimeStamp.yaml'
     - name: quantity
       in: query
       required: false
