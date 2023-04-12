@@ -17,20 +17,21 @@ post:
       application/json:
         schema:
           allOf:
-            - $ref: '../../schemas/OrderCancelationReason.yaml'
+            - $ref: "../../schemas/OrderCancelationReason.yaml"
   responses:
-    '200':
+    "200":
       description: OK
       content:
         application/json:
           schema:
             allOf:
-              - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/Order.yaml'
-              - $ref: '../../schemas/OrderCancelationReason.yaml'
-              - $ref: '../../schemas/OrderCanceledStatus.yaml'
-            required: ['id', 'status', 'reason']
-    '400':
+              - $ref: "../schemas/Order.yaml"
+              - type: object
+                properties:
+                  reason:
+                    $ref: "../../schemas/OrderCancelationReason.yaml"
+            required: ["id", "status", "reason"]
+    "400":
       description: Bad Request
       content:
         application/json:
@@ -52,5 +53,5 @@ post:
                 items:
                   type: string
                   description: List of error details
-    '404':
+    "404":
       description: Order Not Found

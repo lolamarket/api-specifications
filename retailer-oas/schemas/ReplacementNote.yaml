@@ -1,0 +1,4 @@
+type: string
+description: A string representing replacement note.
+example: "I want to add a note to this"
+maxLength: 200

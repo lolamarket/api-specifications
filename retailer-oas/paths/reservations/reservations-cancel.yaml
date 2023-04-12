@@ -15,47 +15,44 @@ post:
     required: false
     content:
       application/json:
-          schema:
-            type: object
-            properties:
-              reason:
-                type: object
-                properties:
-                  code:
-                    description: |-
-                      - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
-                      - `OMS_DRIVEN`	The OMS triggered the cancelation.
-                      - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
-                      - `OTHER`	The cancelation was triggered by another source.
-                    enum:
-                      - CUSTOMER_DRIVEN
-                      - OMS_DRIVEN
-                      - RETAILER_DRIVEN
-                      - OTHER
-                  type:
-                    type: string
-                    description: Cancelation reasons type
-                    enum:
-                      - 'payment failed'
-                      - 'fraudulent customer'
-                      - 'incorrect customer information'
-                      - 'customer requested to cancel'
-                      - 'too many out of stock items'
-                      - 'system error'
-                      - 'other'
-                      - 'unknown'
+        schema:
+          type: object
+          properties:
+            reason:
+              type: object
+              properties:
+                code:
+                  description: |-
+                    - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+                    - `OMS_DRIVEN`	The OMS triggered the cancelation.
+                    - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+                    - `OTHER`	The cancelation was triggered by another source.
+                  enum:
+                    - CUSTOMER_DRIVEN
+                    - OMS_DRIVEN
+                    - RETAILER_DRIVEN
+                    - OTHER
+                type:
+                  type: string
+                  description: Cancelation reasons type
+                  enum:
+                    - "payment failed"
+                    - "fraudulent customer"
+                    - "incorrect customer information"
+                    - "customer requested to cancel"
+                    - "too many out of stock items"
+                    - "system error"
+                    - "other"
+                    - "unknown"
   responses:
-    '200':
+    "200":
       description: OK
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/ReservationCancelation.yaml'
-              - $ref: '../../schemas/ReservationCancelationReason.yaml'
-            required: ['id', 'status', 'createdAt', 'reason']
-    '400':
+            $ref: "../../schemas/ReservationCancelation.yaml"
+            required: ["id", "status", "createdAt", "reason"]
+    "400":
       description: Bad Request
       content:
         application/json:
@@ -75,5 +72,5 @@ post:
                 items:
                   type: string
                   description: List of error details
-    '404':
+    "404":
       description: Not Found

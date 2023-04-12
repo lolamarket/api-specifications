@@ -1,0 +1,15 @@
+description: An object representing the requested quantity and its unit.
+properties:
+  requested:
+    description: The requested quantity.
+    example: 2.0
+    format: float
+    type: number
+  unit:
+    description: The unit of the requested quantity.
+    example: unit
+    type: string
+required:
+  - requested
+  - unit
+type: object

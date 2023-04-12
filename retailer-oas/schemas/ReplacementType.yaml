@@ -1,0 +1,8 @@
+type: string
+description: An object representing replacement type.
+enum:
+  - "SHOPPER_REPLACE"
+  - "CALL_CUSTOMER"
+  - "NO_REPLACEMENTS"
+default: "CALL_CUSTOMER"
+required: true

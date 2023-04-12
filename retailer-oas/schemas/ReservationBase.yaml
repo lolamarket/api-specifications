@@ -1,0 +1,10 @@
+type: object
+required:
+  - timeslotId
+properties:
+  timeslotId:
+    type: string
+    description: The Timeslot's identifier selected for the Reservation
+    example: "slot2"
+  customerInfo:
+    $ref: "./Customer.yaml"

@@ -1,28 +1,25 @@
 type: object
 properties:
-  reason:
-    type: object
-    properties:
-      code:
-        description: |-
-          - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
-          - `OMS_DRIVEN`	The OMS triggered the cancelation.
-          - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
-          - `OTHER`	The cancelation was triggered by another source.
-        enum:
-          - CUSTOMER_DRIVEN
-          - OMS_DRIVEN
-          - RETAILER_DRIVEN
-          - OTHER
-      type:
-        type: string
-        description: Cancelation reasons type
-        enum:
-          - 'payment failed'
-          - 'fraudulent customer'
-          - 'incorrect customer information'
-          - 'customer requested to cancel'
-          - 'too many out of stock items'
-          - 'system error'
-          - 'other'
-          - 'unknown'
+  code:
+    description: |-
+      - `CUSTOMER_DRIVEN`	The customer triggered the cancelation.
+      - `OMS_DRIVEN`	The OMS triggered the cancelation.
+      - `RETAILER_DRIVEN`	The retailer triggered the cancelation.
+      - `OTHER`	The cancelation was triggered by another source.
+    enum:
+      - CUSTOMER_DRIVEN
+      - OMS_DRIVEN
+      - RETAILER_DRIVEN
+      - OTHER
+  type:
+    type: string
+    description: Cancelation reasons type
+    enum:
+      - "payment failed"
+      - "fraudulent customer"
+      - "incorrect customer information"
+      - "customer requested to cancel"
+      - "too many out of stock items"
+      - "system error"
+      - "other"
+      - "unknown"

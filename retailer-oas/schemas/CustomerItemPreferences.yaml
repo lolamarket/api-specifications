@@ -1,0 +1,6 @@
+type: object
+properties:
+  replacementType:
+    $ref: "./ReplacementType.yaml"
+  note:
+    $ref: "./ReplacementNote.yaml"
