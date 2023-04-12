@@ -6,5 +6,5 @@ allOf:
         $ref: "./Capacity.yaml"
       availability:
         type: boolean
-        description: Indicates if the user can book this Timeslot.
+        description: Indicates whether this Timeslot is available to be reserved or not.
         example: true
