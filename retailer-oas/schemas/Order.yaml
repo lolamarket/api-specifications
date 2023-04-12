@@ -3,15 +3,9 @@ allOf:
   - type: object
     properties:
       createdAt:
-        allOf:
-          - type: object
-          - $ref: "./TimeStamp.yaml"
-          - description: The date and time the entity was created
+        $ref: "./CreatedAt.yaml"
       updatedAt:
-        allOf:
-          - type: object
-          - $ref: "./TimeStamp.yaml"
-          - description: The date and time the entity was last updated
+        $ref: "./UpdatedAt.yaml"
       id:
         $ref: "./Id.yaml"
       shopperId:

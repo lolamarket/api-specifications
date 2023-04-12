@@ -1,9 +1,9 @@
 post:
-  summary: Reserve a timeslot. 
+  summary: Reserve a timeslot.
   description: |
     Create a new reservation. 
-    
-    Reservations will automatically expire after 15 minutes in order to free resources for other customers.     
+
+    Reservations will automatically expire after 15 minutes in order to free resources for other customers.
   operationId: createTimeslotReservation
   tags:
     - reservations
@@ -11,19 +11,16 @@ post:
     required: true
     content:
       application/json:
-          schema:
-            $ref: '../../schemas/Reservation.yaml'
+        schema:
+          $ref: "../../schemas/ReservationBase.yaml"
   responses:
-    '200':
+    "200":
       description: OK
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/Reservation.yaml'
-              - $ref: '../../schemas/ReservationStatus.yaml'
-    '400':
+            $ref: "../../schemas/Reservation.yaml"
+    "400":
       description: Bad Request
       content:
         application/json:
