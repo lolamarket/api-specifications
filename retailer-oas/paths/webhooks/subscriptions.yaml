@@ -37,9 +37,7 @@ post:
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/Subscription.yaml'
+            $ref: '../../schemas/Subscription.yaml'
     '400':
       description: Bad Request
 
@@ -61,9 +59,7 @@ get:
               subscriptions:
                 type: array
                 items:
-                  allOf:
-                    - $ref: '../../schemas/ID.yaml'
-                    - $ref: '../../schemas/Subscription.yaml'
+                  $ref: '../../schemas/Subscription.yaml'
                 example: [
                   {
                     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",

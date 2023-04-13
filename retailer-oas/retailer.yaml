@@ -160,7 +160,7 @@ components:
       $ref: "./schemas/ServiceAvailability.yaml"
 
     ID:
-      $ref: "./schemas/ID.yaml"
+      $ref: "./schemas/Id.yaml"
 
     Subscription:
       $ref: "./schemas/Subscription.yaml"
