@@ -17,9 +17,7 @@ get:
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/Subscription.yaml'
+            $ref: '../../schemas/Subscription.yaml'
     '400':
       description: Bad Request
     '404':
@@ -46,16 +44,14 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/Subscription.yaml'
+          $ref: '../../schemas/SubscriptionBase.yaml'
   responses:
     '200':
       description: OK
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: '../../schemas/ID.yaml'
-              - $ref: '../../schemas/Subscription.yaml'
+            $ref: '../../schemas/Subscription.yaml'
     '400':
       description: Bad Request
     '404':
