@@ -7,7 +7,7 @@ allOf:
       updatedAt:
         $ref: "./UpdatedAt.yaml"
       id:
-        $ref: "./id.yaml"
+        $ref: "./Id.yaml"
       shopperId:
         $ref: "./Id.yaml"
       reservationId:
