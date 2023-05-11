@@ -3,11 +3,11 @@ required:
   - customerId
   - phone
 properties:
-  customerId:
+  id:
     type: string
     description: Must uniquely identify a customer
     example: "001"
-  customerName:
+  name:
     type: string
     description: The name of the Customer
     maxLength: 100
