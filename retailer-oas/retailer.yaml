@@ -28,10 +28,10 @@ info:
     2. `order.allocated`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_allocated) Order assigned and accepted by a shopper. In some cases, the order may be assigned to multiple resources (picker, courier).
     3. `order.rescheduled`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rescheduled) Order has been moved to a different timeslot, needs to be allocated.
     4. `order.in.picking`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking) Shopper started picking items. Each product in the order will have their own status.
-        1. `item.pending`
-        2. `item.picked`
-        3. `item.not.found`
-        4. `item.replaced`
+        1. `item.picked`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_picked) Shopper picked an item. This payload highlights the picked product.
+        2. `item.not.found`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_not_found) Shopper cannot find an item. This payload highlights the which product is missing.
+        3. `item.replaced`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_replaced) Shopper has replaced an item. This payload highlights the which product has been replaced and by which product it has been replaced.
+        4. `item.added`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_added) Shopper has picked a new product. 
     5. `order.picked`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_picked) Shopper finished picking order items and will go to the cashier.
     6. `order.in.transit`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_transit) Order on its way to the customer.
     7. `order.delivered`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_delivered) Order delivered to the customer.
