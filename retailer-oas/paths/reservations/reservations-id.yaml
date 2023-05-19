@@ -1,0 +1,22 @@
+get:
+  summary: Get a reservation
+  description: Retrieves reservation details by reservation ID.
+  operationId: getReservationById
+  tags:
+    - reservations
+  parameters:
+    - name: id
+      in: path
+      description: Reservation identifier
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/Reservation.yaml"
+    "404":
+      description: Reservation not found

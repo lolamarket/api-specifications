@@ -88,6 +88,8 @@ paths:
   #Reservations
   /reservations:
     $ref: "./paths/reservations/reservations.yaml"
+  /reservations/{id}:
+    $ref: "./paths/reservations/reservations-id.yaml"
   /reservations/{id}/cancel:
     $ref: "./paths/reservations/reservations-cancel.yaml"
 
