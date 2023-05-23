@@ -21,8 +21,12 @@ properties:
     example: "238120381238"
   shippingAddress:
     $ref: "./ShippingAddress.yaml"
+  reservationId:
+    type: string
+    description: Reservation Id's identifier selected for the Order.
+    format: "uuid"
   timeslotId:
-    description: The Timeslot"s identifier selected for the Order
+    description: The Timeslot's identifier selected for the Order. In case Reservation Id's invalid a "on-demand" request is made.
     example: slot2
     type: string
   totals:
