@@ -12,4 +12,6 @@ allOf:
         $ref: "./ReservationStatus.yaml"
       createdAt:
         $ref: "./CreatedAt.yaml"
+      updatedAt:
+        $ref: "./UpdatedAt.yaml"
   - $ref: "./ReservationBase.yaml"
