@@ -8,6 +8,7 @@ properties:
       - quantity
       - buyingPrice
       - estimatedWeight
+      - unitPrice
     type: array
   customer:
     $ref: "./Customer.yaml"
