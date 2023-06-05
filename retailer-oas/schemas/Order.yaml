@@ -14,8 +14,20 @@ allOf:
         type: string
         description: Reservation Id
         format: "uuid"
+      articles:
+        description: The array of articles included in the Order
+        items:
+          $ref: "./AggregatedOrderArticle.yaml"
+        type: array
       status:
         $ref: "./OrderStatus.yaml"
+      serviceDate:
+        type: object
+        properties:
+          fromDate:
+            $ref: "./TimeStamp.yaml"
+          toDate:
+            $ref: "./TimeStamp.yaml"
       totals:
         allOf:
           - $ref: "./OrderTotals.yaml"

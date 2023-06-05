@@ -16,7 +16,7 @@ properties:
     example: 1.250
   customerItemPreferences:
     $ref: "./CustomerItemPreferences.yaml"
-  quantity:
+  requested:
     allOf:
       - $ref: "./Quantity.yaml"
       - description: The requested quantity and its unit.

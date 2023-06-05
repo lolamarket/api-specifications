@@ -1,0 +1,39 @@
+allOf:
+  - $ref: "./OrderArticle.yaml"
+  - type: object
+    properties:
+      picked:
+        oneOf:
+          - allOf:
+              - $ref: "./Quantity.yaml"
+              - description: The picked by shopper quantity and its unit.
+          - type: 'null'
+      shortDescription:
+        type: string
+        description: "Short description of product"
+        example: "COTTAGE CHEESE DELICATE MIX"
+      category:
+        type: object
+        properties:
+          id:
+            type: string
+            description: Category id
+            example: "Milk"
+          name:
+            type: string
+            description: Category name
+            example: "Milk"
+      packageInfo:
+        type: string
+        description: "Long description of product"
+        example: "Long description of product"
+      EANs:
+        type: array
+        items:
+          type: string
+          example: "5411188111375"
+      pictures:
+        type: array
+        items:
+          example: https://res.cloudinary.com/fonte-online/image/upload/v1684942778/Biedronka/dev/assortment/ou3g3rsogtg5fw1isg1e.png"
+          type: string
