@@ -28,15 +28,6 @@ If the order can not be confirmed instead of receiving this event you will recei
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T14:00:00+00:00",
-      "toDate": "2023-01-11T15:00:00+00:00"
-    },
     "serviceType": "DELIVERY"
   }
 }
@@ -55,15 +46,6 @@ If the order can not be confirmed instead of receiving this event you will recei
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T14:00:00+00:00",
-      "toDate": "2023-01-11T15:00:00+00:00"
-    },
     "shopper": {
       "id": "shopper-01",
       "name": "Lukasz",
@@ -87,10 +69,6 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
     "timeSlot": {
       "id": "slot45",
       "fromDate": "2023-01-12T14:00:00+00:00",
@@ -100,11 +78,6 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
       "id": "slot1",
       "fromDate": "2023-01-11T10:00:00+00:00",
       "toDate": "2023-01-11T11:00:00+00:00"
-    },
-    "shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
     },
     "serviceType": "DELIVERY"
   }
@@ -124,25 +97,6 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-    "oldTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
-    "shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
     "serviceType": "DELIVERY"
   }
 }
@@ -165,23 +119,13 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
       "id": "123",
       "name": "NORTH-21242"
     },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-    "oldTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
     "shopper": {
       "id": "shopper-01",
       "name": "Lukasz",
       "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
     },
     "serviceType": "DELIVERY",
-    "articles": [
+    "article": 
       {
         "itemId": "1111",
         "scanCode": "00980349940",
@@ -191,7 +135,6 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
         "quantityFulfilledUnit": "unit",
         "replaced": false
       }
-    ]
   }
 }
 ```
@@ -360,63 +303,44 @@ The `order.picked` event signifies that the shopper has completed picking all th
 
 ```json
 {
-  "eventId": 1201895966044343902,
-  "eventName": "order.picked",
-  "eventProvider": "glovo-xl",
-  "eventTimestamp": "2023-01-10T18:31:00Z",
-  "eventPayload": {
-    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-		"oldTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
-		"shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
-    "serviceType": "DELIVERY",
-		"articles": [
-			{
-				"itemId": "12345",
-				"scanCode": "00980349941",
-				"quantityRequested": 3.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "9876",
-				"scanCode": "00980349941",
-				"quantityRequested": 0.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 2.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "98761", --- Bags Count ---
-				"scanCode": "009803499410",
-				"quantityRequested": 20.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			}
-		]
-  }
+	"eventId": 1201895966044343902,
+	"eventName": "order.picked",
+	"eventProvider": "glovo-xl",
+	"eventTimestamp": "2023-01-10T18:31:00Z",
+	"eventPayload": {
+	"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+	"orderRef": "238120381238",
+	"serviceType": "DELIVERY",
+	"articles": [
+		{
+			"itemId": "12345",
+			"scanCode": "00980349941",
+			"quantityRequested": 3.0,
+			"quantityRequestedUnit":"unit",
+			"quantityFulfilled": 1.0,
+			"quantityFulfilledUnit":"unit",
+			"replaced": false
+		},
+		{
+			"itemId": "9876",
+			"scanCode": "00980349941",
+			"quantityRequested": 0.0,
+			"quantityRequestedUnit":"unit",
+			"quantityFulfilled": 2.0,
+			"quantityFulfilledUnit":"unit",
+			"replaced": false
+		},
+		{
+			"itemId": "98761", --- Bags Count ---
+			"scanCode": "009803499410",
+			"quantityRequested": 20.0,
+			"quantityRequestedUnit":"unit",
+			"quantityFulfilled": 1.0,
+			"quantityFulfilledUnit":"unit",
+			"replaced": false
+		}
+	]
+	}
 }
 ```
 
@@ -433,55 +357,7 @@ Order on its way to the customer. It has already passed the checkout process suc
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-		"oldTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
-		"shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
-    "serviceType": "DELIVERY",
-		"articles": [
-			{
-				"itemId": "12345",
-				"scanCode": "00980349941",
-				"quantityRequested": 3.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "9876",
-				"scanCode": "00980349941",
-				"quantityRequested": 0.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 2.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "98761", --- Bags Count ---
-				"scanCode": "009803499410",
-				"quantityRequested": 20.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-		]
+    "serviceType": "DELIVERY"
   }
 }
 ```
@@ -493,61 +369,13 @@ Order delivered to the customer.
 ```json
 {
   "eventId": 1201895966044343902,
-  "eventName": "order.picked",
+  "eventName": "order.delivered",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-		"oldTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
-		"shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
-    "serviceType": "DELIVERY",
-		"articles": [
-			{
-				"itemId": "12345",
-				"scanCode": "00980349941",
-				"quantityRequested": 3.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "9876",
-				"scanCode": "00980349941",
-				"quantityRequested": 0.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 2.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "98761", --- Bags Count ---
-				"scanCode": "009803499410",
-				"quantityRequested": 20.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-		]
+    "serviceType": "DELIVERY"
   }
 }
 ```
@@ -565,49 +393,11 @@ Order on hold for some reason that may include:
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T14:00:00+00:00",
-      "toDate": "2023-01-11T15:00:00+00:00"
-    },
     "reason": {
       "code": "CUSTOMER_NO_SHOW",
       "description": "Customer not abailable at delivery location."
     },
-    "serviceType": "DELIVERY",
-    "articles": [
-			{
-				"itemId": "12345",
-				"scanCode": "00980349941",
-				"quantityRequested": 3.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "9876",
-				"scanCode": "00980349941",
-				"quantityRequested": 0.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 2.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-			{
-				"itemId": "98761", --- Bags Count ---
-				"scanCode": "009803499410",
-				"quantityRequested": 20.0,
-				"quantityRequestedUnit":"unit",
-				"quantityFulfilled": 1.0,
-				"quantityFulfilledUnit":"unit",
-				"replaced": false
-			},
-		]
+    "serviceType": "DELIVERY"
   }
 }
 ```
@@ -629,8 +419,7 @@ Order rejected by the OMS for some reason.
       "code": "PICKING_LOCATION_NOT_VALID",
       "description": "Picking location does not match customer's shipping address."
     },
-    "serviceType": "DELIVERY",
-    "express": false
+    "serviceType": "DELIVERY"
   }
 }
 ```
@@ -648,20 +437,6 @@ Order has been canceled before left the store. A cancelation could be initiated 
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-    "shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
     "reason": {
       "code": "ORDER_CANCELLED_BY_OPS_MANAGER",
       "description": "This order has been cancelled by operations manager."
@@ -684,15 +459,10 @@ Order has been canceled after leaving the store so need to be returned to pickin
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
     "reason": {
       "code": "CUSTOMER_NO_SHOW",
       "description": "Customer not abailable at delivery location."
     },
-    "serviceType": "DELIVERY",
     "articles": [
       {
         "itemId": "12345",
@@ -732,7 +502,8 @@ Order has been canceled after leaving the store so need to be returned to pickin
         },
         "returned": true
       }
-    ]
+    ],
+    "serviceType": "DELIVERY",
   }
 }
 ```
