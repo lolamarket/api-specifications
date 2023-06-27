@@ -115,15 +115,6 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
     "serviceType": "DELIVERY",
     "article": 
       {
@@ -152,25 +143,6 @@ A product item has been replaced.
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-    "oldTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
-    "shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
     "serviceType": "DELIVERY",
     "articles": [
       {
@@ -214,25 +186,6 @@ A product item was not found.
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeSlot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-    "oldTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
-    "shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
     "serviceType": "DELIVERY",
     "articles": [
       {
@@ -262,27 +215,8 @@ A new product item has been added to basket.
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "pickingLocation": {
-      "id": "123",
-      "name": "NORTH-21242"
-    },
-    "timeslot": {
-      "id": "slot45",
-      "fromDate": "2023-01-12T14:00:00+00:00",
-      "toDate": "2023-01-12T15:00:00+00:00"
-    },
-    "previousTimeslot": {
-      "id": "slot1",
-      "fromDate": "2023-01-11T10:00:00+00:00",
-      "toDate": "2023-01-11T11:00:00+00:00"
-    },
-    "shopper": {
-      "id": "shopper-01",
-      "name": "Lukasz",
-      "picture": "https://media.lolamarket.com/shopper/placeholder.jpg"
-    },
     "serviceType": "DELIVERY",
-    "articles": [
+    "article": [
       {
         "itemId": "12345",
         "scanCode": "00980349941",
