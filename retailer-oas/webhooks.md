@@ -5,14 +5,18 @@
 1. [order.confirmed](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_confirmed) 
 2. [order.allocated](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_allocated) 
 3. [order.rescheduled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rescheduled) 
-4. [order.in.picking](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking) 
-5. [order.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_picked) 
-6. [order.in.transit](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_transit) 
-7. [order.delivered](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_delivered) 
-8. [order.on.hold](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_on_hold) 
-9. [order.rejected](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) 
-10. [order.canceled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) 
-11. [order.returned](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned)
+4. [order.inPicking](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking)
+5. [order.item.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_picked)
+6. [order.item.replaced](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_replaced)
+7. [order.item.notFound](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_not_found)ORDER_ITEM_ADDED
+8. [order.item.added](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_added)
+9. [order.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_picked) 
+10. [order.in.transit](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_transit) 
+11. [order.delivered](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_delivered) 
+12. [order.on.hold](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_on_hold) 
+13. [order.rejected](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) 
+14. [order.canceled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) 
+15. [order.returned](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned)
 
 ### ORDER_CONFIRMED
 
@@ -187,7 +191,7 @@ A product item was not found.
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
     "serviceType": "DELIVERY",
-    "articles": [
+    "article": [
       {
         "itemId": "1111",
         "scanCode": "00980349940",
