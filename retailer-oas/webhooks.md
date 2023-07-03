@@ -8,7 +8,7 @@
 4. [order.inPicking](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking)
 5. [order.item.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_picked)
 6. [order.item.replaced](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_replaced)
-7. [order.item.notFound](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_not_found)ORDER_ITEM_ADDED
+7. [order.item.notFound](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_not_found)
 8. [order.item.added](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_added)
 9. [order.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_picked) 
 10. [order.in.transit](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_transit) 
