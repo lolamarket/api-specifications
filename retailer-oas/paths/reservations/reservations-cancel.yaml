@@ -59,18 +59,62 @@ post:
           schema:
             type: object
             properties:
-              message:
+              title:
                 type: string
                 description: Error message
-              errorCode:
-                type: string
-                description: Error code
-                enum:
-                  - "TOO_LATE_TO_CANCEL"
-              errors:
+                example: Validation Failed
+              detail:
                 type: array
-                items:
-                  type: string
-                  description: List of error details
+                description: List of error details
+                example: ["code: code must be one of the following values: CUSTOMER_DRIVEN, OMS_DRIVEN, RETAILER_DRIVEN, OTHER", "type: type must be one of the following values: payment failed, fraudulent customer, incorrect customer information, customer requested to cancel, too many out of stock items, system error, other, unknown"]
+              status: 
+                type: string
+                description: Status code
+                example: 400
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: GENERIC.VALIDATION_FAILED
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T11:50:22.754Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: qbTvx3EBRf9nw4b8LAkfc
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/reservations/232rfdsgdeg/cancel
     "404":
       description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: Error message
+                example: The corresponding reservation not found
+              status: 
+                type: string
+                description: Status code
+                example: 404
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: RESERVATION.NOT_FOUND
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T11:50:22.754Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: qbTvx3EBRf9nw4b8LAkfc
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/reservations/232rfdsgdeg/cancel

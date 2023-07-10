@@ -11,9 +11,9 @@ properties:
     type: array
   customer:
     $ref: "./Customer.yaml"
-  customerBillingInfo:
+  billingInfo:
     $ref: "./CustomerBillingInfo.yaml"
-  customerPreferences:
+  preferences:
     $ref: "./CustomerOrderPreferences.yaml"
   orderRef:
     type: string

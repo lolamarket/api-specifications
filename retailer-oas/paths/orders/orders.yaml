@@ -24,22 +24,34 @@ post:
           schema:
             type: object
             properties:
-              message:
+              title:
                 type: string
                 description: Error message
-              errorCode:
-                type: string
-                description: Error code
-                enum:
-                  - "TIMESLOT_NOT_AVAILABLE"
-                  - "ORDER_TOO_HEAVY"
-                  - "INVALID_SHIPPING_ADDRESS"
-                  - "INVALID_CUSTOMER_DATA"
-                  - "INVALID_PRODUCT_QUANTITY"
-                  - "ORDER_TOTAL_MISMATCH"
-                  - "DUPLICATED_ORDER"
-              errors:
+                example: Validation Failed
+              detail:
                 type: array
-                items:
-                  type: string
-                  description: List of error details
+                description: Error description
+                example: "Slot validation failed for this reasons: timeslot unavailable"
+              status: 
+                type: string
+                description: Status code
+                example: 400
+              meta:
+                type: array
+                description: "reasons: [timeslot unavailable]"
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: SLOT_VALIDATION_ERROR
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T09:39:38.117Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: x8_LG2DqqRH-B1SH3aRpD
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/orders/

@@ -20,3 +20,36 @@ get:
             $ref: "../../schemas/Reservation.yaml"
     "404":
       description: Reservation not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title: 
+                type: string
+                description: The type of error
+                example: HttpException
+              detail: 
+                type: string
+                description: Detail on the error found
+                example: Reservation not found
+              status: 
+                type: string
+                description: Status code
+                example: 404
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: GENERIC.NOT_FOUND
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T09:21:12.918Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: Y78YquG4o-UR9ZkjfqBdp
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/reservations/d583b3da-9f1d-41e9-8d34-4323f4578f7e

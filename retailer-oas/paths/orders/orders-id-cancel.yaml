@@ -27,27 +27,79 @@ post:
               - $ref: "../../schemas/Order.yaml"
               - $ref: "../../schemas/OrderCancelationReason.yaml"
             required: ["id", "status", "reason"]
-    "400":
-      description: Bad Request
+    "409":
+      description: Order already cancelled
       content:
         application/json:
           schema:
             type: object
             properties:
-              message:
+              title:
                 type: string
                 description: Error message
-              errorCode:
-                type: string
-                description: Error code
-                enum:
-                  - "ALREADY_CANCELED"
-                  - "TOO_LATE_TO_CANCEL"
-                  - "INVALID_REASON"
-              errors:
+                example: Order status not valid
+              detail:
                 type: array
-                items:
-                  type: string
-                  description: List of error details
+                description: Error description
+                example: "Order 00e9f74a-7297-4582-ab6b-3c2830253ba2 status not valid"
+              meta:
+                type: array
+                description: "orderId: 00e9f74a-7297-4582-ab6b-3c2830253ba2"
+              status: 
+                type: string
+                description: Status code
+                example: 409
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: ORDER_STATUS_NOT_VALID
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T11:57:06.189Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: Ys-F2ZMB7AVh_nBsHc9Nf
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/orders/00e9f74a-7297-4582-ab6b-3c2830253ba2/cancel
     "404":
-      description: Order Not Found
+      description: Order not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: Error message
+                example: Order not found
+              detail:
+                type: array
+                description: Error description
+                example: "Order with id:00e9f74a-7297-4582-ab6b-3c2830253ba2 not found"
+              meta:
+                type: array
+                description: "orderId: 00e9f74a-7297-4582-ab6b-3c2830253ba2"
+              status: 
+                type: string
+                description: Status code
+                example: 404
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: ORDER_NOT_FOUND
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T11:57:06.189Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: EAapXkB4aP7jp2dakIBwU
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/orders/00e9f74a-7297-4582-ab6b-3c2830253ba2/cancel
