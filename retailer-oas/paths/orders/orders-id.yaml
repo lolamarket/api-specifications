@@ -20,6 +20,39 @@ get:
             $ref: '../../schemas/Order.yaml'
     '404':
       description: Order not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: Error message
+                example: HttpException
+              detail:
+                type: array
+                description: Error description
+                example: "Order not found"
+              status: 
+                type: string
+                description: Status code
+                example: 404
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: GENERIC.NOT_FOUND
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T11:57:06.189Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: EAapXkB4aP7jp2dakIBwU
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/orders/f7467222-604d-4a4e-9e62-7e4986523e46s
 
 patch:
   summary: Update an existing order

@@ -27,21 +27,32 @@ post:
           schema:
             type: object
             properties:
-              message:
+              title:
                 type: string
                 description: Error message
-              errorCode:
-                type: string
-                description: Error code
-                enum:
-                  - "TIMESLOT_NOT_AVAILABLE"
-                  - "TOTAL_ARTICLES_TOO_HEAVY"
-                  - "INVALID_SHIPPING_ADDRESS"
-                  - "INVALID_CUSTOMER_DATA"
-                  - "INVALID_ARTICLE_ITEM_QUANTITY"
-                  - "TOTAL_MISMATCH"
-              errors:
+                example: Validation Failed
+              detail:
                 type: array
-                items:
-                  type: string
-                  description: List of error details
+                description: List of error details
+                example: ["timeslotId: timeslotId must be a UUID", "The corresponding timeslot not found"]
+              status: 
+                type: string
+                description: Status code
+                example: 400
+              errorCode: 
+                type: string
+                description: Error code tag
+                example: GENERIC.VALIDATION_FAILED
+              timestamp: 
+                type: timestamp
+                description: The timestamp of the error
+                example: 2023-07-10T09:39:38.117Z
+              requestId: 
+                type: string
+                description: The request internal id 
+                example: 2bnYf60KRDltubGoIRdPj
+              instance: 
+                type: string
+                description: Full path of the request
+                example: /v1/reservations/
+              

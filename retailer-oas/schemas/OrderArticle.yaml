@@ -14,7 +14,7 @@ properties:
     format: weight
     description: The estimated weight of the product in kilograms.
     example: 1.250
-  customerItemPreferences:
+  itemPreferences:
     $ref: "./CustomerItemPreferences.yaml"
   requested:
     allOf:
