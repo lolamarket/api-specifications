@@ -6,17 +6,16 @@
 2. [order.allocated](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_allocated) 
 3. [order.rescheduled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rescheduled) 
 4. [order.inPicking](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking)
-5. [order.item.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_picked)
-6. [order.item.replaced](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_replaced)
-7. [order.item.notFound](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_not_found)
-8. [order.item.added](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_added)
+5. [order.article.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_picked)
+6. [order.article.replaced](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_replaced)
+7. [order.article.notFound](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_not_found)
+8. [order.article.added](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_added)
 9. [order.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_picked) 
 10. [order.in.transit](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_transit) 
 11. [order.delivered](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_delivered) 
-12. [order.on.hold](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_on_hold) 
-13. [order.rejected](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) 
-14. [order.canceled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) 
-15. [order.returned](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned)
+12. [order.rejected](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) 
+13. [order.canceled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) 
+14. [order.returned](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned)
 
 ### ORDER_CONFIRMED
 
@@ -90,7 +89,7 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
 
 ### ORDER_IN_PICKING
 
-`order.in_picking` is an event triggered when a shopper has started picking items for an order. The event provides information about the picking location, timeslot, and shopper assigned to the order. Additionally, each product in the order has its own status, which will be updated as the shopper picks them. Retailers can use this event to track the progress of their orders and ensure that they are being fulfilled on time.
+`order.in_picking` is an event triggered when a shopper has started picking articles for an order. The event provides information about the picking location, timeslot, and shopper assigned to the order. Additionally, each product in the order has its own status, which will be updated as the shopper picks them. Retailers can use this event to track the progress of their orders and ensure that they are being fulfilled on time.
 
 ```json
 {
@@ -106,14 +105,14 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
 }
 ```
 
-### ORDER_ITEM_PICKED
+### ORDER_ARTICLE_PICKED
 
-`order.item.picked` is an event triggered when an item has been picked by the shopper.
+`order.article.picked` is an event triggered when an article has been picked by the shopper.
 
 ```json
 {
   "eventId": 1201895966044343902,
-  "eventName": "order.item.picked",
+  "eventName": "order.article.picked",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
   "eventPayload": {
@@ -122,8 +121,7 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
     "serviceType": "DELIVERY",
     "article": 
       {
-        "itemId": "1111",
-        "scanCode": "00980349940",
+        "id": "1111",
         "quantityRequested": 2.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 2.0,
@@ -134,14 +132,14 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
 }
 ```
 
-### ORDER_ITEM_REPLACED
+### ORDER_ARTICLE_REPLACED
 
-A product item has been replaced.
+A product article has been replaced.
 
 ```json
 {
   "eventId": 1201895966044343902,
-  "eventName": "order.item.replaced",
+  "eventName": "order.article.replaced",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
   "eventPayload": {
@@ -150,8 +148,7 @@ A product item has been replaced.
     "serviceType": "DELIVERY",
     "articles": [
       {
-        "itemId": "1111",
-        "scanCode": "00980349940",
+        "id": "1111",
         "quantityRequested": 2.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 1.0,
@@ -159,14 +156,12 @@ A product item has been replaced.
         "replaced": true,
         "replacement": [
           {
-            "itemId": "9876",
-            "scanCode": "00980349941",
+            "id": "9876",
             "quantityFulfilledUnit": "unit",
             "quantityFulfilled": 2
           },
           {
-            "itemId": "98761",
-            "scanCode": "009803499410",
+            "id": "98761",
             "quantityFulfilledUnit": "unit",
             "quantityFulfilled": 1
           }
@@ -177,14 +172,14 @@ A product item has been replaced.
 }
 ```
 
-### ORDER_ITEM_NOT_FOUND
+### ORDER_ARTICLE_NOT_FOUND
 
-A product item was not found.
+A product article was not found.
 
 ```json
 {
   "eventId": 1201895966044343902,
-  "eventName": "order.item.notFound",
+  "eventName": "order.article.notFound",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
   "eventPayload": {
@@ -193,8 +188,7 @@ A product item was not found.
     "serviceType": "DELIVERY",
     "article": [
       {
-        "itemId": "1111",
-        "scanCode": "00980349940",
+        "id": "1111",
         "quantityRequested": 2.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 0.0,
@@ -206,14 +200,14 @@ A product item was not found.
 }
 ```
 
-### ORDER_ITEM_ADDED
+### ORDER_ARTICLE_ADDED
 
-A new product item has been added to basket.
+A new product article has been added to basket.
 
 ```json
 {
   "eventId": 1201895966044343902,
-  "eventName": "order.item.added",
+  "eventName": "order.article.added",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
   "eventPayload": {
@@ -222,8 +216,7 @@ A new product item has been added to basket.
     "serviceType": "DELIVERY",
     "article": [
       {
-        "itemId": "12345",
-        "scanCode": "00980349941",
+        "id": "12345",
         "quantityRequested": 0.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 4.0,
@@ -237,7 +230,7 @@ A new product item has been added to basket.
 
 ### ORDER_PICKED
 
-The `order.picked` event signifies that the shopper has completed picking all the items and is now heading towards the cashier. This event's payload includes essential information related to product-not-found, out-of-stock, and replacements. In the case of replacements, this event payload displays fully replaced products in-line, while partially replaced products are shown as a partial stock-out along with new or additional items in the order. Retailers receive this event to track the shopper's progress and order fulfillment status accurately and to be able to charge the cutomer .
+The `order.picked` event signifies that the shopper has completed picking all the articles and is now heading towards the cashier. This event's payload includes essential information related to product-not-found, out-of-stock, and replacements. In the case of replacements, this event payload displays fully replaced products in-line, while partially replaced products are shown as a partial stock-out along with new or additional articles in the order. Retailers receive this event to track the shopper's progress and order fulfillment status accurately and to be able to charge the cutomer .
 
 ```json
 {
@@ -250,33 +243,30 @@ The `order.picked` event signifies that the shopper has completed picking all th
 	"orderRef": "238120381238",
 	"serviceType": "DELIVERY",
 	"articles": [
-		{
-			"itemId": "12345",
-			"scanCode": "00980349941",
-			"quantityRequested": 3.0,
-			"quantityRequestedUnit":"unit",
-			"quantityFulfilled": 1.0,
-			"quantityFulfilledUnit":"unit",
-			"replaced": false
-		},
-		{
-			"itemId": "9876",
-			"scanCode": "00980349941",
-			"quantityRequested": 0.0,
-			"quantityRequestedUnit":"unit",
-			"quantityFulfilled": 2.0,
-			"quantityFulfilledUnit":"unit",
-			"replaced": false
-		},
-		{
-			"itemId": "98761", --- Bags Count ---
-			"scanCode": "009803499410",
-			"quantityRequested": 20.0,
-			"quantityRequestedUnit":"unit",
-			"quantityFulfilled": 1.0,
-			"quantityFulfilledUnit":"unit",
-			"replaced": false
-		}
+	{
+	    "id": "12345",
+	    "quantityRequested": 3.0,
+	    "quantityRequestedUnit":"unit",
+	    "quantityFulfilled": 1.0,
+	    "quantityFulfilledUnit":"unit",
+	    "replaced": false
+	},
+	{
+	    "id": "9876",
+	    "quantityRequested": 0.0,
+	    "quantityRequestedUnit":"unit",
+	    "quantityFulfilled": 2.0,
+	    "quantityFulfilledUnit":"unit",
+	    "replaced": false
+	},
+	{
+	    "id": "98761", --- Bags Count ---
+	    "quantityRequested": 20.0,
+	    "quantityRequestedUnit":"unit",
+	    "quantityFulfilled": 1.0,
+	    "quantityFulfilledUnit":"unit",
+	    "replaced": false
+	}
 	]
 	}
 }
@@ -313,28 +303,6 @@ Order delivered to the customer.
   "eventPayload": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
-    "serviceType": "DELIVERY"
-  }
-}
-```
-
-### ORDER_ON_HOLD
-
-Order on hold for some reason that may include:
-
-```json
-{
-  "eventId": 1201895966044343909,
-  "eventName": "order.onHold",
-  "eventProvider": "glovo-xl",
-  "eventTimestamp": "2023-01-12T10:34:11Z",
-  "eventPayload": {
-    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "orderRef": "238120381238",
-    "reason": {
-      "code": "CUSTOMER_NO_SHOW",
-      "description": "Customer not abailable at delivery location."
-    },
     "serviceType": "DELIVERY"
   }
 }
@@ -403,8 +371,7 @@ Order has been canceled after leaving the store so need to be returned to pickin
     },
     "articles": [
       {
-        "itemId": "12345",
-        "scanCode": "00980349940",
+        "id": "12345",        
         "quantityRequested": 2.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 1.0,
@@ -413,28 +380,26 @@ Order has been canceled after leaving the store so need to be returned to pickin
         "returned": true
       },
       {
-        "itemId": "12346",
-        "scanCode": "00980349941",
+        "id": "12346",
         "quantityRequested": 2.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 1.0,
         "quantityFulfilledUnit": "unit",
         "replaced": true,
         "replacement": {
-          "itemId": "12345"
+          "id": "12345"
         },
         "returned": true
       },
       {
-        "itemId": "12347",
-        "scanCode": "",
+        "id": "12347",
         "quantityRequested": 5.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 0.43,
         "quantityFulfilledUnit": "kilograms",
         "replaced": true,
         "replacement": {
-          "itemId": "12",
+          "id": "12",
           "shopperProvidedName": "Oranges",
           "shopperProvidedPrice": 1.23
         },
