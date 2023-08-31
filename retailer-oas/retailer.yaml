@@ -6,14 +6,14 @@ info:
     This is the official OpenAPI specification for Retailer API V1.
 
     ## Concepts
-    - **OMS (Order Management System)**: A software system used to manage and track customer orders, from receiving the order to delivering the items to the customer.
-    - **Picking Location**: The physical location within a warehouse, distribution centre or store where the items for an order are prepared for delivery. It is the place where products are stored, organized and picked.
+    - **OMS (Order Management System)**: A software system used to manage and track customer orders, from receiving the order to delivering the articles to the customer.
+    - **Picking Location**: The physical location within a warehouse, distribution centre or store where the articles for an order are prepared for delivery. It is the place where products are stored, organized and picked.
     - **Order**: a customer's request to purchase one or more articles. An order includes the customer's selected articles, shipping information, some customer preferences, and the preferred Timeslot. It will be tracked by a unique order ID and will transition between different statuses. Depending on the company's policies, orders can also be canceled, refunded or modified.
     - **Timeslot**: a timeslot is a specific window of time during which a customer can pick up their order or receive a delivery. Timeslots are usually divided into particular intervals, such as every hour or every two hours. The system may offer different timeslots depending on the picking location, days of the week, or other factors. Customers can select a timeslot when placing their order; availability can change depending on the demand.
     - **Reservations**: A ticket with which a customer can allocate capacity for 15 minutes to a timeslot in which he wants an order to be delivered to him.
     - **Shopper**: An individual responsible for fulfilling an order by picking the products and preparing them for delivery.
     - **Order status**: The current stage of an order, reflecting its progress and whether it is confirmed, assigned, in transit, delivered, on hold, rejected, canceled, or returned.
-    - **Item status**: The current stage of an individual item within an order, reflecting its progress and whether it is pending, picked, not found, or replaced.
+    - **article status**: The current stage of an individual article within an order, reflecting its progress and whether it is pending, picked, not found, or replaced.
     - **Order rescheduling**: The process of moving an order to a different timeslot, usually due to a change in delivery availability or customer preference.
     - **Event**: An occurrence or change in the state of an order, such as receipt of the order, confirmation, assignment, delivery, or cancelation, that can trigger a webhook notification to subscribed parties.
 
@@ -27,24 +27,21 @@ info:
     1. `order.confirmed`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_confirmed) Order confirmed by the OMS, waiting for shopper assignment.
     2. `order.allocated`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_allocated) Order assigned and accepted by a shopper. In some cases, the order may be assigned to multiple resources (picker, courier).
     3. `order.rescheduled`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rescheduled) Order has been moved to a different timeslot, needs to be allocated.
-    4. `order.in.picking`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking) Shopper started picking items. Each product in the order will have their own status.
-        1. `item.picked`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_picked) Shopper picked an item. This payload highlights the picked product.
-        2. `item.not.found`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_not_found) Shopper cannot find an item. This payload highlights the which product is missing.
-        3. `item.replaced`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_replaced) Shopper has replaced an item. This payload highlights the which product has been replaced and by which product it has been replaced.
-        4. `item.added`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_item_added) Shopper has picked a new product. 
-    5. `order.picked`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_picked) Shopper finished picking order items and will go to the cashier.
+    4. `order.in.picking`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking) Shopper started picking articles. Each product in the order will have their own status.
+        1. `article.picked`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_picked) Shopper picked an article. This payload highlights the picked product.
+        2. `article.not.found`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_not_found) Shopper cannot find an article. This payload highlights the which product is missing.
+        3. `article.replaced`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_replaced) Shopper has replaced an article. This payload highlights the which product has been replaced and by which product it has been replaced.
+        4. `article.added`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_added) Shopper has picked a new product. 
+    5. `order.picked`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_picked) Shopper finished picking order articles and will go to the cashier.
     6. `order.in.transit`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_transit) Order on its way to the customer.
     7. `order.delivered`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_delivered) Order delivered to the customer.
-    8. `order.on.hold`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_on_hold) Order on hold for some reason that may include:
-        1. In warehouse: order with partial picking for some reason.
-        2. Fraud detected: Retailer detects a fraud attempt by the shopper and order has been blocked.
-        3. Order not delivered: Order can not be delivered to the customer and delivery has been postponed.
-    9. `order.rejected`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) Order rejected by the OMS for some reason.
-    10. `order.canceled`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) Order has been canceled before left the store. A cancelation could be initiated by the customer, the retailer, the shopper, or the OMS
-    11. `order.returned`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned) Order has been canceled after leaving the store so need to be returned to picking location.
+    8. `order.rejected`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) Order rejected by the OMS for some reason.
+    9. `order.canceled`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) Order has been canceled before left the store. A cancelation could be initiated by the customer, the retailer, the shopper, or the OMS
+    10. `order.returned`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned) Order has been canceled after leaving the store so need to be returned to picking location.
 
     In this [page](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md), you will find examples of the payload for each event type that can be triggered by an order status change.
-
+    In this [page](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/errorsList.md), you will find examples of the payload for each event type that can be triggered by an order status change.
+    
 servers:
   - url: https://api.example.com/retailer/v1
     description: Production server (live data)
