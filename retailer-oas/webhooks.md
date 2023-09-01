@@ -24,7 +24,7 @@ If the order can not be confirmed instead of receiving this event you will recei
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-45e2-b4l2-48194c9d75b4",
   "eventName": "order.confirmed",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
