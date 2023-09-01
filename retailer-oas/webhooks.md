@@ -42,7 +42,7 @@ If the order can not be confirmed instead of receiving this event you will recei
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-45e2-b402-48194c9d75b4",
   "eventName": "order.allocated",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -65,7 +65,7 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-45e2-b402-48194c9d75a4",
   "eventName": "order.rescheduled",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -93,7 +93,7 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-4ae2-b402-48194c9d75b4",
   "eventName": "order.inPicking",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -111,7 +111,7 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504ev245-869d-45e2-b402-48194c9d75b4",
   "eventName": "order.article.picked",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -138,7 +138,7 @@ A product article has been replaced.
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-45e2-b402-4819wc9d75b4",
   "eventName": "order.article.replaced",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -178,7 +178,7 @@ A product article was not found.
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "5w4e8245-869d-45e2-b402-48194c9d75b4",
   "eventName": "order.article.notFound",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -206,7 +206,7 @@ A new product article has been added to basket.
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-45e2-b402-48194cqd75b4",
   "eventName": "order.article.added",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -234,7 +234,7 @@ The `order.picked` event signifies that the shopper has completed picking all th
 
 ```json
 {
-	"eventId": 1201895966044343902,
+	"eventId": "504e8245-869d-45e2-b402-48194c9d7tb4",
 	"eventName": "order.picked",
 	"eventProvider": "glovo-xl",
 	"eventTimestamp": "2023-01-10T18:31:00Z",
@@ -278,7 +278,7 @@ Order on its way to the customer. It has already passed the checkout process suc
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-45e2-b402-48194c9d75z4",
   "eventName": "order.inTransit",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -296,7 +296,7 @@ Order delivered to the customer.
 
 ```json
 {
-  "eventId": 1201895966044343902,
+  "eventId": "504e8245-869d-45e2-b402-4819yc9d75b4",
   "eventName": "order.delivered",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
@@ -314,7 +314,7 @@ Order rejected by the OMS for some reason.
 
 ```json
 {
-  "eventId": 1201895966044343910,
+  "eventId": "504e8245-869d-45e2-b402-48194c9dy5b4",
   "eventName": "order.rejected",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-11T19:00:00Z",
@@ -336,7 +336,7 @@ Order has been canceled before left the store. A cancelation could be initiated 
 
 ```json
 {
-  "eventId": 1201895966044343911,
+  "eventId": "504e8245-869d-45e2-b402-4p194c9d75b4",
   "eventName": "order.canceled",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-11T19:00:00Z",
@@ -358,7 +358,7 @@ Order has been canceled after leaving the store so need to be returned to pickin
 
 ```json
 {
-  "eventId": 1201895966044343912,
+  "eventId": "504e8245-869d-45e2-b402-48194c9d7gb4",
   "eventName": "order.returned",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-12T19:00:00Z",
