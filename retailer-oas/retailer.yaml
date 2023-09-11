@@ -40,7 +40,9 @@ info:
     10. `order.returned`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned) Order has been canceled after leaving the store so need to be returned to picking location.
 
     In this [page](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md), you will find examples of the payload for each event type that can be triggered by an order status change.
-    In this [page](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/errorsList.md), you will find examples of the payload for each event type that can be triggered by an order status change.
+
+    ## Errors List
+    In this [page](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/errorsList.md), a list of possible errors and validations we have in place.
     
 servers:
   - url: https://api.example.com/retailer/v1
