@@ -367,7 +367,7 @@ Order has been canceled after leaving the store so need to be returned to pickin
     "orderRef": "238120381238",
     "reason": {
       "code": "CUSTOMER_NO_SHOW",
-      "description": "Customer not abailable at delivery location."
+      "description": "Customer not available at delivery location."
     },
     "articles": [
       {
