@@ -53,7 +53,7 @@ servers:
 tags:
   - name: auth
   - name: service-availability
-  - name: picking-locations
+  #- name: picking-locations
   - name: timeslots
   - name: reservations
   - name: orders
@@ -71,12 +71,12 @@ paths:
     $ref: "./paths/service-availability/get.yaml"
 
   # Picking Locations
-  /picking-locations:
-    $ref: "./paths/picking-locations/picking-locations.yaml"
-  /picking-locations/{id}:
-    $ref: "./paths/picking-locations/picking-locations-id.yaml"
-  /picking-locations/{id}/schedule:
-    $ref: "./paths/picking-locations/picking-locations-schedule.yaml"
+  #/picking-locations:
+  #  $ref: "./paths/picking-locations/picking-locations.yaml"
+  #/picking-locations/{id}:
+  #  $ref: "./paths/picking-locations/picking-locations-id.yaml"
+  #/picking-locations/{id}/schedule:
+  #  $ref: "./paths/picking-locations/picking-locations-schedule.yaml"
 
   # Timeslots
   /timeslots:
@@ -107,8 +107,6 @@ paths:
     $ref: "./paths/webhooks/subscriptions.yaml"
   /webhooks/subscriptions/{id}:
     $ref: "./paths/webhooks/subscriptions-id.yaml"
-  /webhooks/subscriptions/{id}/test:
-    $ref: "./paths/webhooks/subscriptions-id-test.yaml"
 
 components:
   schemas:

@@ -15,3 +15,8 @@ properties:
     format: ISO 8601
     description: The ending time of the Timeslot
     example: "2023-01-11T15:00:00+00:00"
+  postalCode:
+    type: string
+    description: The postal code of the Shipping Address
+    maxLength: 10
+    example: "123-545"

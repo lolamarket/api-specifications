@@ -39,6 +39,12 @@ get:
       example: 1
       schema:
         type: number
+    - name: postalCode
+      in: query
+      required: true
+      type: string
+      description: The postal code of the Shipping Address
+      example: "123-545"
 
   responses:
     '200':
