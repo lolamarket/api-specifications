@@ -5,8 +5,6 @@ List of possible `errorCode` values in response and reasons.
 
 | Error code                            | Http exception | Http status code | Message                                                 | Details    |
 | ------------------------------------- | -------------- | ---------------- | ------------------------------------------------------- | --- |
-| `ORDER.ALLOCATION_PROPOSAL.NOT_FOUND` | NotFound       | 404              | Order allocation proposal does not exist                | `optional details`    |
-| `ORDER.ALLOCATION_PROPOSAL.TAKEN`     | Conflict       | 409              | Order allocation proposal is already taken              | `optional details`    |
 | `ORDER.NOT_FOUND`                     | NotFound       | 404              | Order does not exist                                    | `optional details`    |
 | `ORDER.RESCHEDULE.CONFLICT`           | Conflict       | 409              | Order cannot be rescheduled                             | `optional details`    |
 | `RESERVATION.EXISTS`                  | Conflict       | 409              | Reservation already exists                              | `optional details`    |
