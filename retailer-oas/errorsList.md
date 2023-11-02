@@ -3,15 +3,15 @@
 ## Error code list
 List of possible `errorCode` values in response and reasons.
 
-| Error code                            | Http exception | Http status code | Message                                                 | Details    |
-| ------------------------------------- | -------------- | ---------------- | ------------------------------------------------------- | --- |
+| Error code                            | Http exception | Http status code | Message                                                 | Details               |
+| ------------------------------------- | -------------- | ---------------- | ------------------------------------------------------- | --------------------- |
 | `ORDER.NOT_FOUND`                     | NotFound       | 404              | Order does not exist                                    | `optional details`    |
 | `ORDER.RESCHEDULE.CONFLICT`           | Conflict       | 409              | Order cannot be rescheduled                             | `optional details`    |
 | `RESERVATION.EXISTS`                  | Conflict       | 409              | Reservation already exists                              | `optional details`    |
 | `RESERVATION.NOT_FOUND`               | NotFound       | 404              | Reservation does not exist                              | `optional details`    |
 | `RESERVATION.STATUS.CONFLICT`         | Conflict       | 409              | Reservation status cannot be changed                    | `optional details`    |
 | `SHOPPER.NOT_FOUND`                   | NotFound       | 404              | Shopper does not exist                                  | `optional details`    |
-| `TIMESLOT.NOT_FOUND`                  | NotFound       | 404              | Timestlot does not exist                                | `optional details`     |
+| `TIMESLOT.NOT_FOUND`                  | NotFound       | 404              | Timestlot does not exist                                | `optional details`    |
 | `TIMESLOT.NOT_AVAILABLE`              | Conflict       | 409              | Timeslot is not available                               | `optional details`    |
 | `PARAMETER.INVALID`                   | BadRequest     | 400              | Key or/and value is missing                             | `optional details`    |
 | `ORDER.ARTICLES_AGGREGATION.FAILED`   | BadRequest     | 400              | Order article aggregation failed: product(s) is missing | `optional details`    |
@@ -21,7 +21,7 @@ List of possible `errorCode` values in response and reasons.
 | `PARAMETER.NOT_FOUND`                 | BadRequest     | 404              | Parameter does not exist                                | `optional details`    |
 | `FILTER.INVALID`                      | BadRequest     | 400              | Invalid Filter arguments                                | `optional details`    |
 | `GEOCOORDINATES.INVALID`              | BadRequest     | 400              | GeoCoordinates is invalid                               | `optional details`    |
-
+| `ADDRESS.FAILED_GEOLOCALIZATION`      | BadRequest     | 400              | Failed to geolocate address. Try another address        | `optional details`    |
 
 ## Requests list
 | Endpoint                 | Url                                                                                   | Method | Returned Error or Exception       | Validations                                                                                                                                                                                                                                                                                                                                                                                                 | Cause                                                         | HttpStatus |
