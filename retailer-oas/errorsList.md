@@ -22,6 +22,7 @@ List of possible `errorCode` values in response and reasons.
 | `FILTER.INVALID`                      | BadRequest     | 400              | Invalid Filter arguments                                | `optional details`    |
 | `GEOCOORDINATES.INVALID`              | BadRequest     | 400              | GeoCoordinates is invalid                               | `optional details`    |
 | `ADDRESS.FAILED_GEOLOCALIZATION`      | BadRequest     | 400              | Failed to geolocate address. Try another address        | `optional details`    |
+| `ORDER.ILEGAL_STATUS_TRANSITION`      | MethodNotAllowed | 405            | Status transition is not permitted                      | `optional details`    |
 
 ## Requests list
 | Endpoint                 | Url                                                                                   | Method | Returned Error or Exception       | Validations                                                                                                                                                                                                                                                                                                                                                                                                 | Cause                                                         | HttpStatus |
