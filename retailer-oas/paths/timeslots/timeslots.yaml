@@ -4,7 +4,7 @@ get:
     This endpoint allows retailers to retrieve the available timeslots for a given picking location.
     The retailer can specify the picking location by passing its identifier in the id query parameter.
     The fromDate parameter is used to specify the starting date of the timeslots to be retrieved, and toDate to
-    limit at the end. The result will be limited to a maximum of 7 days. The date must be in ISO 8601 format.
+    limit at the end. The result will be limited to a maximum of 7 days from current date with limit up to 100 timeslots. The date must be in ISO 8601 format.
     The quantity parameter limits the number of timeslots to be returned.
 
   operationId: getTimeslotsAvailability
