@@ -8,6 +8,13 @@ allOf:
               - $ref: "./Quantity.yaml"
               - description: The picked by shopper quantity and its unit.
           - type: 'null'
+      replacementPreferences:
+        type: array
+        description: The array of replacement with aggregated catalog info
+        example: "[{\"buyingPrice\":{\"amount\":4.29,\"currency\":\"PLN\"},\"estimatedWeight\":1.062,\"requested\":{\"quantity\":0,\"unit\":\"unit\"},\"picked\":null,\"replacementPreferences\":[],\"itemPreferences\":{\"replacementType\":\"CALL_CUSTOMER\",\"note\":\"Iwanttoaddanotetothis\"},\"sku\":\"0000360908\",\"status\":\"PENDING\",\"unitPrice\":{\"amount\":4.29,\"currency\":\"PLN\"},\"category\":{\"id\":\"L111415\",\"name\":\"L111415\"},\"shortDescription\":\"desc\",\"packageInfo\":\"info\",\"EANs\":[\"5900512850016\"],\"pictures\":[\"https://res.cloudinary.com/fonte-online/image/upload/v1691505759/Biedronka/dev/assortment/hvmzyjf9cpcqevvulhdp.png\"]}]"
+        items:
+          $ref: './OrderArticle.yaml'
+
       shortDescription:
         type: string
         description: "Short description of product"
