@@ -5,7 +5,7 @@
 1. [order.confirmed](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_confirmed) 
 2. [order.allocated](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_allocated) 
 3. [order.rescheduled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rescheduled) 
-4. [order.inPicking](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking)
+4. [order.in.picking](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_picking)
 5. [order.article.picked](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_picked)
 6. [order.article.replaced](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_replaced)
 7. [order.article.notFound](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_article_not_found)
@@ -15,7 +15,8 @@
 11. [order.delivered](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_delivered) 
 12. [order.rejected](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) 
 13. [order.canceled](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) 
-14. [order.returned](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned)
+14. [order.in.return](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_return)
+15. [order.returned](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned)
 
 ### ORDER_CONFIRMED
 
@@ -89,12 +90,12 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
 
 ### ORDER_IN_PICKING
 
-`order.in_picking` is an event triggered when a shopper has started picking articles for an order. The event provides information about the picking location, timeslot, and shopper assigned to the order. Additionally, each product in the order has its own status, which will be updated as the shopper picks them. Retailers can use this event to track the progress of their orders and ensure that they are being fulfilled on time.
+`order.in.picking` is an event triggered when a shopper has started picking articles for an order. The event provides information about the picking location, timeslot, and shopper assigned to the order. Additionally, each product in the order has its own status, which will be updated as the shopper picks them. Retailers can use this event to track the progress of their orders and ensure that they are being fulfilled on time.
 
 ```json
 {
   "eventId": "504e8245-869d-4ae2-b402-48194c9d75b4",
-  "eventName": "order.inPicking",
+  "eventName": "order.in.picking",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
   "eventPayload": {
@@ -119,15 +120,14 @@ Order has been rescheduled for a different time slot, and needs to be allocated 
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "orderRef": "238120381238",
     "serviceType": "DELIVERY",
-    "article": 
-      {
-        "id": "1111",
-        "quantityRequested": 2.0,
-        "quantityRequestedUnit": "unit",
-        "quantityFulfilled": 2.0,
-        "quantityFulfilledUnit": "unit",
-        "replaced": false
-      }
+    "article": {
+      "id": "1111",
+      "quantityRequested": 2.0,
+      "quantityRequestedUnit": "unit",
+      "quantityFulfilled": 2.0,
+      "quantityFulfilledUnit": "unit",
+      "replaced": false
+    }
   }
 }
 ```
@@ -279,7 +279,7 @@ Order on its way to the customer. It has already passed the checkout process suc
 ```json
 {
   "eventId": "504e8245-869d-45e2-b402-48194c9d75z4",
-  "eventName": "order.inTransit",
+  "eventName": "order.in.transit",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-10T18:31:00Z",
   "eventPayload": {
@@ -352,14 +352,14 @@ Order has been canceled before left the store. A cancelation could be initiated 
 }
 ```
 
-### ORDER_RETURNED
+### ORDER_IN_RETURN
 
-Order has been canceled after leaving the store so need to be returned to picking location.
+Order has been canceled after leaving the store so need to start the return process.
 
 ```json
 {
   "eventId": "504e8245-869d-45e2-b402-48194c9d7gb4",
-  "eventName": "order.returned",
+  "eventName": "order.in.return",
   "eventProvider": "glovo-xl",
   "eventTimestamp": "2023-01-12T19:00:00Z",
   "eventPayload": {
@@ -371,7 +371,7 @@ Order has been canceled after leaving the store so need to be returned to pickin
     },
     "articles": [
       {
-        "id": "12345",        
+        "id": "12345",
         "quantityRequested": 2.0,
         "quantityRequestedUnit": "unit",
         "quantityFulfilled": 1.0,
@@ -406,7 +406,66 @@ Order has been canceled after leaving the store so need to be returned to pickin
         "returned": true
       }
     ],
-    "serviceType": "DELIVERY",
+    "serviceType": "DELIVERY"
+  }
+}
+```
+
+### ORDER_RETURNED
+
+Order has been canceled after leaving the store and the return process has finished.
+
+```json
+{
+  "eventId": "504e8245-869d-45e2-b402-48194c9d7gb4",
+  "eventName": "order.returned",
+  "eventProvider": "glovo-xl",
+  "eventTimestamp": "2023-01-12T19:00:00Z",
+  "eventPayload": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "orderRef": "238120381238",
+    "reason": {
+      "code": "CUSTOMER_NO_SHOW",
+      "description": "Customer not available at delivery location."
+    },
+    "articles": [
+      {
+        "id": "12345",
+        "quantityRequested": 2.0,
+        "quantityRequestedUnit": "unit",
+        "quantityFulfilled": 1.0,
+        "quantityFulfilledUnit": "unit",
+        "replaced": false,
+        "returned": true
+      },
+      {
+        "id": "12346",
+        "quantityRequested": 2.0,
+        "quantityRequestedUnit": "unit",
+        "quantityFulfilled": 1.0,
+        "quantityFulfilledUnit": "unit",
+        "replaced": true,
+        "replacement": {
+          "id": "12345"
+        },
+        "returned": true
+      },
+      {
+        "id": "12347",
+        "quantityRequested": 5.0,
+        "quantityRequestedUnit": "unit",
+        "quantityFulfilled": 0.43,
+        "quantityFulfilledUnit": "kilograms",
+        "replaced": true,
+        "replacement": {
+          "id": "12",
+          "shopperProvidedName": "Oranges",
+          "shopperProvidedPrice": 1.23
+        },
+        "returned": true
+      }
+    ],
+    "serviceType": "DELIVERY"
   }
 }
 ```
