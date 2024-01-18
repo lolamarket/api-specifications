@@ -37,7 +37,7 @@ info:
     7. `order.delivered`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_delivered) Order delivered to the customer.
     8. `order.rejected`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_rejected) Order rejected by the OMS for some reason.
     9. `order.canceled`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_canceled) Order has been canceled before left the store. A cancelation could be initiated by the customer, the retailer, the shopper, or the OMS
-    10. `order.in_return`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_return) Order has been canceled after leaving the store so need to start the return process.
+    10. `order.in.return`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_in_return) Order has been canceled after leaving the store so need to start the return process.
     11. `order.returned`: [payload](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md#order_returned) Order has been canceled after leaving the store and the return process has finished.
 
     In this [page](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/webhooks.md), you will find examples of the payload for each event type that can be triggered by an order status change.
