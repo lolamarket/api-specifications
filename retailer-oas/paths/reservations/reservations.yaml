@@ -55,4 +55,7 @@ post:
                 type: string
                 description: Full path of the request
                 example: /v1/reservations/
+    '409':
+      description: 'BadRequestException: Picking Location not found.
+                    errorCode: PICKING_LOCATION.NOT_AVAILABLE'
               
