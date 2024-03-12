@@ -31,3 +31,8 @@ get:
       description: Invalid postal code or country code format.
     '404':
       description: Service not available for the given postal code and country code.
+    '409':
+      description: 'BadRequestException: Picking Location not found.
+                    errorCode: PICKING_LOCATION.NOT_AVAILABLE'
+      
+      
