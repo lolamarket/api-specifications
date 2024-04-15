@@ -54,14 +54,14 @@ get:
       description: Longitude in decimal degrees
     - name: postalCode
       in: query
-      description: The postal code of the Picking Location
+      description: The postal code of the shipping address
       example: "90210"
       required: true
       schema:
         type: string
     - name: addressLine1
       in: query
-      description: The first line of the address of the Picking Location (usually identifies the street's name and door number)
+      description: The first line of the address of the shipping address (usually identifies the street's name and door number)
       example: "123 Main St"
       required: true
       schema:
@@ -70,7 +70,7 @@ get:
       in: query
       schema:
         type: string
-      description: The second line of the address of the Picking Location (usually identifies floor/apartment numbers and any other relevant address information)
+      description: The second line of the address of the shipping address (usually identifies floor/apartment numbers and any other relevant address information)
       example: "Suite 456"
       required: true
     - name: countryCode
@@ -78,7 +78,7 @@ get:
       schema:
         type: string
       format: ISO 3166-1
-      description: The country code of the Picking Location
+      description: The country code of the shipping address
       example: "PL"
       required: true
 
