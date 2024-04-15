@@ -35,7 +35,7 @@ get:
     - name: service
       in: query
       default: "Pick&Delivery"
-      description: Which service you are looking for.
+      description: Which is the desired service to search in the Picking Locations Pool
       type: string
       enum: ["Pick&Delivery","Pick&Collect"]
     - name: lat
