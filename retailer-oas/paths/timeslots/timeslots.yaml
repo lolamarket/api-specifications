@@ -11,13 +11,6 @@ get:
   tags:
     - timeslots
   parameters:
-    - name: pickingLocationId
-      in: query
-      required: true
-      description: Picking Location identifier
-      example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-      schema:
-        $ref: '../../schemas/Id.yaml'
     - name: fromDate
       in: query
       required: true
@@ -38,13 +31,56 @@ get:
       description: Number of Timeslots to be displayed, use this parameter to limit the request and retrieve just (1) the nearest available timeslots.
       example: 1
       schema:
+        type: number\
+    - name: service
+      in: query
+      default: "Pick&Delivery"
+      description: Which service you are looking for.
+      type: string
+      enum: ["Pick&Delivery","Pick&Collect"]
+    - name: lat
+      in: query
+      schema:
         type: number
+      format: ISO 6709:2022
+      example: 35.89421911
+      description: Latitude in decimal degrees
+    - name: lon
+      in: query
+      schema:
+        type: number
+      format: ISO 6709:2022
+      example: 139.94637467
+      description: Longitude in decimal degrees
     - name: postalCode
       in: query
+      description: The postal code of the Picking Location
+      example: "90210"
       required: true
-      type: string
-      description: The postal code of the Shipping Address
-      example: "123-545"
+      schema:
+        type: string
+    - name: addressLine1
+      in: query
+      description: The first line of the address of the Picking Location (usually identifies the street's name and door number)
+      example: "123 Main St"
+      required: true
+      schema:
+        type: string
+    - name: addressLine2
+      in: query
+      schema:
+        type: string
+      description: The second line of the address of the Picking Location (usually identifies floor/apartment numbers and any other relevant address information)
+      example: "Suite 456"
+      required: true
+    - name: countryCode
+      in: query
+      schema:
+        type: string
+      format: ISO 3166-1
+      description: The country code of the Picking Location
+      example: "PL"
+      required: true
 
   responses:
     '200':
@@ -52,9 +88,8 @@ get:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '../../schemas/TimeslotAvailability.yaml'
+            type: object
+            $ref: '../../schemas/Timeslots.yaml'
     '400':
       description: Invalid ID
     '409':

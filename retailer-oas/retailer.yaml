@@ -46,14 +46,14 @@ info:
     In this [page](https://github.com/lolamarket/api-specifications/blob/main/retailer-oas/errorsList.md), a list of possible errors and validations we have in place.
     
 servers:
-  - url: https://retailer-api.glovoxl.com/v1
+  - url: https://retailer-api.glovoxl.com
     description: Production server (live data)
-  - url: https://retailer-api.stg.glovoxl.com/v1
+  - url: https://retailer-api.stg.glovoxl.com
     description: Staging server (test data)
 
 tags:
   - name: auth
-  - name: service-availability
+  #- name: service-availability
   #- name: picking-locations
   - name: timeslots
   - name: reservations
@@ -62,14 +62,10 @@ tags:
 
 paths:
   # Authentication
-  /oauth/token:
+  /v1/oauth/token:
     $ref: "./paths/auth/post-token.yaml"
-  /oauth/token/revoke:
+  /v1/oauth/token/revoke:
     $ref: "./paths/auth/post-token-revoke.yaml"
-
-  # Service availability
-  /service-availability:
-    $ref: "./paths/service-availability/get.yaml"
 
   # Picking Locations
   #/picking-locations:
@@ -80,33 +76,33 @@ paths:
   #  $ref: "./paths/picking-locations/picking-locations-schedule.yaml"
 
   # Timeslots
-  /timeslots:
+  /v2/timeslots:
     $ref: "./paths/timeslots/timeslots.yaml"
-  /timeslots/{id}:
+  /v2/timeslots/{id}:
     $ref: "./paths/timeslots/timeslots-id.yaml"
 
   #Reservations
-  /reservations:
+  /v1/reservations:
     $ref: "./paths/reservations/reservations.yaml"
-  /reservations/{id}:
+  /v1/reservations/{id}:
     $ref: "./paths/reservations/reservations-id.yaml"
-  /reservations/{id}/cancel:
+  /v1/reservations/{id}/cancel:
     $ref: "./paths/reservations/reservations-cancel.yaml"
 
   # Orders
-  /orders:
+  /v1/orders:
     $ref: "./paths/orders/orders.yaml"
-  /orders/{id}:
+  /v1/orders/{id}:
     $ref: "./paths/orders/orders-id.yaml"
-  /orders/{id}/cancel:
+  /v1/orders/{id}/cancel:
     $ref: "./paths/orders/orders-id-cancel.yaml"
 
   # Webhooks
-  /webhooks/subscriptions/event-types:
+  /v1/webhooks/subscriptions/event-types:
     $ref: "./paths/webhooks/subscriptions-event-types.yaml"
-  /webhooks/subscriptions:
+  /v1/webhooks/subscriptions:
     $ref: "./paths/webhooks/subscriptions.yaml"
-  /webhooks/subscriptions/{id}:
+  /v1/webhooks/subscriptions/{id}:
     $ref: "./paths/webhooks/subscriptions-id.yaml"
 
 components:

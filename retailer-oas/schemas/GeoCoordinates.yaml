@@ -1,8 +1,12 @@
-type: object
-properties:
+type: array
+items:
   lat:
     type: number
+    format: ISO 6709:2022
+    example: 35.89421911
     description: Latitude in decimal degrees
   lon:
     type: number
+    format: ISO 6709:2022
+    example: 139.94637467
     description: Longitude in decimal degrees
