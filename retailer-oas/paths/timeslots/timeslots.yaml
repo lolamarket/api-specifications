@@ -31,7 +31,7 @@ get:
       description: Number of Timeslots to be displayed, use this parameter to limit the request and retrieve just (1) the nearest available timeslots.
       example: 1
       schema:
-        type: number\
+        type: number
     - name: service
       in: query
       default: "Pick&Delivery"
