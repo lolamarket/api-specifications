@@ -25,10 +25,17 @@ get:
       example: "2023-01-19T22:00:00Z"
       schema:
         $ref: '../../schemas/TimeStamp.yaml'
-    - name: quantity
+    - name: limit
       in: query
       required: false
       description: Number of Timeslots to be displayed, use this parameter to limit the request and retrieve just (1) the nearest available timeslots.
+      example: 1
+      schema:
+        type: number
+    - name: page
+      in: query
+      required: false
+      description: Cursor to display more timeslots according to a query.
       example: 1
       schema:
         type: number
