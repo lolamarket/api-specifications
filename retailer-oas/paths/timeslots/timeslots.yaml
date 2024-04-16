@@ -1,23 +1,16 @@
 get:
   summary: Get the Timeslots and their availability for a given Picking Location
   description: |-
-    This endpoint allows retailers to retrieve the available timeslots for a given picking location.
-    The retailer can specify the picking location by passing its identifier in the id query parameter.
+    This endpoint allows retailers to retrieve the available timeslots for a given address.
+    The retailer can specify the shipping address (postal-code, addressline1, addressLine2 and country code) or provide the latitude and longitude of the address.
     The fromDate parameter is used to specify the starting date of the timeslots to be retrieved, and toDate to
     limit at the end. The result will be limited to a maximum of 7 days from current date with limit up to 100 timeslots. The date must be in ISO 8601 format.
-    The quantity parameter limits the number of timeslots to be returned.
+    The limit parameter will restrict the number of timeslots to be returned.
 
   operationId: getTimeslotsAvailability
   tags:
     - timeslots
   parameters:
-    - name: pickingLocationId
-      in: query
-      required: true
-      description: Picking Location identifier
-      example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-      schema:
-        $ref: '../../schemas/Id.yaml'
     - name: fromDate
       in: query
       required: true
@@ -32,19 +25,69 @@ get:
       example: "2023-01-19T22:00:00Z"
       schema:
         $ref: '../../schemas/TimeStamp.yaml'
-    - name: quantity
+    - name: limit
       in: query
       required: false
       description: Number of Timeslots to be displayed, use this parameter to limit the request and retrieve just (1) the nearest available timeslots.
       example: 1
       schema:
         type: number
+    - name: page
+      in: query
+      required: false
+      description: Cursor to display more timeslots according to a query.
+      example: 1
+      schema:
+        type: number
+    - name: service
+      in: query
+      default: "Pick&Delivery"
+      description: Which is the desired service to search in the Picking Locations Pool
+      type: string
+      enum: ["Pick&Delivery","Pick&Collect"]
+    - name: lat
+      in: query
+      schema:
+        type: number
+      format: ISO 6709:2022
+      example: 35.89421911
+      description: Latitude in decimal degrees
+    - name: lon
+      in: query
+      schema:
+        type: number
+      format: ISO 6709:2022
+      example: 139.94637467
+      description: Longitude in decimal degrees
     - name: postalCode
       in: query
+      description: The postal code of the shipping address
+      example: "90210"
       required: true
-      type: string
-      description: The postal code of the Shipping Address
-      example: "123-545"
+      schema:
+        type: string
+    - name: addressLine1
+      in: query
+      description: The first line of the address of the shipping address (usually identifies the street's name and door number)
+      example: "123 Main St"
+      required: true
+      schema:
+        type: string
+    - name: addressLine2
+      in: query
+      schema:
+        type: string
+      description: The second line of the address of the shipping address (usually identifies floor/apartment numbers and any other relevant address information)
+      example: "Suite 456"
+      required: true
+    - name: countryCode
+      in: query
+      schema:
+        type: string
+      format: ISO 3166-1
+      description: The country code of the shipping address
+      example: "PL"
+      required: true
 
   responses:
     '200':
@@ -52,11 +95,7 @@ get:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '../../schemas/TimeslotAvailability.yaml'
-    '400':
-      description: Invalid ID
-    '409':
-      description: 'BadRequestException: Picking Location not found.
-                    errorCode: PICKING_LOCATION.NOT_AVAILABLE'
+            type: object
+            $ref: '../../schemas/Timeslots.yaml'
+    '404':
+      description: Service not available for the given location.

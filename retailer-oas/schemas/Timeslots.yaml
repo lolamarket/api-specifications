@@ -1,13 +1,12 @@
-type: object
 properties:
   data:
     type: object
     properties:
       pickingLocationRef:
-          description: Picking Location Reference
-          format: uuid
-          example: "7996"
-          type: string
+        description: Picking Location Reference
+        format: uuid
+        example: "7996"
+        type: string
       serviceType:
         type: object
         properties:
@@ -16,8 +15,10 @@ properties:
           pickCollect:
             type: boolean
         description: Services allowed in this Picking Location.
-      timeslot:
-          allOf: 
+      timeslots:
+        type: array
+        items:
+          allOf:
             - $ref: "./Timeslot.yaml"
             - type: object
               properties:
@@ -27,3 +28,16 @@ properties:
                   type: boolean
                   description: Indicates whether this Timeslot is available to be reserved or not.
                   example: true
+  pagination:
+    type: object
+    properties:
+      limit:
+        type: number
+        maximum: 100
+      page:
+        type: number
+        example: 1
+      total:
+        type: number
+        example: 100
+        description: Total number of available timeslots

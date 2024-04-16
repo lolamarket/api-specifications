@@ -1,10 +1,6 @@
 type: object
 properties:
-  available:
+  occupancyRate:
     type: number
-    description: Available capacity of the location
-    example: 100
-  reserved:
-    type: number
-    description: Reserved capacity of the location
-    example: 20
+    description: Capacity saturation in the picking location
+    example: 70
