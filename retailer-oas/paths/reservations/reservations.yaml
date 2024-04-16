@@ -56,6 +56,6 @@ post:
                 description: Full path of the request
                 example: /v1/reservations/
     '409':
-      description: 'BadRequestException: Picking Location not found.
-                    errorCode: PICKING_LOCATION.NOT_AVAILABLE'
+      description: 'BadRequestException: Timeslot not found.
+                    errorCode: TIMESLOT.NOT_AVAILABLE'
               
