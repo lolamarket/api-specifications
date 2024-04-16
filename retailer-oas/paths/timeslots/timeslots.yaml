@@ -1,11 +1,11 @@
 get:
   summary: Get the Timeslots and their availability for a given Picking Location
   description: |-
-    This endpoint allows retailers to retrieve the available timeslots for a given picking location.
-    The retailer can specify the picking location by passing its identifier in the id query parameter.
+    This endpoint allows retailers to retrieve the available timeslots for a given address.
+    The retailer can specify the shipping address (postal-code, addressline1, addressLine2 and country code) or provide the latitude and longitude of the address.
     The fromDate parameter is used to specify the starting date of the timeslots to be retrieved, and toDate to
     limit at the end. The result will be limited to a maximum of 7 days from current date with limit up to 100 timeslots. The date must be in ISO 8601 format.
-    The quantity parameter limits the number of timeslots to be returned.
+    The limit parameter will restrict the number of timeslots to be returned.
 
   operationId: getTimeslotsAvailability
   tags:
@@ -97,8 +97,5 @@ get:
           schema:
             type: object
             $ref: '../../schemas/Timeslots.yaml'
-    '400':
-      description: Invalid ID
-    '409':
-      description: 'BadRequestException: Picking Location not found.
-                    errorCode: PICKING_LOCATION.NOT_AVAILABLE'
+    '404':
+      description: Service not available for the given location.
