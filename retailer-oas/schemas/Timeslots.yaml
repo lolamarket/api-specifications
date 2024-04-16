@@ -24,10 +24,6 @@ properties:
               properties:
                 capacity:
                   $ref: "./Capacity.yaml"
-                availability:
-                  type: boolean
-                  description: Indicates whether this Timeslot is available to be reserved or not.
-                  example: true
   pagination:
     type: object
     properties:

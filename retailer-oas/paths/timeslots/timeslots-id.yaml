@@ -19,3 +19,6 @@ get:
         application/json:
           schema:
             $ref: "../../schemas/TimeslotAvailability.yaml"
+    '409':
+      description: 'BadRequestException: Timeslot not found.
+                    errorCode: TIMESLOT.NOT_AVAILABLE'
